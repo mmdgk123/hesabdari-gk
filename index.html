@@ -6,524 +6,407 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="خرج">
-<meta name="theme-color" content="#0a0a1a">
+<meta name="theme-color" content="#fafbfc">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="manifest" href="manifest.json">
-<title>💰 دخل و خرج</title>
+<title>خرج</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IRANSansX:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=IRANSansX:wght@300;400;500;700;900&family=Orbitron:wght@400;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0a1a;--card:#111128;--border:#1e1e44;--acc:#00e87b;--red:#ff1744;--txt:#c8c8e0;--mut:#5a5a7e;--gld:#f59e0b;--cyn:#06b6d4}
-body{font-family:'IRANSansX',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;padding:16px;padding-bottom:120px;overflow-x:hidden}
-body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 50%,rgba(0,232,123,.04) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(6,182,212,.04) 0%,transparent 50%),radial-gradient(circle at 50% 80%,rgba(168,85,247,.03) 0%,transparent 50%);pointer-events:none;z-index:-1}
-.header{text-align:center;padding:24px 0 16px}
-.header h1{font-family:'Orbitron',sans-serif;font-size:24px;font-weight:900;background:linear-gradient(135deg,#00e87b,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px}
-.header p{color:var(--mut);font-size:13px;margin-top:6px}
-.card{background:linear-gradient(145deg,#12122a,#0e0e22);border:1px solid var(--border);border-radius:20px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
-.card::before{content:'';position:absolute;top:0;right:0;width:60px;height:60px;background:radial-gradient(circle,rgba(0,232,123,.08),transparent);pointer-events:none}
-.type-row{display:flex;gap:10px}
-.type-btn{flex:1;padding:16px 10px;border:2px solid var(--border);border-radius:16px;background:var(--card);color:var(--txt);font-family:'IRANSansX',sans-serif;font-size:15px;font-weight:700;cursor:pointer;text-align:center;transition:all .3s;position:relative;overflow:hidden}
-.type-btn::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:3px;border-radius:3px;transition:width .3s}
-.type-btn.active-expense{border-color:var(--red);background:rgba(255,23,68,.08);color:var(--red);box-shadow:0 0 20px rgba(255,23,68,.1)}
-.type-btn.active-expense::after{width:40px;background:var(--red)}
-.type-btn.active-income{border-color:var(--acc);background:rgba(0,232,123,.08);color:var(--acc);box-shadow:0 0 20px rgba(0,232,123,.1)}
-.type-btn.active-income::after{width:40px;background:var(--acc)}
-.form-group{margin-bottom:16px}
-.form-group label{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mut);margin-bottom:8px;font-weight:500}
-.form-group label span{font-size:14px}
-.form-group input{width:100%;padding:14px 16px;background:rgba(10,10,26,.6);border:1.5px solid var(--border);border-radius:14px;color:var(--txt);font-family:'IRANSansX',sans-serif;font-size:16px;outline:none;transition:all .3s}
-.form-group input:focus{border-color:var(--acc);box-shadow:0 0 15px rgba(0,232,123,.08)}
-.form-group input::placeholder{color:var(--mut);opacity:.5}
-.amount-wrap{position:relative}
-.amount-wrap::after{content:'تومان';position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:12px;opacity:.6}
-.amount-wrap input{padding-left:60px}
-.card-row{display:flex;gap:10px}
-.card-btn{flex:1;padding:14px;border:2px solid var(--border);border-radius:14px;background:var(--card);color:var(--txt);font-family:'IRANSansX',sans-serif;font-size:14px;font-weight:600;cursor:pointer;text-align:center;transition:all .3s}
-.card-btn.active{border-color:var(--gld);background:rgba(245,158,11,.08);color:var(--gld);box-shadow:0 0 15px rgba(245,158,11,.08)}
-.submit-btn{width:100%;padding:18px;border:none;border-radius:16px;font-family:'IRANSansX',sans-serif;font-weight:900;font-size:17px;cursor:pointer;transition:all .3s;letter-spacing:.5px}
-.submit-btn:active{transform:scale(.97)}
-.submit-expense{background:linear-gradient(135deg,#ff2255,#cc1133);color:#fff;box-shadow:0 4px 20px rgba(255,23,68,.3)}
-.submit-income{background:linear-gradient(135deg,#00ff8a,#00c06a);color:#000;box-shadow:0 4px 20px rgba(0,232,123,.3)}
+:root{
+  --bg:#f5f6fa;--white:#fff;--border:#e8eaf0;
+  --text:#1a1d26;--text2:#6b7280;--text3:#9ca3af;
+  --red:#ef4444;--red-bg:#fef2f2;--red-border:#fecaca;
+  --green:#10b981;--green-bg:#ecfdf5;--green-border:#a7f3d0;
+  --blue:#3b82f6;--blue-bg:#eff6ff;--blue-border:#bfdbfe;
+  --gold:#f59e0b;--gold-bg:#fffbeb;--gold-border:#fde68a;
+  --shadow:0 1px 3px rgba(0,0,0,.08);--shadow-lg:0 4px 12px rgba(0,0,0,.1);
+  --radius:14px;--radius-sm:10px;
+}
+body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:0 0 100px;direction:rtl;-webkit-font-smoothing:antialiased}
 
-/* Tabs */
-.tabs{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
-.tab{padding:10px 18px;border:1.5px solid var(--border);border-radius:12px;background:var(--card);color:var(--mut);font-family:'IRANSansX',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s}
-.tab.active{border-color:var(--acc);color:var(--acc);background:rgba(0,232,123,.08)}
+/* ─── Header ─── */
+.header{background:var(--white);border-bottom:1px solid var(--border);padding:20px 20px 16px;position:sticky;top:0;z-index:10}
+.header-top{display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:22px;font-weight:900;color:var(--text)}
+.header-date{font-size:13px;color:var(--text3);margin-top:2px}
 
-/* Filter bar */
-.filter-bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
-.filter-bar select{padding:8px 12px;background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--txt);font-family:'IRANSansX',sans-serif;font-size:12px;outline:none}
-.filter-bar input{padding:8px 12px;background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--txt);font-family:'IRANSansX',sans-serif;font-size:12px;outline:none;width:100px}
+/* ─── Balance Card ─── */
+.balance-card{margin:16px;background:linear-gradient(135deg,#1e293b 0%,#334155 100%);border-radius:18px;padding:24px;color:#fff;box-shadow:var(--shadow-lg)}
+.balance-label{font-size:13px;opacity:.7;margin-bottom:6px}
+.balance-amount{font-size:32px;font-weight:900;letter-spacing:-.5px}
+.balance-row{display:flex;gap:16px;margin-top:16px}
+.balance-item{flex:1;background:rgba(255,255,255,.1);border-radius:12px;padding:12px;text-align:center}
+.balance-item-label{font-size:11px;opacity:.7;margin-bottom:4px}
+.balance-item-val{font-size:16px;font-weight:800}
+.balance-item-val.red{color:#fca5a5}
+.balance-item-val.green{color:#6ee7b7}
 
-/* Stats */
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.stat{background:linear-gradient(145deg,#12122a,#0e0e22);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center}
-.stat-num{font-size:20px;font-weight:900;font-family:'Orbitron',sans-serif}
-.stat-label{font-size:11px;color:var(--mut);margin-top:4px}
+/* ─── Quick Add ─── */
+.quick-add{margin:0 16px 16px;background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.type-tabs{display:flex;border-bottom:1px solid var(--border)}
+.type-tab{flex:1;padding:14px;text-align:center;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;color:var(--text3);position:relative}
+.type-tab.active{color:var(--text)}
+.type-tab.active::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:3px;border-radius:3px 3px 0 0}
+.type-tab.active.exp::after{background:var(--red)}
+.type-tab.active.inc::after{background:var(--green)}
 
-/* Entries */
-.entries h3{font-family:'Orbitron',sans-serif;font-size:14px;margin-bottom:14px;color:var(--gld);letter-spacing:.5px}
-.entry{background:linear-gradient(145deg,#12122a,#0e0e22);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden}
-.entry::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;border-radius:0 4px 4px 0}
-.entry.exp::before{background:var(--red)}
-.entry.inc::before{background:var(--acc)}
-.entry-info{flex:1}
-.entry-amount{font-weight:900;font-size:17px;font-family:'Orbitron',sans-serif;letter-spacing:-.5px}
-.entry-desc{font-size:13px;color:var(--txt);margin-top:4px;font-weight:500}
-.entry-meta{font-size:11px;color:var(--mut);margin-top:6px;display:flex;align-items:center;gap:8px}
-.entry-meta .tag{padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600}
-.entry-meta .tag-melat{background:rgba(245,158,11,.1);color:var(--gld);border:1px solid rgba(245,158,11,.2)}
-.entry-meta .tag-saderat{background:rgba(6,182,212,.1);color:var(--cyn);border:1px solid rgba(6,182,212,.2)}
-.entry-type-exp{color:var(--red)}
-.entry-type-inc{color:var(--acc)}
-.entry-actions{display:flex;gap:6px}
-.entry-delete,.entry-edit{padding:8px 10px;border-radius:10px;cursor:pointer;font-size:13px;font-family:'IRANSansX',sans-serif;transition:all .2s;border:none}
-.entry-delete{background:rgba(255,23,68,.06);border:1px solid rgba(255,23,68,.15);color:var(--red)}
-.entry-edit{background:rgba(0,232,123,.06);border:1px solid rgba(0,232,123,.15);color:var(--acc)}
-.entry-delete:active,.entry-edit:active{transform:scale(.9)}
+.form-fields{padding:16px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px}
+.field input{width:100%;padding:13px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:15px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;transition:border .2s}
+.field input:focus{border-color:var(--blue)}
+.field input::placeholder{color:var(--text3)}
+.amount-field{position:relative}
+.amount-field::after{content:'هزار تومان';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text3);pointer-events:none}
+.amount-field input{padding-left:80px;font-size:18px;font-weight:700}
+.card-pills{display:flex;gap:8px}
+.card-pill{flex:1;padding:11px;border:1.5px solid var(--border);border-radius:var(--radius-sm);text-align:center;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text2);background:var(--white)}
+.card-pill.active{border-color:var(--gold);background:var(--gold-bg);color:#92400e}
+.submit-btn{width:100%;padding:15px;border:none;border-radius:var(--radius-sm);font-size:16px;font-weight:800;font-family:inherit;cursor:pointer;transition:all .15s;margin-top:4px}
+.submit-btn:active{transform:scale(.98)}
+.submit-btn.exp{background:var(--red);color:#fff}
+.submit-btn.inc{background:var(--green);color:#fff}
 
-/* Warning */
-.warning-bar{background:rgba(255,23,68,.08);border:1px solid rgba(255,23,68,.2);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--red);display:none;align-items:center;gap:8px}
-.warning-bar.show{display:flex}
+/* ─── Stats ─── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 16px 16px}
+.stat{background:var(--white);border-radius:var(--radius-sm);padding:12px 8px;text-align:center;box-shadow:var(--shadow)}
+.stat-num{font-size:15px;font-weight:900;margin-bottom:2px}
+.stat-num.red{color:var(--red)}.stat-num.green{color:var(--green)}.stat-num.gold{color:var(--gold)}.stat-num.blue{color:var(--blue)}
+.stat-label{font-size:10px;color:var(--text3);font-weight:500}
 
-/* Summary */
-.summary{background:linear-gradient(145deg,#12122a,#0e0e22);border:1px solid var(--border);border-radius:20px;padding:20px;margin-top:16px;position:relative;overflow:hidden}
-.summary::before{content:'';position:absolute;top:-30px;left:-30px;width:100px;height:100px;background:radial-gradient(circle,rgba(0,232,123,.06),transparent);pointer-events:none}
-.summary-row{display:flex;justify-content:space-between;padding:8px 0;font-size:14px}
-.summary-row.total{border-top:1px solid var(--border);margin-top:8px;padding-top:12px;font-weight:900;font-size:18px;font-family:'Orbitron',sans-serif}
+/* ─── Tabs & Filter ─── */
+.section-header{display:flex;justify-content:space-between;align-items:center;margin:0 16px 10px}
+.section-title{font-size:15px;font-weight:800;color:var(--text)}
+.filter-pills{display:flex;gap:6px;margin:0 16px 12px;overflow-x:auto;padding-bottom:2px}
+.filter-pill{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;color:var(--text2);background:var(--white);border:1px solid var(--border)}
+.filter-pill.active{background:var(--text);color:#fff;border-color:var(--text)}
 
-/* Actions */
-.actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
-.action-btn{flex:1;min-width:calc(50% - 5px);padding:14px;border:none;border-radius:14px;font-family:'IRANSansX',sans-serif;font-weight:700;font-size:13px;cursor:pointer;text-align:center;transition:all .2s}
-.action-btn:active{transform:scale(.96)}
-.copy-btn{background:linear-gradient(135deg,#00b4d8,#0077b6);color:#fff}
-.clear-btn{background:rgba(255,23,68,.08);color:var(--red);border:1px solid rgba(255,23,68,.2)}
-.backup-btn{background:rgba(168,85,247,.1);color:var(--pur);border:1px solid rgba(168,85,247,.2)}
-.restore-btn{background:rgba(245,158,11,.1);color:var(--gld);border:1px solid rgba(245,158,11,.2)}
+/* ─── Search ─── */
+.search-wrap{margin:0 16px 12px;position:relative}
+.search-wrap input{width:100%;padding:11px 14px 11px 36px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--text);background:var(--white);outline:none}
+.search-wrap input:focus{border-color:var(--blue)}
+.search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3)}
 
-/* Modal */
-.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
-.modal-overlay.show{display:flex}
-.modal{background:linear-gradient(145deg,#12122a,#0e0e22);border:1px solid var(--border);border-radius:20px;padding:24px;width:100%;max-width:400px}
-.modal h3{color:var(--acc);margin-bottom:16px;text-align:center}
-.modal .form-group{margin-bottom:12px}
-.modal-actions{display:flex;gap:10px;margin-top:16px}
-.modal-actions button{flex:1;padding:12px;border:none;border-radius:12px;font-family:'IRANSansX',sans-serif;font-weight:700;font-size:14px;cursor:pointer}
-.modal-save{background:linear-gradient(135deg,#00ff8a,#00c06a);color:#000}
-.modal-cancel{background:rgba(255,23,68,.1);color:var(--red);border:1px solid rgba(255,23,68,.2)}
+/* ─── Entry List ─── */
+.entries{margin:0 16px}
+.entry{background:var(--white);border-radius:var(--radius);padding:14px 14px 14px 18px;margin-bottom:8px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.entry::before{content:'';position:absolute;right:0;top:0;bottom:0;width:4px}
+.entry.exp::before{background:var(--red)}.entry.inc::before{background:var(--green)}
+.entry-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.entry.exp .entry-icon{background:var(--red-bg)}.entry.inc .entry-icon{background:var(--green-bg)}
+.entry-body{flex:1;min-width:0}
+.entry-title{font-size:14px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.entry-meta{font-size:11px;color:var(--text3);margin-top:3px;display:flex;align-items:center;gap:6px}
+.entry-amount{text-align:left;flex-shrink:0}
+.entry-amount-val{font-size:15px;font-weight:900;white-space:nowrap}
+.entry.exp .entry-amount-val{color:var(--red)}.entry.inc .entry-amount-val{color:var(--green)}
+.entry-amount-unit{font-size:10px;color:var(--text3)}
+.entry-actions{display:flex;gap:4px;flex-shrink:0}
+.entry-btn{width:30px;height:30px;border-radius:8px;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;transition:all .15s}
+.entry-btn.edit{background:var(--blue-bg);color:var(--blue)}.entry-btn.edit:active{background:#dbeafe}
+.entry-btn.del{background:var(--red-bg);color:var(--red)}.entry-btn.del:active{background:#fee2e2}
 
-.empty{text-align:center;padding:32px;color:var(--mut);font-size:14px;line-height:2}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:14px 28px;background:linear-gradient(135deg,#00e87b,#00c06a);color:#000;border-radius:14px;font-weight:700;font-size:14px;opacity:0;transition:all .3s;z-index:99;pointer-events:none;box-shadow:0 8px 30px rgba(0,232,123,.3)}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(-5px)}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+/* ─── Empty ─── */
+.empty{text-align:center;padding:48px 20px;color:var(--text3)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty-text{font-size:14px;line-height:1.8}
+
+/* ─── Warning ─── */
+.warning{margin:0 16px 12px;padding:12px 14px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:var(--radius-sm);font-size:13px;color:var(--red);display:none;align-items:center;gap:8px}
+.warning.show{display:flex}
+
+/* ─── Modal ─── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.modal-bg.show{display:flex}
+.modal{background:var(--white);border-radius:20px 20px 0 0;padding:24px 20px 32px;width:100%;max-width:480px;animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal h3{font-size:18px;font-weight:800;text-align:center;margin-bottom:20px;color:var(--text)}
+.modal-btns{display:flex;gap:10px;margin-top:18px}
+.modal-btns button{flex:1;padding:13px;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;font-family:inherit;cursor:pointer}
+.modal-save{background:var(--blue);color:#fff}.modal-cancel{background:var(--bg);color:var(--text2)}
+
+/* ─── Bottom Actions ─── */
+.bottom-actions{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);padding:12px 16px;display:flex;gap:8px;z-index:10}
+.bottom-btn{flex:1;padding:10px;border:none;border-radius:var(--radius-sm);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px}
+.btn-blue{background:var(--blue-bg);color:var(--blue)}.btn-purple{background:#f5f3ff;color:#7c3aed;border:1px solid #e9d5ff}
+.btn-amber{background:var(--gold-bg);color:#92400e;border:1px solid var(--gold-border)}.btn-red{background:var(--red-bg);color:var(--red)}
+
+/* ─── Toast ─── */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);padding:10px 20px;background:var(--text);color:#fff;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:all .2s;z-index:99;pointer-events:none}
+.toast.show{opacity:1}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>💰 DAKHEL</h1>
-  <p>ثبت دخل و خرج ماهانه</p>
-</div>
-
-<!-- Type -->
-<div class="card">
-  <div class="type-row">
-    <div class="type-btn active-expense" id="btnExpense" onclick="setType('expense')">🔴 خرج</div>
-    <div class="type-btn" id="btnIncome" onclick="setType('income')">🟢 دخل</div>
-  </div>
-</div>
-
-<!-- Form -->
-<div class="card" id="formCard">
-  <div class="form-group">
-    <label><span>💰</span> مبلغ (هزار تومان)</label>
-    <div class="amount-wrap">
-      <input type="text" id="amount" inputmode="numeric" placeholder="مثلاً ۵۰۰ یا 500">
+  <div class="header-top">
+    <div>
+      <h1>💰 خرج</h1>
+      <div class="header-date" id="headerDate"></div>
     </div>
   </div>
-  <div class="form-group">
-    <label><span>📝</span> بابت چی؟</label>
-    <input type="text" id="desc" placeholder="نون، اسنپ، آرایشگاه...">
+</div>
+
+<div class="balance-card">
+  <div class="balance-label">مانده حساب</div>
+  <div class="balance-amount" id="balAmount">۰ تومان</div>
+  <div class="balance-row">
+    <div class="balance-item"><div class="balance-item-label">🔴 خرج</div><div class="balance-item-val red" id="balExp">۰</div></div>
+    <div class="balance-item"><div class="balance-item-label">🟢 دخل</div><div class="balance-item-val green" id="balInc">۰</div></div>
   </div>
-  <div class="form-group">
-    <label><span>💳</span> کارت</label>
-    <div class="card-row">
-      <div class="card-btn active" id="cardMelat" onclick="setCard('ملت')">💳 ملت</div>
-      <div class="card-btn" id="cardSaderat" onclick="setCard('صادرات')">💳 صادرات</div>
-    </div>
+</div>
+
+<div class="quick-add">
+  <div class="type-tabs">
+    <div class="type-tab active exp" id="tabExp" onclick="setType('expense')">🔴 خرج</div>
+    <div class="type-tab" id="tabInc" onclick="setType('income')">🟢 دخل</div>
   </div>
-  <button class="submit-btn submit-expense" id="submitBtn" onclick="addEntry()">➕ ثبت خرج</button>
+  <div class="form-fields">
+    <div class="field"><label>مبلغ</label><div class="amount-field"><input type="text" id="amount" inputmode="numeric" placeholder="مثلاً ۵۰۰"></div></div>
+    <div class="field"><label>بابت چی؟</label><input type="text" id="desc" placeholder="نون، اسنپ، آرایشگاه..."></div>
+    <div class="field"><label>کارت</label><div class="card-pills"><div class="card-pill active" id="cpMelat" onclick="setCard('ملت')">💳 ملت</div><div class="card-pill" id="cpSad" onclick="setCard('صادرات')">💳 صادرات</div></div></div>
+    <button class="submit-btn exp" id="submitBtn" onclick="addEntry()">ثبت خرج</button>
+  </div>
 </div>
 
-<!-- Warning -->
-<div class="warning-bar" id="warningBar">⚠️ <span id="warningText"></span></div>
-
-<!-- Stats -->
-<div class="stats" id="statsSection" style="display:none">
-  <div class="stat"><div class="stat-num" style="color:var(--red)" id="statExpense">۰</div><div class="stat-label">جمع خرج</div></div>
-  <div class="stat"><div class="stat-num" style="color:var(--acc)" id="statIncome">۰</div><div class="stat-label">جمع دخل</div></div>
-  <div class="stat"><div class="stat-num" style="color:var(--gld)" id="statAvg">۰</div><div class="stat-label">میانگین روزانه</div></div>
-  <div class="stat"><div class="stat-num" style="color:var(--cyn)" id="statCount">۰</div><div class="stat-label">تعداد تراکنش</div></div>
+<div class="stats" id="statsBox" style="display:none">
+  <div class="stat"><div class="stat-num red" id="sExp">۰</div><div class="stat-label">خرج</div></div>
+  <div class="stat"><div class="stat-num green" id="sInc">۰</div><div class="stat-label">دخل</div></div>
+  <div class="stat"><div class="stat-num gold" id="sAvg">۰</div><div class="stat-label">میانگین/روز</div></div>
+  <div class="stat"><div class="stat-num blue" id="sCnt">۰</div><div class="stat-label">تراکنش</div></div>
 </div>
 
-<!-- Tabs -->
-<div class="tabs" id="tabsSection" style="display:none">
-  <div class="tab active" onclick="setTab('all')">همه</div>
-  <div class="tab" onclick="setTab('expense')">🔴 خرج</div>
-  <div class="tab" onclick="setTab('income')">🟢 دخل</div>
-  <div class="tab" onclick="setTab('melon')">🍈 مرداد</div>
+<div class="warning" id="warning">⚠️ <span id="warningTxt"></span></div>
+
+<div class="filter-pills" id="filterBox" style="display:none">
+  <div class="filter-pill active" onclick="setTab('all',this)">همه</div>
+  <div class="filter-pill" onclick="setTab('expense',this)">🔴 خرج</div>
+  <div class="filter-pill" onclick="setTab('income',this)">🟢 دخل</div>
+  <div class="filter-pill" onclick="setTab('melon',this)">مرداد</div>
 </div>
 
-<!-- Filter -->
-<div class="filter-bar" id="filterSection" style="display:none">
-  <select id="filterMonth" onchange="renderAll()">
-    <option value="all">همه ماه‌ها</option>
-  </select>
-  <input type="text" id="filterSearch" placeholder="جستجو..." oninput="renderAll()">
+<div class="section-header" id="listHeader" style="display:none"><div class="section-title">تراکنش‌ها</div></div>
+
+<div class="search-wrap" id="searchBox" style="display:none">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  <input type="text" id="searchInput" placeholder="جستجو..." oninput="renderAll()">
 </div>
 
-<!-- Entries -->
-<div class="entries" id="entriesSection">
-  <h3>📝 تراکنش‌ها</h3>
-  <div id="entriesList"></div>
-</div>
+<div class="entries" id="entriesList"></div>
 
-<!-- Summary -->
-<div class="summary" id="summarySection" style="display:none">
-  <div class="summary-row"><span>🔴 جمع خرج</span><span id="totalExpense" style="color:var(--red)">۰</span></div>
-  <div class="summary-row"><span>🟢 جمع دخل</span><span id="totalIncome" style="color:var(--acc)">۰</span></div>
-  <div class="summary-row total"><span>💰 مانده</span><span id="balance">۰</span></div>
-</div>
-
-<!-- Actions -->
-<div class="actions">
-  <button class="action-btn copy-btn" onclick="copyAll()">📋 کپی</button>
-  <button class="action-btn backup-btn" onclick="downloadBackup()">💾 بکاپ</button>
-  <button class="action-btn restore-btn" onclick="document.getElementById('restoreInput').click()">📂 بازگردانی</button>
-  <button class="action-btn clear-btn" onclick="clearAll()">🗑 پاک کردن</button>
-  <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreBackup(event)">
-</div>
-
-<!-- Modal -->
-<div class="modal-overlay" id="editModal">
+<div class="modal-bg" id="editModal">
   <div class="modal">
-    <h3>✏️ ویرایش تراکنش</h3>
-    <div class="form-group">
-      <label>مبلغ (هزار تومان)</label>
-      <input type="text" id="editAmount" inputmode="numeric">
-    </div>
-    <div class="form-group">
-      <label>بابت چی؟</label>
-      <input type="text" id="editDesc">
-    </div>
-    <div class="form-group">
-      <label>کارت</label>
-      <div class="card-row">
-        <div class="card-btn" id="editCardMelat" onclick="setEditCard('ملت')">💳 ملت</div>
-        <div class="card-btn" id="editCardSaderat" onclick="setEditCard('صادرات')">💳 صادرات</div>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="modal-cancel" onclick="closeModal()">لغو</button>
-      <button class="modal-save" onclick="saveEdit()">ذخیره</button>
-    </div>
+    <h3>ویرایش تراکنش</h3>
+    <div class="field"><label>مبلغ (هزار تومان)</label><div class="amount-field"><input type="text" id="editAmt" inputmode="numeric"></div></div>
+    <div class="field"><label>بابت چی؟</label><input type="text" id="editDesc"></div>
+    <div class="field"><label>کارت</label><div class="card-pills"><div class="card-pill" id="ecMelat" onclick="setEditCard('ملت')">💳 ملت</div><div class="card-pill" id="ecSad" onclick="setEditCard('صادرات')">💳 صادرات</div></div></div>
+    <div class="modal-btns"><button class="modal-cancel" onclick="closeModal()">لغو</button><button class="modal-save" onclick="saveEdit()">ذخیره</button></div>
   </div>
+</div>
+
+<div class="bottom-actions">
+  <button class="bottom-btn btn-blue" onclick="copyAll()">📋 کپی</button>
+  <button class="bottom-btn btn-purple" onclick="dlBackup()">💾 بکاپ</button>
+  <button class="bottom-btn btn-amber" onclick="document.getElementById('fileIn').click()">📂 بازگردانی</button>
+  <button class="bottom-btn btn-red" onclick="clearAll()">🗑</button>
+  <input type="file" id="fileIn" accept=".json" style="display:none" onchange="restore(event)">
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-let type = 'expense';
-let card = 'ملت';
-let editIdx = -1;
-let editCard = 'ملت';
-let currentTab = 'all';
-let entries = JSON.parse(localStorage.getItem('dakhel_entries') || '[]');
-const WARNING_THRESHOLD = 5000000; // 5 million warning
+let type='expense',card='ملت',currentTab='all',editIdx=-1,editCardVal='ملت';
+let entries=JSON.parse(localStorage.getItem('dakhel_entries')||'[]');
+const WARN=5e6;
 
-// ═══ JALALI ═══
-function gregorianToJalali(gy,gm,gd){
+/* ─── Jalali ─── */
+function j2g(jy,jm,jd){
+  var j_d_m=[0,31,60,91,121,152,182,213,244,274,305,335];
+  var jy2=jy+1595;var days=365*jy2+Math.floor((jy2+3)/4)-Math.floor((jy2+99)/100)+Math.floor((jy2+399)/400)+jd+j_d_m[jm-1]-79;
+  var gy=days;for(var i=1;gy>0;i++){var k=gy>=1821?4:4;var dm=[31,k===4&&j2gLeap(jy)?30:29][0]||31;if(gy<=dm)break;gy-=dm;}
+  return[gy<1?gy+12:gy,i<10?i+2:i-10,days<1?days+31:days];
+}
+function j2gLeap(y){return((y+1595)%33)%4===1}
+function g2j(gy,gm,gd){
   var g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];
   var gy2=(gm>2)?(gy+1):gy;
   var days=355666+(365*gy)+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)+gd+g_d_m[gm-1];
-  var jy=-1595+Math.floor(33*(Math.floor(days/12053)));
-  days=days%12053;
-  jy+=4*Math.floor(days/1461);
-  days=days%1461;
+  var jy=-1595+Math.floor(33*(Math.floor(days/12053)));days%=12053;jy+=4*Math.floor(days/1461);days%=1461;
   if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365;}
-  var jm,jd;
-  if(days<186){jm=1+Math.floor(days/31);jd=1+days%31;}else{jm=7+Math.floor((days-186)/30);jd=1+(days-186)%30;}
+  var jm,jd;if(days<186){jm=1+Math.floor(days/31);jd=1+days%31;}else{jm=7+Math.floor((days-186)/30);jd=1+(days-186)%30;}
   return[jy,jm,jd];
 }
-function jalaliMonthName(m){return['','فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'][m]||''}
-
-function faToEn(s){const m={'۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9'};return s.replace(/[۰-۹]/g,c=>m[c]||c)}
-
+function jMonthName(m){return['','فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'][m]||''}
+function fa2en(s){var m={'۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9'};return s.replace(/[۰-۹]/g,c=>m[c]||c)}
 function fmt(n){return n.toLocaleString('fa-IR')}
 
-function getJalaliNow(){
-  const now=new Date();
-  const s=now.toLocaleString('sv-SE',{timeZone:'Asia/Tehran'});
-  const p=s.split(' ');
-  const dp=p[0].split('-');
-  const tp=p[1].split(':');
-  const j=gregorianToJalali(parseInt(dp[0]),parseInt(dp[1]),parseInt(dp[2]));
-  return{date:`${j[0]}/${String(j[1]).padStart(2,'0')}/${String(j[2]).padStart(2,'0')} ${jalaliMonthName(j[1])} ${tp[0]}:${tp[1]}`, year:j[0], month:j[1], day:j[2]};
+function nowJalali(){
+  var s=new Date().toLocaleString('sv-SE',{timeZone:'Asia/Tehran'});
+  var p=s.split(' '),d=p[0].split('-'),t=p[1].split(':');
+  var j=g2j(+d[0],+d[1],+d[2]);
+  return{str:`${j[0]}/${String(j[1]).padStart(2,'0')}/${String(j[2]).padStart(2,'0')} ${jMonthName(j[1])} ${t[0]}:${t[1]}`,y:j[0],m:j[1],d:j[2]};
 }
 
-// ═══ TYPE & CARD ═══
+/* ─── Header Date ─── */
+function updateHeader(){
+  var j=nowJalali();
+  document.getElementById('headerDate').textContent=`${j.d} ${jMonthName(j.m)} ${j.y}`;
+}
+
+/* ─── Type & Card ─── */
 function setType(t){
   type=t;
-  document.getElementById('btnExpense').className=t==='expense'?'type-btn active-expense':'type-btn';
-  document.getElementById('btnIncome').className=t==='income'?'type-btn active-income':'type-btn';
-  const btn=document.getElementById('submitBtn');
-  if(t==='expense'){btn.className='submit-btn submit-expense';btn.textContent='➕ ثبت خرج';}
-  else{btn.className='submit-btn submit-income';btn.textContent='➕ ثبت دخل';}
+  document.getElementById('tabExp').className='type-tab'+(t==='expense'?' active exp':'');
+  document.getElementById('tabInc').className='type-tab'+(t==='income'?' active inc':'');
+  var b=document.getElementById('submitBtn');
+  b.className='submit-btn '+(t==='expense'?'exp':'inc');
+  b.textContent=t==='expense'?'ثبت خرج':'ثبت دخل';
 }
-
 function setCard(c){
   card=c;
-  document.getElementById('cardMelat').className=c==='ملت'?'card-btn active':'card-btn';
-  document.getElementById('cardSaderat').className=c==='صادرات'?'card-btn active':'card-btn';
+  document.getElementById('cpMelat').className='card-pill'+(c==='ملت'?' active':'');
+  document.getElementById('cpSad').className='card-pill'+(c==='صادرات'?' active':'');
 }
-
 function setEditCard(c){
-  editCard=c;
-  document.getElementById('editCardMelat').className=c==='ملت'?'card-btn active':'card-btn';
-  document.getElementById('editCardSaderat').className=c==='صادرات'?'card-btn active':'card-btn';
+  editCardVal=c;
+  document.getElementById('ecMelat').className='card-pill'+(c==='ملت'?' active':'');
+  document.getElementById('ecSad').className='card-pill'+(c==='صادرات'?' active':'');
 }
-
-function setTab(t){
+function setTab(t,el){
   currentTab=t;
-  document.querySelectorAll('.tab').forEach(tab=>tab.classList.remove('active'));
-  event.target.classList.add('active');
+  document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
   renderAll();
 }
 
-// ═══ ADD ═══
+/* ─── Add ─── */
 function addEntry(){
-  let raw=document.getElementById('amount').value.trim();
-  let amount=faToEn(raw).replace(/,/g,'');
-  if(!amount||amount==0){showToast('مبلغ رو وارد کن ⚠️');return;}
-  amount=parseInt(amount)*1000;
-  const desc=document.getElementById('desc').value.trim();
-  if(!desc){showToast('توضیح رو وارد کن ⚠️');return;}
-
-  const j=getJalaliNow();
-  entries.push({type,amount,desc,card,date:j.date,year:j.year,month:j.month,day:j.day});
-  localStorage.setItem('dakhel_entries',JSON.stringify(entries));
-  document.getElementById('amount').value='';
-  document.getElementById('desc').value='';
-  renderAll();
-  checkWarning();
-  showToast(type==='expense'?'خرج ثبت شد ✓':'دخل ثبت شد ✓');
+  var raw=document.getElementById('amount').value.trim();
+  var amt=fa2en(raw).replace(/,/g,'');
+  if(!amt||amt==0){toast('مبلغ رو وارد کن ⚠️');return;}
+  var desc=document.getElementById('desc').value.trim();
+  if(!desc){toast('توضیح رو وارد کن ⚠️');return;}
+  var j=nowJalali();
+  entries.push({type,amount:parseInt(amt)*1000,desc,card,date:j.str,year:j.y,month:j.m,day:j.d});
+  save();document.getElementById('amount').value='';document.getElementById('desc').value='';
+  renderAll();toast(type==='expense'?'خرج ثبت شد ✓':'دخل ثبت شد ✓');
 }
 
-// ═══ EDIT ═══
+/* ─── Edit ─── */
 function openEdit(i){
-  editIdx=i;
-  editCard=entries[i].card;
-  document.getElementById('editAmount').value=Math.round(entries[i].amount/1000);
+  editIdx=i;editCardVal=entries[i].card;
+  document.getElementById('editAmt').value=Math.round(entries[i].amount/1000);
   document.getElementById('editDesc').value=entries[i].desc;
-  document.getElementById('editCardMelat').className=editCard==='ملت'?'card-btn active':'card-btn';
-  document.getElementById('editCardSaderat').className=editCard==='صادرات'?'card-btn active':'card-btn';
+  document.getElementById('ecMelat').className='card-pill'+(editCardVal==='ملت'?' active':'');
+  document.getElementById('ecSad').className='card-pill'+(editCardVal==='صادرات'?' active':'');
   document.getElementById('editModal').classList.add('show');
 }
-
 function saveEdit(){
-  let raw=document.getElementById('editAmount').value.trim();
-  let amount=faToEn(raw).replace(/,/g,'');
-  if(!amount||amount==0){showToast('مبلغ رو وارد کن ⚠️');return;}
-  const desc=document.getElementById('editDesc').value.trim();
-  if(!desc){showToast('توضیح رو وارد کن ⚠️');return;}
-  entries[editIdx].amount=parseInt(amount)*1000;
-  entries[editIdx].desc=desc;
-  entries[editIdx].card=editCard;
-  localStorage.setItem('dakhel_entries',JSON.stringify(entries));
-  closeModal();
-  renderAll();
-  showToast('ویرایش شد ✓');
+  var amt=fa2en(document.getElementById('editAmt').value.trim()).replace(/,/g,'');
+  if(!amt||amt==0){toast('مبلغ رو وارد کن ⚠️');return;}
+  var desc=document.getElementById('editDesc').value.trim();
+  if(!desc){toast('توضیح رو وارد کن ⚠️');return;}
+  entries[editIdx].amount=parseInt(amt)*1000;entries[editIdx].desc=desc;entries[editIdx].card=editCardVal;
+  save();closeModal();renderAll();toast('ویرایش شد ✓');
 }
-
 function closeModal(){document.getElementById('editModal').classList.remove('show');}
+function delEntry(i){if(!confirm('پاک بشه؟'))return;entries.splice(i,1);save();renderAll();toast('پاک شد 🗑');}
 
-function deleteEntry(i){
-  if(!confirm('پاک بشه؟'))return;
-  entries.splice(i,1);
-  localStorage.setItem('dakhel_entries',JSON.stringify(entries));
-  renderAll();
-  showToast('پاک شد 🗑');
+/* ─── Filter ─── */
+function filtered(){
+  var l=[...entries];
+  if(currentTab==='expense')l=l.filter(e=>e.type==='expense');
+  else if(currentTab==='income')l=l.filter(e=>e.type==='income');
+  else if(currentTab==='melon')l=l.filter(e=>e.month===5&&e.year===1405);
+  var q=document.getElementById('searchInput')?.value?.trim()?.toLowerCase()||'';
+  if(q)l=l.filter(e=>e.desc.toLowerCase().includes(q)||e.card.includes(q));
+  return l;
 }
 
-// ═══ FILTER ═══
-function getFiltered(){
-  let list=[...entries];
-  if(currentTab==='expense')list=list.filter(e=>e.type==='expense');
-  else if(currentTab==='income')list=list.filter(e=>e.type==='income');
-  else if(currentTab==='melon')list=list.filter(e=>e.month===5&&e.year===1405);
-
-  const monthFilter=document.getElementById('filterMonth').value;
-  if(monthFilter!=='all')list=list.filter(e=>`${e.year}/${e.month}`===monthFilter);
-
-  const search=document.getElementById('filterSearch').value.trim();
-  if(search){
-    const s=search.toLowerCase();
-    list=list.filter(e=>e.desc.toLowerCase().includes(s)||e.card.includes(search)||fmt(e.amount).includes(search));
-  }
-  return list;
+/* ─── Icons ─── */
+var icons={نون:'🍞',اسنپ:'🚗',آرایشگاه:'✂️',قبض:'📄',پارچه:'🧵',بیمه:'🛡️',کلاه:'🧢',دارو:'💊',نان:'🍞',پنکه:'🌀',فیلترشکن:'🔒',تورنمنت:'🎮',گیمنت:'🕹️',ランی:'🥤',بیسکوییت:'🍪',ادکلن:'🧴',کادو:'🎁',خرید:'🛒',شارژ:'📱',اینترنت:'🌐',سرور:'🖥️',موبوگیفت:'🎁',سانس:'🏋️',ویزیت:'🏥',رادیولوژ:'📷',دمپایی:'🩴',روکش:'🏍️',مته:'🔧',پفک:'🍿',اشتراک:'📺',سالن:'🏊',لبنیات:'🥛',نان:'🍞',دینار:'💰',قرض:'💸',نذری:'🙏'};
+function getIcon(d){
+  for(var k in icons)if(d.includes(k))return icons[k];
+  if(d.includes('پول')||d.includes('مبلغ'))return '💰';
+  if(d.includes('اسنپ'))return '🚗';if(d.includes('کارت'))return '💳';if(d.includes('بازی'))return '🎮';
+  return '📝';
 }
 
-function updateMonthFilter(){
-  const months=new Set();
-  entries.forEach(e=>months.add(`${e.year}/${e.month}`));
-  const sel=document.getElementById('filterMonth');
-  const prev=sel.value;
-  sel.innerHTML='<option value="all">همه ماه‌ها</option>';
-  [...months].sort().reverse().forEach(m=>{
-    const [y,mo]=m.split('/');
-    const name=jalaliMonthName(parseInt(mo));
-    sel.innerHTML+=`<option value="${m}">${name} ${y}</option>`;
-  });
-  sel.value=prev;
-}
-
-// ═══ WARNING ═══
-function checkWarning(){
-  const today=getJalaliNow();
-  const todayStr=`${today.year}/${today.month}/${today.day}`;
-  const todayExpenses=entries.filter(e=>e.type==='expense'&&e.date.startsWith(todayStr)).reduce((s,e)=>s+e.amount,0);
-  const bar=document.getElementById('warningBar');
-  const txt=document.getElementById('warningText');
-  if(todayExpenses>=WARNING_THRESHOLD){
-    txt.textContent=`خرج امروز ${fmt(todayExpenses)} تومان شد! ⚠️`;
-    bar.classList.add('show');
-  }else{
-    bar.classList.remove('show');
-  }
-}
-
-// ═══ RENDER ═══
+/* ─── Render ─── */
+function save(){localStorage.setItem('dakhel_entries',JSON.stringify(entries));}
 function renderAll(){
-  updateMonthFilter();
-  const filtered=getFiltered();
-  const allExp=entries.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
-  const allInc=entries.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0);
-  const balance=allInc-allExp;
+  var f=filtered();
+  var allE=entries.filter(e=>e.type==='expense'),allI=entries.filter(e=>e.type==='income');
+  var totE=allE.reduce((s,e)=>s+e.amount,0),totI=allI.reduce((s,e)=>s+e.amount,0);
+  var bal=totI-totE;
+  var days=new Set(entries.map(e=>e.date.split(' ')[0])).size||1;
 
-  // Stats
-  const dayCount=new Set(entries.map(e=>e.date.split(' ')[0])).size||1;
-  const avgDay=Math.round(allExp/dayCount);
+  document.getElementById('balAmount').textContent=fmt(bal)+' تومان';
+  document.getElementById('balExp').textContent=fmt(totE);
+  document.getElementById('balInc').textContent=fmt(totI);
+  document.getElementById('sExp').textContent=fmt(totE);
+  document.getElementById('sInc').textContent=fmt(totI);
+  document.getElementById('sAvg').textContent=fmt(Math.round(totE/days));
+  document.getElementById('sCnt').textContent=fmt(entries.length);
 
-  document.getElementById('statExpense').textContent=fmt(allExp);
-  document.getElementById('statIncome').textContent=fmt(allInc);
-  document.getElementById('statAvg').textContent=fmt(avgDay);
-  document.getElementById('statCount').textContent=fmt(entries.length);
-  document.getElementById('statsSection').style.display=entries.length>0?'grid':'none';
-  document.getElementById('tabsSection').style.display=entries.length>0?'flex':'none';
-  document.getElementById('filterSection').style.display=entries.length>0?'flex':'none';
+  var show=entries.length>0;
+  document.getElementById('statsBox').style.display=show?'grid':'none';
+  document.getElementById('filterBox').style.display=show?'flex':'none';
+  document.getElementById('listHeader').style.display=show?'flex':'none';
+  document.getElementById('searchBox').style.display=show?'block':'none';
 
-  document.getElementById('totalExpense').textContent=fmt(allExp);
-  document.getElementById('totalIncome').textContent=fmt(allInc);
-  document.getElementById('balance').textContent=fmt(balance);
-  document.getElementById('summarySection').style.display=entries.length>0?'block':'none';
-
-  const list=document.getElementById('entriesList');
-  if(filtered.length===0){
-    list.innerHTML='<div class="empty">'+(entries.length===0?'هنوز تراکنشی ثبت نشده 📝<br>از بالا شروع کن!':'نتیجه‌ای پیدا نشد 🔍')+'</div>';
-    return;
-  }
-
-  let html='';
-  for(let i=entries.length-1;i>=0;i--){
-    const e=entries[i];
-    if(!filtered.includes(e))continue;
-    const isExp=e.type==='expense';
-    const cardClass=e.card==='ملت'?'tag-melat':'tag-saderat';
-    html+=`<div class="entry ${isExp?'exp':'inc'}">
-      <div class="entry-info">
-        <div class="entry-amount ${isExp?'entry-type-exp':'entry-type-inc'}">${isExp?'−':'+'} ${fmt(e.amount)}</div>
-        <div class="entry-desc">${e.desc}</div>
-        <div class="entry-meta"><span class="tag ${cardClass}">${e.card}</span> ${e.date}</div>
-      </div>
-      <div class="entry-actions">
-        <button class="entry-edit" onclick="openEdit(${i})">✏️</button>
-        <button class="entry-delete" onclick="deleteEntry(${i})">✕</button>
-      </div>
+  var list=document.getElementById('entriesList');
+  if(!f.length){list.innerHTML='<div class="empty"><div class="empty-icon">'+(entries.length?'🔍':'📝')+'</div><div class="empty-text">'+(entries.length?'نتیجه‌ای پیدا نشد':'هنوز تراکنشی ثبت نشده')+'</div></div>';return;}
+  var h='';
+  for(var i=entries.length-1;i>=0;i--){
+    var e=entries[i];if(!f.includes(e))continue;
+    var isE=e.type==='expense';
+    h+=`<div class="entry ${isE?'exp':'inc'}">
+      <div class="entry-icon">${getIcon(e.desc)}</div>
+      <div class="entry-body"><div class="entry-title">${e.desc}</div><div class="entry-meta"><span>${e.card}</span><span>·</span><span>${e.date.split(' ')[0]}</span></div></div>
+      <div class="entry-amount"><div class="entry-amount-val">${isE?'-':'+'} ${fmt(e.amount)}</div><div class="entry-amount-unit">تومان</div></div>
+      <div class="entry-actions"><button class="entry-btn edit" onclick="openEdit(${i})">✏️</button><button class="entry-btn del" onclick="delEntry(${i})">✕</button></div>
     </div>`;
   }
-  list.innerHTML=html;
+  list.innerHTML=h;
+
+  // warning
+  var j=nowJalali(),ts=`${j.y}/${j.m}/${j.d}`;
+  var todayExp=entries.filter(e=>e.type==='expense'&&e.date.startsWith(ts)).reduce((s,e)=>s+e.amount,0);
+  var w=document.getElementById('warning');
+  if(todayExp>=WARN){document.getElementById('warningTxt').textContent=`خرج امروز ${fmt(todayExp)} تومان شد!`;w.classList.add('show');}else w.classList.remove('show');
 }
 
-// ═══ COPY ═══
+/* ─── Copy ─── */
 function copyAll(){
-  if(entries.length===0){showToast('چیزی نیست برای کپی ⚠️');return;}
-  let text='خرج\n';
-  for(const e of entries){
-    if(e.type==='expense'){
-      text+=`📆 [${e.date}]\n💰 مبلغ: ${fmt(e.amount)}\n📝 بابت: ${e.desc}\n💳 کارت: ${e.card}\n--------------------------------------------------\n`;
-    }
-  }
-  text+='\nدخل\n';
-  for(const e of entries){
-    if(e.type==='income'){
-      text+=`📆 [${e.date}]\n💰 مبلغ: ${fmt(e.amount)}\n📝 بابت: ${e.desc}\n💳 کارت: ${e.card}\n--------------------------------------------------\n`;
-    }
-  }
-  navigator.clipboard.writeText(text).then(()=>{showToast('کپی شد! ✅ بفرستش برای ربات');}).catch(()=>{
-    const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('کپی شد! ✅');
-  });
+  if(!entries.length){toast('چیزی نیست ⚠️');return;}
+  var t='خرج\n';
+  entries.filter(e=>e.type==='expense').forEach(e=>{t+=`📆 [${e.date}]\n💰 مبلغ: ${fmt(e.amount)}\n📝 بابت: ${e.desc}\n💳 کارت: ${e.card}\n--------------------------------------------------\n`;});
+  t+='\nدخل\n';
+  entries.filter(e=>e.type==='income').forEach(e=>{t+=`📆 [${e.date}]\n💰 مبلغ: ${fmt(e.amount)}\n📝 بابت: ${e.desc}\n💳 کارت: ${e.card}\n--------------------------------------------------\n`;});
+  navigator.clipboard.writeText(t).then(()=>toast('کپی شد ✅')).catch(()=>{var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a);toast('کپی شد ✅');});
 }
 
-// ═══ BACKUP ═══
-function downloadBackup(){
-  if(entries.length===0){showToast('چیزی نیست برای بکاپ ⚠️');return;}
-  const blob=new Blob([JSON.stringify(entries,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  a.download=`dakhel_backup_${new Date().toISOString().split('T')[0]}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('بکاپ دانلود شد 💾');
+/* ─── Backup ─── */
+function dlBackup(){
+  if(!entries.length){toast('چیزی نیست ⚠️');return;}
+  var b=new Blob([JSON.stringify(entries,null,2)],{type:'application/json'});
+  var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=`dakhel_${new Date().toISOString().split('T')[0]}.json`;a.click();URL.revokeObjectURL(u);toast('بکاپ دانلود شد 💾');
 }
-
-function restoreBackup(e){
-  const file=e.target.files[0];
-  if(!file)return;
-  const reader=new FileReader();
-  reader.onload=function(ev){
-    try{
-      const data=JSON.parse(ev.target.result);
-      if(!Array.isArray(data)){showToast('فایل نامعتبره ⚠️');return;}
-      if(!confirm(`${data.length} تراکنش پیدا شد. اضافه بشه؟`))return;
-      entries=entries.concat(data);
-      localStorage.setItem('dakhel_entries',JSON.stringify(entries));
-      renderAll();
-      showToast(`${data.length} تراکنش بازگردانی شد ✓`);
-    }catch(err){showToast('خطا در خواندن فایل ⚠️');}
-  };
-  reader.readAsText(file);
-  e.target.value='';
+function restore(e){
+  var f=e.target.files[0];if(!f)return;
+  var r=new FileReader();r.onload=function(ev){
+    try{var d=JSON.parse(ev.target.result);if(!Array.isArray(d)){toast('فایل نامعتبر ⚠️');return;}
+    if(!confirm(d.length+' تراکنش پیدا شد. اضافه بشه؟'))return;
+    entries=entries.concat(d);save();renderAll();toast(d.length+' تراکنش بازگردانی شد ✓');}
+    catch(err){toast('خطا ⚠️');}
+  };r.readAsText(f);e.target.value='';
 }
+function clearAll(){if(!confirm('همه پاک بشه؟'))return;entries=[];save();renderAll();toast('پاک شد 🗑');}
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
 
-// ═══ CLEAR ═══
-function clearAll(){
-  if(!confirm('همه چی پاک بشه؟'))return;
-  entries=[];
-  localStorage.setItem('dakhel_entries',JSON.stringify(entries));
-  renderAll();
-  showToast('پاک شد 🗑');
-}
-
-function showToast(msg){
-  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2000);
-}
-
-// Init
-setType('expense');
-renderAll();
-checkWarning();
+updateHeader();setType('expense');renderAll();
 </script>
 </body>
 </html>
