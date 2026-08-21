@@ -180,6 +180,21 @@ function setCard(c) {
 
 function faToEn(s){const m={'۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9'};return s.replace(/[۰-۹]/g,c=>m[c]||c)}
 
+function gregorianToJalali(gy,gm,gd){
+  var g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];
+  var gy2=(gm>2)?(gy+1):gy;
+  var days=355666+(365*gy)+((gy2+3)/4)-((gy2+99)/100)+((gy2+399)/400)+gd+g_d_m[gm-1];
+  var jy=-1595+(33*(days/12053));
+  days%=12053;
+  jy+=4*(days/1461);
+  days%=1461;
+  if(days>365){jy+=int((days-1)/365);days=(days-1)%365;}
+  var jm,jd;
+  if(days<186){jm=1+int(days/31);jd=1+(days%31);}else{jm=7+int((days-186)/30);jd=1+((days-186)%30);}
+  return[jy,jm,jd];
+}
+function int(n){return Math.floor(n)}
+
 function addEntry() {
   let raw = document.getElementById('amount').value.trim();
   let amount = faToEn(raw).replace(/,/g, '');
@@ -189,14 +204,19 @@ function addEntry() {
   if (!desc) { showToast('توضیح رو وارد کن ⚠️'); return; }
 
   const now = new Date();
-  const options = { timeZone: 'Asia/Tehran', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false };
-  const tehran = new Date(now.toLocaleString('en-US', options));
-  const y = tehran.getFullYear();
-  const m = String(tehran.getMonth() + 1).padStart(2, '0');
-  const d = String(tehran.getDate()).padStart(2, '0');
-  const hh = String(tehran.getHours()).padStart(2, '0');
-  const mm = String(tehran.getMinutes()).padStart(2, '0');
-  const dateStr = `${y}/${m}/${d} ${hh}:${mm}`;
+  const options = { timeZone: 'Asia/Tehran', hour: '2-digit', minute: '2-digit', hour12: false };
+  const tehranTime = new Date(now.toLocaleString('en-US', options));
+  const hh = String(tehranTime.getHours()).padStart(2, '0');
+  const mm = String(tehranTime.getMinutes()).padStart(2, '0');
+
+  // Jalali date
+  const tehranDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }));
+  const jy = tehranDate.getFullYear();
+  const jm = tehranDate.getMonth() + 1;
+  const jd = tehranDate.getDate();
+  const jalali = gregorianToJalali(jy, jm, jd);
+  const jMonthNames = ['','فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+  const dateStr = `${jalali[0]}/${String(jalali[1]).padStart(2,'0')}/${String(jalali[2]).padStart(2,'0')} ${jMonthNames[jalali[1]]} ${hh}:${mm}`;
 
   entries.push({ type, amount, desc, card, date: dateStr });
   localStorage.setItem('dakhel_entries', JSON.stringify(entries));
