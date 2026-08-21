@@ -406,7 +406,7 @@ function restore(e){
 function clearAll(){if(!confirm('همه پاک بشه؟'))return;entries=[];save();renderAll();toast('پاک شد 🗑');}
 function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
 
-updateHeader();setType('expense');renderAll();
+updateHeader();setType("expense");renderAll();if("serviceWorker" in navigator)navigator.serviceWorker.register("/dakhel-app/sw.js");
 </script>
 </body>
 </html>
