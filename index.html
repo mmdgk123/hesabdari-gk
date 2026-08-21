@@ -276,7 +276,7 @@ function copyAll() {
   text += '\nدخل\n';
   for (const e of entries) {
     if (e.type === 'income') {
-      text += `چقدر؟ | ${fmt(e.amount)}\nبابت؟ | ${e.desc}\nاز کدوم کارت؟ | ${e.card}\n--------------------------------------------------\n`;
+      text += `📆 [${e.date}]\n💰 مبلغ: ${fmt(e.amount)}\n📝 بابت: ${e.desc}\n💳 کارت: ${e.card}\n--------------------------------------------------\n`;
     }
   }
   navigator.clipboard.writeText(text).then(() => {
