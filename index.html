@@ -189,17 +189,16 @@ function faToEn(s){const m={'۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5
 function gregorianToJalali(gy,gm,gd){
   var g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];
   var gy2=(gm>2)?(gy+1):gy;
-  var days=355666+(365*gy)+((gy2+3)/4)-((gy2+99)/100)+((gy2+399)/400)+gd+g_d_m[gm-1];
-  var jy=-1595+(33*(days/12053));
+  var days=355666+(365*gy)+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)+gd+g_d_m[gm-1];
+  var jy=-1595+Math.floor((33*days)/12053);
   days%=12053;
-  jy+=4*(days/1461);
+  jy+=Math.floor(4*days/1461);
   days%=1461;
-  if(days>365){jy+=int((days-1)/365);days=(days-1)%365;}
+  if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365;}
   var jm,jd;
-  if(days<186){jm=1+int(days/31);jd=1+(days%31);}else{jm=7+int((days-186)/30);jd=1+((days-186)%30);}
+  if(days<186){jm=1+Math.floor(days/31);jd=1+(days%31);}else{jm=7+Math.floor((days-186)/30);jd=1+((days-186)%30);}
   return[jy,jm,jd];
 }
-function int(n){return Math.floor(n)}
 
 function addEntry() {
   let raw = document.getElementById('amount').value.trim();
@@ -209,18 +208,20 @@ function addEntry() {
   const desc = document.getElementById('desc').value.trim();
   if (!desc) { showToast('توضیح رو وارد کن ⚠️'); return; }
 
+  // Get Tehran time properly
   const now = new Date();
-  const options = { timeZone: 'Asia/Tehran', hour: '2-digit', minute: '2-digit', hour12: false };
-  const tehranTime = new Date(now.toLocaleString('en-US', options));
-  const hh = String(tehranTime.getHours()).padStart(2, '0');
-  const mm = String(tehranTime.getMinutes()).padStart(2, '0');
+  const tehranStr = now.toLocaleString('sv-SE', { timeZone: 'Asia/Tehran' });
+  // sv-SE gives: "2026-08-21 13:45:30"
+  const parts = tehranStr.split(' ');
+  const dateParts = parts[0].split('-');
+  const timeParts = parts[1].split(':');
+  const gy = parseInt(dateParts[0]);
+  const gm = parseInt(dateParts[1]);
+  const gd = parseInt(dateParts[2]);
+  const hh = timeParts[0];
+  const mm = timeParts[1];
 
-  // Jalali date
-  const tehranDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }));
-  const jy = tehranDate.getFullYear();
-  const jm = tehranDate.getMonth() + 1;
-  const jd = tehranDate.getDate();
-  const jalali = gregorianToJalali(jy, jm, jd);
+  const jalali = gregorianToJalali(gy, gm, gd);
   const jMonthNames = ['','فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
   const dateStr = `${jalali[0]}/${String(jalali[1]).padStart(2,'0')}/${String(jalali[2]).padStart(2,'0')} ${jMonthNames[jalali[1]]} ${hh}:${mm}`;
 
