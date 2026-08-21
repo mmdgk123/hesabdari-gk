@@ -155,10 +155,11 @@ function setCard(c) {
 }
 
 function addEntry() {
-  const amount = document.getElementById('amount').value.replace(/,/g, '');
-  const desc = document.getElementById('desc').value.trim();
-  
+  let amount = document.getElementById('amount').value.replace(/,/g, '');
   if (!amount || amount == 0) { showToast('مبلغ رو وارد کن ⚠️'); return; }
+  // Auto add 3 zeros (user types in thousands)
+  amount = parseInt(amount) * 1000;
+  const desc = document.getElementById('desc').value.trim();
   if (!desc) { showToast('توضیح رو وارد کن ⚠️'); return; }
   
   const now = new Date();
