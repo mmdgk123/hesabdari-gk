@@ -1,11 +1,12 @@
 {
-  "name": "دخل و خرج",
-  "short_name": "خرج",
+  "name": "حسابداری",
+  "short_name": "حسابداری",
   "description": "ثبت دخل و خرج ماهانه",
-  "start_url": "/",
+  "start_url": "/dakhel-app/",
+  "scope": "/dakhel-app/",
   "display": "standalone",
-  "background_color": "#0a0a1a",
-  "theme_color": "#0a0a1a",
+  "background_color": "#0f1117",
+  "theme_color": "#0f1117",
   "orientation": "portrait",
   "icons": [
     {
