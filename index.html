@@ -218,16 +218,6 @@ body{font-family:'IRANSansX',system-ui,-apple-system,sans-serif;background:var(-
   </div>
 </div>
 
-<div class="chart-card" id="chartCard">
-  <div class="chart-head">
-    <div><div class="chart-title">📊 خرج این ماه</div><div class="chart-sub" id="chartSub"></div></div>
-  </div>
-  <div class="donut-wrap">
-    <div class="legend" id="legend"></div>
-    <div class="donut" id="donut"><div class="donut-center"><b id="donutTotal">۰</b><span>کل خرج</span></div></div>
-  </div>
-</div>
-
 <div class="stats" id="statsBox" style="display:none">
   <div class="stat"><div class="stat-num red" id="sExp">۰</div><div class="stat-label">خرج</div></div>
   <div class="stat"><div class="stat-num green" id="sInc">۰</div><div class="stat-label">دخل</div></div>
@@ -423,27 +413,7 @@ function categorize(desc){
   return 5;
 }
 function renderChart(expList){
-  var cardEl=document.getElementById('chartCard');
-  var j=nowJalali();
-  document.getElementById('chartSub').textContent=jMonthName(j.m)+' '+j.y;
-  var totals={};
-  expList.forEach(e=>{var c=categorize(e.desc);totals[c]=(totals[c]||0)+e.amount;});
-  var keys=Object.keys(totals).sort((a,b)=>totals[b]-totals[a]);
-  if(!keys.length){cardEl.classList.remove('show');return;}
-  var tot=expList.reduce((s,e)=>s+e.amount,0);
-  var grad=[],lg='';
-  var acc=0;
-  keys.slice(0,5).forEach(k=>{
-    var pct=totals[k]/tot*100;
-    grad.push(`${chartColors[k]} ${acc.toFixed(1)}% ${(acc+pct).toFixed(1)}%`);
-    acc+=pct;
-    lg+=`<div class="lg"><i style="background:${chartColors[k]}"></i> ${catNames[k]} <b>${fmt(totals[k])}</b></div>`;
-  });
-  grad.push(`#262b3d ${acc.toFixed(1)}% 100%`);
-  document.getElementById('donut').style.background=`conic-gradient(${grad.join(',')})`;
-  document.getElementById('legend').innerHTML=lg;
-  document.getElementById('donutTotal').textContent=fmt(Math.round(tot/1000))+'K';
-  cardEl.classList.add('show');
+  // removed per user request
 }
 
 /* ─── Render ─── */
