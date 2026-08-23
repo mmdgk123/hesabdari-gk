@@ -164,6 +164,10 @@ body{font-family:'IRANSansX',system-ui,-apple-system,sans-serif;background:var(-
 .card-pill{flex:1;padding:12px;border:1.5px solid var(--border);border-radius:14px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text2);background:rgba(11,13,20,.4)}
 .card-pill.active.melat{border-color:#8a93a8;background:rgba(255,255,255,.07);color:#d4d8e2}
 .card-pill.active.saderat{border-color:var(--blue);background:rgba(91,141,255,.1);color:var(--blue)}
+.quick-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.quick-chip{padding:8px 13px;border-radius:20px;border:1px solid var(--border);background:rgba(11,13,20,.4);color:var(--text2);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.quick-chip:active{transform:scale(.92)}
+.quick-chip.sel{border-color:var(--blue);background:rgba(91,141,255,.12);color:var(--blue)}
 .submit-btn{
   width:100%;padding:17px;border:none;border-radius:18px;
   font-size:15px;font-weight:800;font-family:inherit;cursor:pointer;color:#fff;
@@ -231,7 +235,7 @@ body{font-family:'IRANSansX',system-ui,-apple-system,sans-serif;background:var(-
   <div class="filter-pill active" onclick="setTab('all',this)">همه</div>
   <div class="filter-pill" onclick="setTab('expense',this)">🔴 خرج</div>
   <div class="filter-pill" onclick="setTab('income',this)">🟢 دخل</div>
-  <div class="filter-pill" onclick="setTab('melon',this)">مرداد</div>
+  <div id="monthPills"></div>
 </div>
 
 <div class="section-header" id="listHeader" style="display:none"><div class="section-title">تراکنش‌ها</div></div>
@@ -253,9 +257,10 @@ body{font-family:'IRANSansX',system-ui,-apple-system,sans-serif;background:var(-
       <div class="type-tab active exp" id="tabExp" onclick="setType('expense')">🔴 خرج</div>
       <div class="type-tab" id="tabInc" onclick="setType('income')">🟢 دخل</div>
     </div>
-    <div class="field"><label>مبلغ</label><div class="amount-field"><input type="text" id="amount" inputmode="numeric" placeholder="مثلاً ۵۰۰"></div></div>
+    <div class="field"><label>مبلغ</label><div class="amount-field"><input type="text" id="amount" inputmode="numeric" placeholder="مثلاً ۵۰۰" oninput="formatAmount(this)"></div></div>
     <div class="field"><label>بابت چی؟</label><input type="text" id="desc" placeholder="نون، اسنپ، آرایشگاه..."></div>
     <div class="field"><label>کارت</label><div class="card-pills"><div class="card-pill active" id="cpMelat" onclick="setCard('ملت')">💳 ملت</div><div class="card-pill" id="cpSad" onclick="setCard('صادرات')">💳 صادرات</div></div></div>
+    <div class="quick-row" id="quickRow"></div>
     <button class="submit-btn exp" id="submitBtn" onclick="addEntry()">ثبت خرج</button>
   </div>
 </div>
@@ -313,6 +318,26 @@ function updateHeader(){
 }
 
 /* ─── Sheet ─── */
+var quickCats=[['🍞 نون','نان'],['🚗 اسنپ','اسنپ'],['📄 قبض','قبض'],['🏋️ سانس','سانس'],['💊 دارو','دارو'],['🎮 بازی','بازی'],['🛒 خرید','خرید']];
+var quickSel='';
+function buildQuick(){
+  var r=document.getElementById('quickRow');
+  r.innerHTML=quickCats.map((q,i)=>`<button class="quick-chip" data-i="${i}" onclick="pickQuick(${i})">${q[0]}</button>`).join('');
+}
+function pickQuick(i){
+  var chips=document.querySelectorAll('#quickRow .quick-chip');
+  var already=chips[i].classList.contains('sel');
+  chips.forEach(c=>c.classList.remove('sel'));
+  if(already){quickSel='';return;}
+  chips[i].classList.add('sel');quickSel=quickCats[i][1];
+  document.getElementById('desc').value=quickCats[i][1];
+  setTimeout(()=>document.getElementById('amount').focus(),80);
+}
+function formatAmount(el){
+  var v=fa2en(el.value).replace(/[^\d]/g,'');
+  el.value=v?parseInt(v).toLocaleString('en-US'):'';
+}
+
 function openSheet(){
   document.getElementById('addSheet').classList.add('show');
   setTimeout(()=>document.getElementById('amount').focus(),350);
@@ -356,6 +381,9 @@ function addEntry(){
   var j=nowJalali();
   entries.push({type,amount:parseInt(amt)*1000,desc,card,date:j.str,year:j.y,month:j.m,day:j.d});
   save();document.getElementById('amount').value='';document.getElementById('desc').value='';
+  document.querySelectorAll('#quickRow .quick-chip').forEach(c=>c.classList.remove('sel'));
+  quickSel='';
+  buildMonthPills();
   closeSheet();renderAll();toast(type==='expense'?'خرج ثبت شد ✓':'دخل ثبت شد ✓');
 }
 
@@ -381,11 +409,26 @@ document.getElementById('editModal').addEventListener('click',function(e){if(e.t
 function delEntry(i){if(!confirm('پاک بشه؟'))return;entries.splice(i,1);save();renderAll();toast('پاک شد 🗑');}
 
 /* ─── Filter ─── */
+var monthKeys=[];
+function buildMonthPills(){
+  var set=new Set();
+  entries.forEach(e=>set.add(e.year+'/'+e.month));
+  monthKeys=[...set].sort().reverse();
+  var box=document.getElementById('monthPills');
+  box.innerHTML=monthKeys.map(k=>{
+    var p=k.split('/');
+    return `<div class="filter-pill" onclick="setTab('m:${k}',this)">${jMonthName(+p[1])}</div>`;
+  }).join('');
+}
 function filtered(){
   var l=[...entries];
   if(currentTab==='expense')l=l.filter(e=>e.type==='expense');
   else if(currentTab==='income')l=l.filter(e=>e.type==='income');
-  else if(currentTab==='melon')l=l.filter(e=>e.month===5&&e.year===1405);
+  else if(currentTab.startsWith('m:')){
+    var p=currentTab.slice(2).split('/');
+    var y=+p[0],m=+p[1];
+    l=l.filter(e=>e.year===y&&e.month===m);
+  }
   var q=document.getElementById('searchInput')?.value?.trim()?.toLowerCase()||'';
   if(q)l=l.filter(e=>e.desc.toLowerCase().includes(q)||e.card.includes(q));
   return l;
@@ -420,10 +463,11 @@ function renderChart(expList){
 function save(){localStorage.setItem('dakhel_entries',JSON.stringify(entries));}
 function renderAll(){
   var f=filtered();
-  var allE=entries.filter(e=>e.type==='expense'),allI=entries.filter(e=>e.type==='income');
+  var scope=(currentTab.startsWith('m:'))?f:entries;
+  var allE=scope.filter(e=>e.type==='expense'),allI=scope.filter(e=>e.type==='income');
   var totE=allE.reduce((s,e)=>s+e.amount,0),totI=allI.reduce((s,e)=>s+e.amount,0);
   var bal=totI-totE;
-  var days=new Set(entries.map(e=>e.date.split(' ')[0])).size||1;
+  var days=new Set(scope.map(e=>e.date.split(' ')[0])).size||1;
 
   document.getElementById('balAmount').textContent=fmt(bal);
   document.getElementById('balExp').textContent=fmt(totE);
@@ -431,9 +475,7 @@ function renderAll(){
   document.getElementById('sExp').textContent=fmt(totE);
   document.getElementById('sInc').textContent=fmt(totI);
   document.getElementById('sAvg').textContent=fmt(Math.round(totE/days));
-  document.getElementById('sCnt').textContent=fmt(entries.length);
-
-  renderChart(allE);
+  document.getElementById('sCnt').textContent=fmt(scope.length);
 
   var show=entries.length>0;
   document.getElementById('statsBox').style.display=show?'grid':'none';
@@ -492,7 +534,7 @@ function restore(e){
 function clearAll(){if(!confirm('همه پاک بشه؟'))return;entries=[];save();renderAll();toast('پاک شد 🗑');}
 function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
 
-updateHeader();setType("expense");renderAll();if("serviceWorker" in navigator)navigator.serviceWorker.register("/dakhel-app/sw.js");
+updateHeader();setType("expense");buildQuick();buildMonthPills();renderAll();if("serviceWorker" in navigator)navigator.serviceWorker.register("/dakhel-app/sw.js");
 </script>
 </body>
 </html>
