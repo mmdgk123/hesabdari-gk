@@ -162,7 +162,8 @@ body{font-family:'IRANSansX',system-ui,-apple-system,sans-serif;background:var(-
 .amount-field input{padding-left:85px;font-size:19px;font-weight:800}
 .card-pills{display:flex;gap:8px}
 .card-pill{flex:1;padding:12px;border:1.5px solid var(--border);border-radius:14px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text2);background:rgba(11,13,20,.4)}
-.card-pill.active{border-color:var(--gold);background:rgba(255,200,87,.08);color:var(--gold)}
+.card-pill.active.melat{border-color:#8a93a8;background:rgba(255,255,255,.07);color:#d4d8e2}
+.card-pill.active.saderat{border-color:var(--blue);background:rgba(91,141,255,.1);color:var(--blue)}
 .submit-btn{
   width:100%;padding:17px;border:none;border-radius:18px;
   font-size:15px;font-weight:800;font-family:inherit;cursor:pointer;color:#fff;
@@ -340,13 +341,13 @@ function setType(t){
 }
 function setCard(c){
   card=c;
-  document.getElementById('cpMelat').className='card-pill'+(c==='ملت'?' active':'');
-  document.getElementById('cpSad').className='card-pill'+(c==='صادرات'?' active':'');
+  document.getElementById('cpMelat').className='card-pill'+(c==='ملت'?' active melat':'');
+  document.getElementById('cpSad').className='card-pill'+(c==='صادرات'?' active saderat':'');
 }
 function setEditCard(c){
   editCardVal=c;
-  document.getElementById('ecMelat').className='card-pill'+(c==='ملت'?' active':'');
-  document.getElementById('ecSad').className='card-pill'+(c==='صادرات'?' active':'');
+  document.getElementById('ecMelat').className='card-pill'+(c==='ملت'?' active melat':'');
+  document.getElementById('ecSad').className='card-pill'+(c==='صادرات'?' active saderat':'');
 }
 function setTab(t,el){
   currentTab=t;
@@ -373,8 +374,8 @@ function openEdit(i){
   editIdx=i;editCardVal=entries[i].card;
   document.getElementById('editAmt').value=Math.round(entries[i].amount/1000);
   document.getElementById('editDesc').value=entries[i].desc;
-  document.getElementById('ecMelat').className='card-pill'+(editCardVal==='ملت'?' active':'');
-  document.getElementById('ecSad').className='card-pill'+(editCardVal==='صادرات'?' active':'');
+  document.getElementById('ecMelat').className='card-pill'+(editCardVal==='ملت'?' active melat':'');
+  document.getElementById('ecSad').className='card-pill'+(editCardVal==='صادرات'?' active saderat':'');
   document.getElementById('editModal').classList.add('show');
 }
 function saveEdit(){
