@@ -112,7 +112,9 @@ body{font-family:'IRANSansX',system-ui,-apple-system,sans-serif;background:var(-
 .entry-body{flex:1;min-width:0}
 .entry-title{font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .entry-meta{font-size:10.5px;color:var(--text3);margin-top:4px;display:flex;gap:6px;align-items:center}
-.chip{padding:2px 8px;border-radius:6px;font-size:9px;font-weight:700;background:rgba(255,200,87,.1);color:var(--gold);border:1px solid rgba(255,200,87,.15)}
+.chip{padding:2px 8px;border-radius:6px;font-size:9px;font-weight:700}
+.chip-melat{background:rgba(255,255,255,.08);color:#d4d8e2;border:1px solid rgba(255,255,255,.12)}
+.chip-saderat{background:rgba(91,141,255,.12);color:var(--blue);border:1px solid rgba(91,141,255,.25)}
 .entry-amt{text-align:left;flex-shrink:0}
 .entry-amt b{font-size:14.5px;font-weight:900;letter-spacing:-.3px;white-space:nowrap}
 .entry.exp .entry-amt b{color:var(--red)}.entry.inc .entry-amt b{color:var(--green)}
@@ -477,7 +479,7 @@ function renderAll(){
     anim++;
     h+=`<div class="entry ${isE?'exp':'inc'}" style="animation-delay:${Math.min(anim*.05,.4)}s">
       <div class="tx-icon ${isE?'ic-red':'ic-green'}">${getIcon(e.desc)}</div>
-      <div class="entry-body"><div class="entry-title">${e.desc}</div><div class="entry-meta"><span class="chip">${e.card}</span><span>${e.date.split(' ').slice(0,2).join(' ')}</span></div></div>
+      <div class="entry-body"><div class="entry-title">${e.desc}</div><div class="entry-meta"><span class="chip ${e.card==='ملت'?'chip-melat':'chip-saderat'}">${e.card}</span><span>${e.date.split(' ').slice(0,2).join(' ')}</span></div></div>
       <div class="entry-amt"><b>${isE?'−':'+'} ${fmt(e.amount)}</b><span>تومان</span></div>
       <div class="entry-actions"><button class="entry-btn edit" onclick="openEdit(${i})">✏️</button><button class="entry-btn del" onclick="delEntry(${i})">✕</button></div>
     </div>`;
