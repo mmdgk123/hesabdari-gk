@@ -244,6 +244,11 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
     <input type="text" id="searchInput" placeholder="جستجو..." oninput="renderEntries()">
   </div>
   <div class="entries" id="entriesList"></div>
+  <div style="display:flex;gap:8px;margin-top:8px">
+    <button onclick="dlBackup()" style="flex:1;padding:12px;border:1.5px solid var(--border);border-radius:14px;background:var(--card);color:var(--text2);font-size:12px;font-weight:800;font-family:inherit;cursor:pointer">💾 دانلود بکاپ</button>
+    <button onclick="document.getElementById('fileIn').click()" style="flex:1;padding:12px;border:1.5px solid var(--border);border-radius:14px;background:var(--card);color:var(--text2);font-size:12px;font-weight:800;font-family:inherit;cursor:pointer">📂 برگرداندن بکاپ</button>
+    <input type="file" id="fileIn" accept=".json" style="display:none" onchange="restore(event)">
+  </div>
 </div>
 
 <!-- ═══ صفحه بدهی‌ها ═══ -->
@@ -267,7 +272,6 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
   <button class="nav-btn active" onclick="switchPage('hesab',this)"><div class="nav-icon"><span>🏦</span></div><div class="nav-label">حساب‌ها</div></button>
   <button class="nav-btn" onclick="switchPage('trans',this)"><div class="nav-icon"><span>📝</span></div><div class="nav-label">تراکنش‌ها</div></button>
   <button class="nav-btn" onclick="switchPage('debts',this)"><div class="nav-icon"><span>💰</span></div><div class="nav-label">بدهی‌ها</div></button>
-  <button class="nav-btn" onclick="dlBackup()"><div class="nav-icon"><span>💾</span></div><div class="nav-label">بکاپ</div></button>
 </nav>
 
 <!-- ═══ Debts FAB ═══ -->
