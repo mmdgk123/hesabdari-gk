@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ثبت سریع">
+<meta name="theme-color" content="#07080d">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>ثبت سریع</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IRANSansX:wght@400;600;700;800;900;1000&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07080d;--card:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
+  --text:#f0f2f8;--text2:#9aa0b4;--text3:#585c6e;
+  --red:#ff4d6d;--green:#2de0a5;--blue:#6c9bff;
+}
+[data-theme="light"]{
+  --bg:#f2f3f7;--card:rgba(0,0,0,.03);--border:rgba(0,0,0,.08);
+  --text:#1a1d2e;--text2:#6b7085;--text3:#9498a8;
+  --red:#d6335a;--green:#0da672;--blue:#3d63d8;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'IRANSansX',system-ui,sans-serif;min-height:100vh;direction:rtl;-webkit-font-smoothing:antialiased;padding:env(safe-area-inset-top) 20px env(safe-area-inset-bottom);transition:background .3s,color .3s}
+
+.title{font-size:22px;font-weight:1000;text-align:center;margin:20px 0 6px;letter-spacing:-.5px}
+.subtitle{font-size:12px;color:var(--text3);text-align:center;margin-bottom:24px}
+
+.type-tabs{display:flex;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:3px;margin-bottom:20px}
+.type-tab{flex:1;padding:12px;text-align:center;font-size:14px;font-weight:800;cursor:pointer;border-radius:13px;color:var(--text3);transition:all .25s}
+.type-tab.active.exp{background:linear-gradient(135deg,var(--red),#c01840);color:#fff}
+.type-tab.active.inc{background:linear-gradient(135deg,var(--green),#0aa873);color:#03130d}
+
+.field{margin-bottom:16px}
+.field label{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:7px}
+.field input{width:100%;padding:15px;border:1.5px solid var(--border);border-radius:16px;font-size:15px;font-family:inherit;font-weight:600;color:var(--text);background:var(--card);outline:none;transition:all .2s}
+.field input:focus{border-color:var(--blue)}
+.field input::placeholder{color:var(--text3);font-weight:400}
+.amt-wrap{position:relative}
+.amt-wrap::after{content:'هزار تومان';position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--text3);font-weight:600;pointer-events:none}
+.amt-wrap input{padding-left:88px;font-size:22px;font-weight:1000}
+
+.card-pills{display:flex;gap:9px}
+.cp{flex:1;padding:13px;border:1.5px solid var(--border);border-radius:15px;text-align:center;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;color:var(--text2);background:var(--card)}
+.cp.active.melat{border-color:rgba(176,181,196,.5);background:rgba(255,255,255,.08);color:var(--text)}
+.cp.active.saderat{border-color:rgba(108,155,255,.5);background:rgba(108,155,255,.12);color:var(--blue)}
+[data-theme="light"] .cp.active.melat{background:rgba(0,0,0,.06)}
+
+.submit{width:100%;padding:18px;border:none;border-radius:18px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;color:#fff;margin-top:8px;position:relative;overflow:hidden}
+.submit::after{content:'';position:absolute;top:0;right:-120%;width:55%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.28),transparent);animation:shine 2.5s infinite}
+@keyframes shine{0%{right:-120%}55%,100%{right:170%}}
+.submit:active{transform:scale(.97)}
+.submit.exp{background:linear-gradient(135deg,var(--red),#c01840);box-shadow:0 12px 30px -8px rgba(225,26,72,.5)}
+.submit.inc{background:linear-gradient(135deg,var(--green),#0aa873);color:#03130d}
+
+.toast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(10px);padding:12px 24px;background:var(--text);color:var(--bg);border-radius:100px;font-size:13px;font-weight:800;opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);z-index:300;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.bal-row{display:flex;gap:10px;margin-bottom:20px}
+.bal-card{flex:1;padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--border);text-align:center}
+.bal-card small{font-size:10px;color:var(--text2);font-weight:700;display:block;margin-bottom:3px}
+.bal-card b{font-size:15px;font-weight:900}
+
+.links{text-align:center;margin-top:24px}
+.links a{color:var(--blue);font-size:12px;font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="title">ثبت سریع 💸</div>
+<div class="subtitle">حسابداری — ویجت آیفون</div>
+
+<div class="bal-row">
+  <div class="bal-card"><small>ملت</small><b id="wMelat">۰</b></div>
+  <div class="bal-card"><small>صادرات</small><b id="wSad">۰</b></div>
+</div>
+
+<div class="type-tabs">
+  <div class="type-tab active exp" id="wTabExp" onclick="wSetType('expense')">🔴 خرج</div>
+  <div class="type-tab" id="wTabInc" onclick="wSetType('income')">🟢 دخل</div>
+</div>
+
+<div class="field">
+  <label>مبلغ</label>
+  <div class="amt-wrap">
+    <input type="text" id="wAmt" inputmode="numeric" placeholder="مثلاً ۵۰۰" oninput="fmtAmt(this)">
+  </div>
+</div>
+
+<div class="field">
+  <label>توضیح</label>
+  <input type="text" id="wDesc" placeholder="نون، اسنپ، قبض...">
+</div>
+
+<div class="field">
+  <label>کارت</label>
+  <div class="card-pills">
+    <div class="cp active melat" id="wCpMelat" onclick="wSetCard('ملت')">💳 ملت</div>
+    <div class="cp" id="wCpSad" onclick="wSetCard('صادرات')">💳 صادرات</div>
+  </div>
+</div>
+
+<button class="submit exp" id="wSubmit" onclick="wAdd()">ثبت خرج</button>
+
+<div class="links">
+  <a href="index.html">باز کردن حسابداری کامل →</a>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var wType='expense',wCard='ملت';
+var P='dakhel_';
+var entries=JSON.parse(localStorage.getItem(P+'entries')||'[]');
+var balances=JSON.parse(localStorage.getItem(P+'bal')||'{"melat":0,"sad":0}');
+
+function g2j(gy,gm,gd){var g=[0,31,59,90,120,151,181,212,243,273,304,334];var y2=gm>2?gy+1:gy;var d=355666+365*gy+Math.floor((y2+3)/4)-Math.floor((y2+99)/100)+Math.floor((y2+399)/400)+gd+g[gm-1];var jy=-1595+Math.floor(33*Math.floor(d/12053));d%=12053;jy+=4*Math.floor(d/1461);d%=1461;if(d>365){jy+=Math.floor((d-1)/365);d=(d-1)%365;}if(d<186)return[jy,1+Math.floor(d/31),1+d%31];return[jy,7+Math.floor((d-186)/30),1+(d-186)%30];}
+function jMN(m){return['','فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'][m]||'';}
+function fa2en(s){return s.replace(/[۰-۹]/g,function(c){return({'۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9'})[c]||c;});}
+function fmt(n){return n.toLocaleString('fa-IR');}
+function fmtAmt(el){var v=fa2en(el.value).replace(/[^\d]/g,'');el.value=v?parseInt(v).toLocaleString('en-US'):'';}
+function nowJ(){var s=new Date().toLocaleString('sv-SE',{timeZone:'Asia/Tehran'});var p=s.split(' '),d=p[0].split('-'),t=p[1].split(':');var j=g2j(+d[0],+d[1],+d[2]);return{str:j[0]+'/'+String(j[1]).padStart(2,'0')+'/'+String(j[2]).padStart(2,'0')+' '+jMN(j[1])+' '+t[0]+':'+t[1],y:j[0],m:j[1],d:j[2]};}
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2000);}
+
+function wSetType(t){
+  wType=t;
+  document.getElementById('wTabExp').className='type-tab'+(t==='expense'?' active exp':'');
+  document.getElementById('wTabInc').className='type-tab'+(t==='income'?' active inc':'');
+  var b=document.getElementById('wSubmit');
+  b.className='submit '+(t==='expense'?'exp':'inc');
+  b.textContent=t==='expense'?'ثبت خرج':'ثبت دخل';
+}
+function wSetCard(c){
+  wCard=c;
+  document.getElementById('wCpMelat').className='cp'+(c==='ملت'?' active melat':'');
+  document.getElementById('wCpSad').className='cp'+(c==='صادرات'?' active saderat':'');
+}
+function wAdd(){
+  var amt=fa2en(document.getElementById('wAmt').value.trim()).replace(/,/g,'');
+  if(!amt||amt==0){toast('مبلغ رو وارد کن');return;}
+  var desc=document.getElementById('wDesc').value.trim();
+  if(!desc){toast('توضیح رو وارد کن');return;}
+  var j=nowJ();
+  entries.push({type:wType,amount:parseInt(amt)*1000,desc:desc,card:wCard,date:j.str,year:j.y,month:j.m,day:j.d});
+  localStorage.setItem(P+'entries',JSON.stringify(entries));
+  document.getElementById('wAmt').value='';
+  document.getElementById('wDesc').value='';
+  renderBal();
+  toast(wType==='expense'?'خرج ثبت شد ✓':'دخل ثبت شد ✓');
+}
+function renderBal(){
+  document.getElementById('wMelat').textContent=fmt(balances.melat);
+  document.getElementById('wSad').textContent=fmt(balances.sad);
+}
+
+// Load theme
+var t=localStorage.getItem(P+'theme')||'dark';
+document.documentElement.setAttribute('data-theme',t);
+
+// Focus amount on load
+setTimeout(function(){document.getElementById('wAmt').focus()},400);
+renderBal();
+</script>
+</body>
+</html>
