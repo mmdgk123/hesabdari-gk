@@ -237,7 +237,11 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
     <div class="fp active" onclick="setTab('all',this)">همه</div>
     <div class="fp" onclick="setTab('expense',this)">خرج</div>
     <div class="fp" onclick="setTab('income',this)">دخل</div>
-    <div id="monthPills"></div>
+    <div style="position:relative;margin-right:4px">
+      <div class="fp" id="monthBtn" onclick="toggleMonthList()" style="background:var(--blue);color:#fff;border-color:var(--blue);display:flex;align-items:center;gap:4px"><span id="monthBtnText">همه ماه‌ها</span> <span style="font-size:10px">▼</span></div>
+      <div id="monthDropdown" style="display:none;position:absolute;top:100%;right:0;margin-top:6px;background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:8px;z-index:50;min-width:160px;max-height:300px;overflow-y:auto;box-shadow:0 12px 40px -8px rgba(0,0,0,.5);animation:sheetUp .2s">
+      </div>
+    </div>
   </div>
   <div class="search-wrap">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -456,7 +460,7 @@ function deleteAll(){if(!confirm('همه تراکنش‌ها پاک بشن؟\nا
 function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2000);}
 
 /* INIT */
-loadTheme();document.getElementById("eyeBtn").textContent=balHidden?"👁‍🗨 نمایش موجودی":"👁 پنهان کردن";buildMonthPills();renderHesab();renderEntries();renderDebts();
+document.addEventListener("click",function(ev){if(!ev.target.closest("#monthDropdown")&&!ev.target.closest("#monthBtn")){monthListOpen=false;var dd=document.getElementById("monthDropdown");if(dd)dd.style.display="none";}});loadTheme();document.getElementById("eyeBtn").textContent=balHidden?"👁‍🗨 نمایش موجودی":"👁 پنهان کردن";buildMonthPills();renderHesab();renderEntries();renderDebts();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("/dakhel-app/sw.js");
 </script>
 </body>
