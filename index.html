@@ -360,8 +360,8 @@ function nowJ(){var s=new Date().toLocaleString('sv-SE',{timeZone:'Asia/Tehran'}
 function fmtAmt(el){var v=fa2en(el.value).replace(/[^\d]/g,'');el.value=v?parseInt(v).toLocaleString('en-US'):'';}
 
 /* PAGE NAV */
-var balHidden=false;
-function toggleBalanceVisibility(){balHidden=!balHidden;document.getElementById('eyeBtn').textContent=balHidden?'👁‍🗨 پنهان کردن':'👁 نمایش موجودی';renderHesab();}
+var balHidden=localStorage.getItem("dakhel_balHidden")==="true";
+function toggleBalanceVisibility(){balHidden=!balHidden;localStorage.setItem("dakhel_balHidden",balHidden);document.getElementById('eyeBtn').textContent=balHidden?'👁‍🗨 نمایش موجودی':'👁 پنهان کردن';renderHesab();}
 function switchPage(id,btn){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
   document.getElementById('page-'+id).classList.add('active');
@@ -454,7 +454,7 @@ function clearAll(){if(!confirm('همه پاک بشه؟'))return;entries=[];debt
 function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2000);}
 
 /* INIT */
-loadTheme();buildMonthPills();renderHesab();renderEntries();renderDebts();
+loadTheme();document.getElementById("eyeBtn").textContent=balHidden?"👁‍🗨 نمایش موجودی":"👁 پنهان کردن";buildMonthPills();renderHesab();renderEntries();renderDebts();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("/dakhel-app/sw.js");
 </script>
 </body>
