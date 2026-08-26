@@ -207,17 +207,20 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
 
 <!-- ═══ صفحه حساب‌ها ═══ -->
 <div class="page active" id="page-hesab">
-  <div class="acc-total">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
     <div class="acc-total-label">مانده کل</div>
+    <div style="font-size:12px;color:var(--text3);cursor:pointer;font-weight:600" onclick="toggleBalanceVisibility()" id="eyeBtn">👁 نمایش موجودی</div>
+  </div>
+  <div class="acc-total">
     <div class="acc-total-amount" id="totalBal">۰ <small>تومان</small></div>
   </div>
   <div class="acc-grid">
-    <div class="acc-card melat" onclick="editBalance('melat')">
-      <div class="acc-name"><span class="dot melat-dot"></span>ملت</div>
+    <div class="acc-card melat">
+      <div class="acc-name"><span class="dot melat-dot"></span>ملت <span style="margin-right:auto;font-size:10px;cursor:pointer;opacity:.5" onclick="event.stopPropagation();editBalance('melat')">✏️</span></div>
       <div class="acc-bal" id="balMelat">۰ <small>تومان</small></div>
     </div>
-    <div class="acc-card sad" onclick="editBalance('sad')">
-      <div class="acc-name"><span class="dot sad-dot"></span>صادرات</div>
+    <div class="acc-card sad">
+      <div class="acc-name"><span class="dot sad-dot"></span>صادرات <span style="margin-right:auto;font-size:10px;cursor:pointer;opacity:.5" onclick="event.stopPropagation();editBalance('sad')">✏️</span></div>
       <div class="acc-bal" id="balSad">۰ <small>تومان</small></div>
     </div>
   </div>
@@ -257,14 +260,18 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
 </div>
 
 <!-- ═══ FAB ═══ -->
-<button class="fab" onclick="openAddSheet()">＋</button>
+<button class="fab" id="fab" onclick="openAddSheet()">＋</button>
 
 <!-- ═══ Bottom Nav ═══ -->
 <nav class="bottom-nav">
   <button class="nav-btn active" onclick="switchPage('hesab',this)"><div class="nav-icon"><span>🏦</span></div><div class="nav-label">حساب‌ها</div></button>
   <button class="nav-btn" onclick="switchPage('trans',this)"><div class="nav-icon"><span>📝</span></div><div class="nav-label">تراکنش‌ها</div></button>
   <button class="nav-btn" onclick="switchPage('debts',this)"><div class="nav-icon"><span>💰</span></div><div class="nav-label">بدهی‌ها</div></button>
+  <button class="nav-btn" onclick="dlBackup()"><div class="nav-icon"><span>💾</span></div><div class="nav-label">بکاپ</div></button>
 </nav>
+
+<!-- ═══ Debts FAB ═══ -->
+<button class="fab" id="debtsFab" onclick="openAddDebt()" style="display:none;left:auto;right:20px;background:linear-gradient(145deg,#2de0a5,#0aa873);box-shadow:0 14px 36px -10px rgba(10,168,115,.55),inset 0 1.5px 0 rgba(255,255,255,.25)">＋</button>
 
 <!-- ═══ Add Transaction Sheet ═══ -->
 <div class="sheet-bg" id="addSheet">
@@ -349,13 +356,17 @@ function nowJ(){var s=new Date().toLocaleString('sv-SE',{timeZone:'Asia/Tehran'}
 function fmtAmt(el){var v=fa2en(el.value).replace(/[^\d]/g,'');el.value=v?parseInt(v).toLocaleString('en-US'):'';}
 
 /* PAGE NAV */
+var balHidden=false;
+function toggleBalanceVisibility(){balHidden=!balHidden;document.getElementById('eyeBtn').textContent=balHidden?'👁‍🗨 پنهان کردن':'👁 نمایش موجودی';renderHesab();}
 function switchPage(id,btn){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
   document.getElementById('page-'+id).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active')});
   btn.classList.add('active');
-  var titles={hesab:'حسابداری',trans:'تراکنش\u200cها',debts:'بدهی\u200cها'};
+  var titles={hesab:'حسابداری',trans:'تراکنش‌ها',debts:'بدهی‌ها'};
   document.getElementById('pageTitle').textContent=titles[id]||'حسابداری';
+  document.getElementById('fab').style.display=id==='debts'?'none':'flex';
+  document.getElementById('debtsFab').style.display=id==='debts'?'flex':'none';
   if(id==='trans')renderEntries();
   if(id==='debts')renderDebts();
 }
@@ -376,9 +387,15 @@ function renderHesab(){
   var totE=monthE.reduce(function(s,e){return s+e.amount},0);
   var totI=monthI.reduce(function(s,e){return s+e.amount},0);
   var total=balances.melat+balances.sad;
-  document.getElementById('totalBal').innerHTML=fmt(total)+' <small>تومان</small>';
-  document.getElementById('balMelat').innerHTML=fmt(balances.melat)+' <small>تومان</small>';
-  document.getElementById('balSad').innerHTML=fmt(balances.sad)+' <small>تومان</small>';
+  if(balHidden){
+    document.getElementById('totalBal').innerHTML='••••• <small>تومان</small>';
+    document.getElementById('balMelat').innerHTML='••••• <small>تومان</small>';
+    document.getElementById('balSad').innerHTML='••••• <small>تومان</small>';
+  }else{
+    document.getElementById('totalBal').innerHTML=fmt(total)+' <small>تومان</small>';
+    document.getElementById('balMelat').innerHTML=fmt(balances.melat)+' <small>تومان</small>';
+    document.getElementById('balSad').innerHTML=fmt(balances.sad)+' <small>تومان</small>';
+  }
   document.getElementById('sExp').textContent=fmt(totE);
   document.getElementById('sInc').textContent=fmt(totI);
   document.getElementById('sCnt').textContent=fmt(entries.length);
