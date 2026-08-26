@@ -285,8 +285,8 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
       <div class="type-tab active exp" id="tabExp" onclick="setType('expense')">خرج</div>
       <div class="type-tab" id="tabInc" onclick="setType('income')">دخل</div>
     </div>
-    <div class="field"><label>مبلغ</label><div style="position:relative"><input type="text" id="amount" inputmode="numeric" placeholder="مثلاً ۵۰۰" oninput="fmtAmt(this)" style="padding-left:85px;font-size:20px;font-weight:900"><span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--text3);font-weight:600">هزار تومان</span></div></div>
-    <div class="field"><label>توضیح</label><input type="text" id="desc" placeholder="پول نون، اسنپ..."></div>
+    <div class="field"><label>مبلغ</label><div style="position:relative"><input type="text" id="amount" inputmode="numeric" placeholder="" oninput="fmtAmt(this)" style="padding-left:85px;font-size:20px;font-weight:900"><span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--text3);font-weight:600">هزار تومان</span></div></div>
+    <div class="field"><label>توضیح</label><input type="text" id="desc" placeholder=""></div>
     <div class="field"><label>کارت</label><div class="card-pills"><div class="cp active melat" id="cpMelat" onclick="setCard('ملت')">💳 ملت</div><div class="cp" id="cpSad" onclick="setCard('صادرات')">💳 صادرات</div></div></div>
     <button class="submit-btn exp" id="submitBtn" onclick="addEntry()">ثبت خرج</button>
   </div>
@@ -308,7 +308,7 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
 <div class="bal-modal-bg" id="balModal">
   <div class="bal-modal">
     <h3 id="balModalTitle">موجودی ملت</h3>
-    <div class="field"><label>موجودی فعلی (هزار تومان)</label><input type="text" id="balInput" inputmode="numeric" placeholder="مثلاً ۵۰۰۰" oninput="fmtAmt(this)"></div>
+    <div class="field"><label>موجودی فعلی (هزار تومان)</label><input type="text" id="balInput" inputmode="numeric" placeholder="" oninput="fmtAmt(this)"></div>
     <div class="modal-btns">
       <button class="modal-cancel" onclick="closeBalModal()">لغو</button>
       <button class="modal-save" onclick="saveBal()">ذخیره</button>
