@@ -97,7 +97,7 @@ body{
 .hc-inc{box-shadow:inset 0 0 24px rgba(45,224,165,.06)}.hc-inc b{color:var(--green)}
 
 /* ═══════ Stats strip ═══════ */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 16px 18px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 16px 18px}
 .stat{
   position:relative;overflow:hidden;
   background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
@@ -179,12 +179,6 @@ body{
 .empty-icon{font-size:44px;margin-bottom:14px;filter:grayscale(.4);opacity:.7}
 .empty-text{font-size:14px;line-height:2;font-weight:500}
 
-/* ═══════ Warning ═══════ */
-.warning{margin:0 16px 12px;padding:13px 16px;border-radius:18px;font-size:13px;font-weight:700;color:var(--red);display:none;align-items:center;gap:9px;
-  background:linear-gradient(135deg,rgba(255,77,109,.12),rgba(255,77,109,.05));
-  border:1px solid rgba(255,77,109,.3);
-  box-shadow:0 8px 24px -10px var(--glow-red)}
-.warning.show{display:flex;animation:pulse 2.5s infinite}
 
 /* ═══════ FAB ═══════ */
 .fab{
@@ -326,11 +320,9 @@ body{
 <div class="stats" id="statsBox" style="display:none">
   <div class="stat sr"><div class="stat-num" id="sExp">۰</div><div class="stat-label">خرج</div></div>
   <div class="stat sg"><div class="stat-num" id="sInc">۰</div><div class="stat-label">دخل</div></div>
-  <div class="stat sy"><div class="stat-num" id="sAvg">۰</div><div class="stat-label">میانگین/روز</div></div>
   <div class="stat sb"><div class="stat-num" id="sCnt">۰</div><div class="stat-label">تراکنش</div></div>
 </div>
 
-<div class="warning" id="warning">⚠️ <span id="warningTxt"></span></div>
 
 <div class="filter-pills" id="filterBox" style="display:none">
   <div class="filter-pill active" onclick="setTab('all',this)">همه</div>
@@ -390,7 +382,6 @@ body{
 <script>
 let type='expense',card='ملت',currentTab='all',editIdx=-1,editCardVal='ملت';
 let entries=JSON.parse(localStorage.getItem('dakhel_entries')||'[]');
-const WARN=5e6;
 
 /* ─── Jalali ─── */
 function g2j(gy,gm,gd){
@@ -546,15 +537,13 @@ function renderAll(){
   var allE=scope.filter(e=>e.type==='expense'),allI=scope.filter(e=>e.type==='income');
   var totE=allE.reduce((s,e)=>s+e.amount,0),totI=allI.reduce((s,e)=>s+e.amount,0);
   var bal=totI-totE;
-  var days=new Set(scope.map(e=>e.date.split(' ')[0])).size||1;
-
+  
   document.getElementById('balAmount').textContent=fmt(bal);
   document.getElementById('balExp').textContent=fmt(totE);
   document.getElementById('balInc').textContent=fmt(totI);
   document.getElementById('sExp').textContent=fmt(totE);
   document.getElementById('sInc').textContent=fmt(totI);
-  document.getElementById('sAvg').textContent=fmt(Math.round(totE/days));
-  document.getElementById('sCnt').textContent=fmt(scope.length);
+    document.getElementById('sCnt').textContent=fmt(scope.length);
 
   var show=entries.length>0;
   document.getElementById('statsBox').style.display=show?'grid':'none';
@@ -582,9 +571,6 @@ function renderAll(){
   list.innerHTML=h;
 
   var j=nowJalali(),ts=`${j.y}/${j.m}/${j.d}`;
-  var todayExp=entries.filter(e=>e.type==='expense'&&e.date.startsWith(ts)).reduce((s,e)=>s+e.amount,0);
-  var w=document.getElementById('warning');
-  if(todayExp>=WARN){document.getElementById('warningTxt').textContent=`خرج امروز ${fmt(todayExp)} تومان شد!`;w.classList.add('show');}else w.classList.remove('show');
 }
 
 /* ─── Copy / Backup / Restore / Clear ─── */
