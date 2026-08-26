@@ -360,8 +360,8 @@ function nowJ(){var s=new Date().toLocaleString('sv-SE',{timeZone:'Asia/Tehran'}
 function fmtAmt(el){var v=fa2en(el.value).replace(/[^\d]/g,'');el.value=v?parseInt(v).toLocaleString('en-US'):'';}
 
 /* PAGE NAV */
-var balHidden=localStorage.getItem("dakhel_balHidden")==="true";
-function toggleBalanceVisibility(){balHidden=!balHidden;localStorage.setItem("dakhel_balHidden",balHidden);document.getElementById('eyeBtn').textContent=balHidden?'👁‍🗨 نمایش موجودی':'👁 پنهان کردن';renderHesab();}
+var balHidden=true;
+function toggleBalanceVisibility(){balHidden=!balHidden;document.getElementById('eyeBtn').textContent=balHidden?'👁‍🗨 نمایش موجودی':'👁 پنهان کردن';renderHesab();}
 function switchPage(id,btn){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
   document.getElementById('page-'+id).classList.add('active');
