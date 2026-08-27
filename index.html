@@ -197,7 +197,6 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
 </style>
 </head>
 <body>
-<div id="app">
 
 <div class="header">
   <div class="header-row">
@@ -344,125 +343,8 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
   </div>
 </div>
 
-<!-- ═══ SET PIN MODAL ═══ -->
-<div class="modal" id="setPinModal">
-  <div class="modal-box">
-    <div style="font-size:34px;margin-bottom:6px">🔒</div>
-    <div id="spTitle" style="font-weight:800;margin-bottom:14px;color:var(--text)">رمز جدید رو وارد کن</div>
-    <div class="field"><input type="password" id="spInput" inputmode="numeric" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="" onkeydown="if(event.key==='Enter')spNext()"></div>
-    <div class="modal-btns"><button class="modal-cancel" onclick="document.getElementById('setPinModal').classList.remove('show')">لغو</button><button class="modal-save" onclick="spNext()">بعدی</button></div>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
-</div><!-- /#app -->
-<!-- ═══ LOCK SCREEN ═══ -->
-<div id="lockScreen" style="display:none;position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,var(--bg) 0%,var(--bg2) 100%);flex-direction:column;align-items:center;justify-content:center;gap:14px">
-  <div style="font-size:44px">🔒</div>
-  <div style="color:var(--text);font-weight:800;font-size:16px">حسابداری قفله</div>
-  <div id="lockDots" style="display:flex;gap:10px;margin:4px 0"></div>
-  <div id="lockPad" style="display:grid;grid-template-columns:repeat(3,64px);gap:10px"></div>
-  <div id="lockMsg" style="min-height:18px;font-size:12px;color:var(--red);font-weight:700"></div>
-</div>
 
-<script>
-/* ═══ APP LOCK (4-digit PIN) ═══ */
-var lockPin=null, lockBuf='', lockTries=0;
-try{ lockPin=localStorage.getItem('dakhel_pin'); }catch(e){}
-function isLocked(){ return !!lockPin; }
-function initLock(){
-  var ls=document.getElementById('lockScreen'); if(!ls) return;
-  if(!isLocked()){ ls.style.display='none'; return; }
-  var app=document.getElementById('app');
-  if(app){ app.style.visibility='hidden'; }
-  ls.style.display='flex'; buildLockPad(); drawLockDots();
-}
-function drawLockDots(){
-  var d=''; for(var i=0;i<4;i++) d+='<span style="width:14px;height:14px;border-radius:50%;border:2px solid '+(i<lockBuf.length?'var(--blue)':'transparent')+';background:'+(i<lockBuf.length?'var(--blue)':'none')+'"></span>';
-  document.getElementById('lockDots').innerHTML=d;
-}
-function buildLockPad(){
-  var keys=['1','2','3','4','5','6','7','8','9','del','','0','ok'];
-  var h='';
-  keys.forEach(function(k){
-    if(k==='') { h+='<div></div>'; return; }
-    var st='padding:16px;border-radius:50%;border:1.5px solid var(--border2);background:var(--card);color:var(--text);font-size:20px;font-weight:700;font-family:inherit;cursor:pointer';
-    h+='<button data-k="'+k+'" style="'+st+'">'+(k==='del'?'⌫':(k==='ok'?'✓':k))+'</button>';
-  });
-  document.getElementById('lockPad').innerHTML=h;
-}
-(function(){
-  var pad=document.getElementById('lockPad');
-  pad.addEventListener('click',function(ev){
-    var btn=ev.target.closest('button[data-k]'); if(!btn) return;
-    var k=btn.getAttribute('data-k');
-    if(k==='del'){ lockKey('del'); } else { lockKey(k); }
-  });
-})();
-function lockKey(k){
-  var msg=document.getElementById('lockMsg'); msg.textContent='';
-  if(isFinite(parseInt(k))) {
-    if(lockBuf.length>=4) return;
-    lockBuf+=k; drawLockDots();
-    if(lockBuf.length===4){ setTimeout(checkPin,150); }
-  } else if(k==='del'){ lockBuf=lockBuf.slice(0,-1); drawLockDots(); }
-  else if(k==='ok'){ checkPin(); }
-}
-function checkPin(){
-  if(lockBuf===lockPin){
-    document.getElementById('lockScreen').style.display='none';
-    var app=document.getElementById('app'); if(app) app.style.visibility='visible';
-    lockBuf=''; lockTries=0;
-    toast('خوش اومدی 👋');
-  } else {
-    lockTries++;
-    if(lockTries>=5){
-      document.getElementById('lockMsg').textContent='چند بار اشتباه شد! یک دقیقه صبر کن';
-      disablePad(60);
-    } else {
-      document.getElementById('lockMsg').textContent='اشتباهه، دوباره بزن ('+lockTries+'/5)';
-    }
-    lockBuf=''; drawLockDots();
-  }
-}
-function disablePad(sec){
-  var pad=document.getElementById('lockPad');
-  pad.style.pointerEvents='none'; pad.style.opacity=.4;
-  var iv=setInterval(function(){
-    sec--;
-    if(sec<=0){ clearInterval(iv); pad.style.pointerEvents='auto'; pad.style.opacity=1; document.getElementById('lockMsg').textContent=''; }
-    else document.getElementById('lockMsg').textContent='قفل موقت — '+sec+' ثانیه';
-  },1000);
-}
-/* SET / REMOVE PIN */
-function openSetPin(){
-  document.getElementById('setPinModal').classList.add('show');
-  setPinStage=1; setPinFirst='';
-  document.getElementById('spTitle').textContent='رمز جدید رو وارد کن';
-  document.getElementById('spInput').value='';
-  setTimeout(function(){document.getElementById('spInput').focus();},100);
-}
-function spNext(){
-  var v=document.getElementById('spInput').value.trim();
-  if(!/^\d{4}$/.test(v)){ toast('۴ رقم بزن'); return; }
-  if(setPinStage===1){ setPinFirst=v; setPinStage=2; document.getElementById('spTitle').textContent='یک بار دیگه تکرار کن'; document.getElementById('spInput').value=''; }
-  else{
-    if(v!==setPinFirst){ toast('دو بار یکی نبود، از اول'); setPinStage=1; document.getElementById('spTitle').textContent='رمز جدید رو وارد کن'; document.getElementById('spInput').value=''; return; }
-    lockPin=v; localStorage.setItem('dakhel_pin',v);
-    document.getElementById('setPinModal').classList.remove('show');
-    renderSettingsRow();
-    toast('قفل فعال شد 🔒');
-  }
-}
-
-/* SETTINGS AREA — in accounts tab under balance buttons */
-function renderSettingsRow(){
-  var el=document.getElementById('settingsRow'); if(!el) return;
-  var has=!!lockPin;
-  el.innerHTML='<button onclick="'+(has?'removePin()':'openSetPin()')+'" style="width:100%;margin-top:10px;padding:12px;border:1.5px dashed var(--border2);border-radius:14px;background:var(--card);color:var(--text2);font-size:12px;font-weight:800;font-family:inherit;cursor:pointer">'+(has?'🔓 برداشتن قفل':'🔒 قفل با رمز ۴ رقمی')+'</button>';
-}
-function removePin(){ if(!confirm('قفل برداشته شه؟'))return; lockPin=null; localStorage.removeItem('dakhel_pin'); renderSettingsRow(); toast('قفل برداشته شد'); }
-</script>
 
 <script>
 /* DATA */
@@ -587,7 +469,7 @@ function toast(m){var t=document.getElementById('toast');t.textContent=m;t.class
 document.addEventListener('keydown',function(ev){if(ev.key!=='Enter')return;var s1=document.getElementById('addSheet'),s2=document.getElementById('addDebtSheet');if(s1.classList.contains('show')){ev.preventDefault();addEntry();}else if(s2.classList.contains('show')){ev.preventDefault();addDebt();}});
 
 /* INIT */
-document.addEventListener("click",function(ev){if(!ev.target.closest("#monthDropdown")&&!ev.target.closest("#monthBtn")){monthListOpen=false;var dd=document.getElementById("monthDropdown");if(dd)dd.style.display="none";}});loadTheme();document.getElementById("eyeBtn").textContent=balHidden?"👁‍🗨 نمایش موجودی":"👁 پنهان کردن";buildMonthPills();renderHesab();renderEntries();renderDebts();renderSettingsRow();initLock();
+document.addEventListener("click",function(ev){if(!ev.target.closest("#monthDropdown")&&!ev.target.closest("#monthBtn")){monthListOpen=false;var dd=document.getElementById("monthDropdown");if(dd)dd.style.display="none";}});loadTheme();document.getElementById("eyeBtn").textContent=balHidden?"👁‍🗨 نمایش موجودی":"👁 پنهان کردن";buildMonthPills();renderHesab();renderEntries();renderDebts();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("/dakhel-app/sw.js");
 </script>
 </body>
