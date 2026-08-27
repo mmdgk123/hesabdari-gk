@@ -363,7 +363,6 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
   <div id="lockDots" style="display:flex;gap:10px;margin:4px 0"></div>
   <div id="lockPad" style="display:grid;grid-template-columns:repeat(3,64px);gap:10px"></div>
   <div id="lockMsg" style="min-height:18px;font-size:12px;color:var(--red);font-weight:700"></div>
-  <button onclick="lockForget()" style="margin-top:6px;background:none;border:none;color:var(--text2);opacity:.55;font-size:11px;text-decoration:underline;cursor:pointer;font-family:inherit">رمزم یادم رفته</button>
 </div>
 
 <script>
@@ -435,13 +434,6 @@ function disablePad(sec){
     else document.getElementById('lockMsg').textContent='قفل موقت — '+sec+' ثانیه';
   },1000);
 }
-function lockForget(){
-  if(!confirm('رمز یادت رفته؟\nاین راه تنهاست: کل برنامه ریست میشه (همه تراکنش‌ها، بدهی‌ها و رمز پاک میشن)\nاگه فایل بکاپ داری بازم میتونی برگردونی. ادامه بدم؟'))return;
-  if(!confirm('مطمئنی؟ این کار غیرقابل بازگشته!'))return;
-  try{ localStorage.removeItem('dakhel_entries'); localStorage.removeItem('dakhel_debts'); localStorage.removeItem('dakhel_bal'); localStorage.removeItem('dakhel_pin'); localStorage.removeItem('dakhel_theme'); }catch(e){}
-  location.reload();
-}
-
 /* SET / REMOVE PIN */
 function openSetPin(){
   document.getElementById('setPinModal').classList.add('show');
