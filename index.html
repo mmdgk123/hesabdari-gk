@@ -249,10 +249,10 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
   </div>
   <div class="entries" id="entriesList"></div>
   <div style="display:flex;gap:8px;margin-top:8px">
+    <input type="file" id="fileIn" accept=".json,.txt" style="display:none" onchange="restore(event)">
     <button onclick="dlBackup()" style="flex:1;padding:12px;border:1.5px solid var(--border);border-radius:14px;background:var(--card);color:var(--text2);font-size:12px;font-weight:800;font-family:inherit;cursor:pointer">💾 بکاپ</button>
     <button onclick="document.getElementById('fileIn').click()" style="flex:1;padding:12px;border:1.5px solid var(--border);border-radius:14px;background:var(--card);color:var(--text2);font-size:12px;font-weight:800;font-family:inherit;cursor:pointer">📂 برگردانی</button>
     <button onclick="deleteAll()" style="flex:1;padding:12px;border:1.5px solid rgba(255,77,109,.3);border-radius:14px;background:rgba(255,77,109,.08);color:var(--red);font-size:12px;font-weight:800;font-family:inherit;cursor:pointer">🗑 حذف همه</button>
-    <input type="file" id="fileIn" accept=".json" style="display:none" onchange="restore(event)">
   </div>
 </div>
 
@@ -460,7 +460,7 @@ function genPDF(){var j=nowJ();var monthE=entries.filter(function(e){return e.ty
 
 /* BACKUP */
 function dlBackup(){var d={entries:entries,debts:debts,balances:balances};var b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='dakhel_backup_'+new Date().toISOString().split('T')[0]+'.json';a.click();URL.revokeObjectURL(u);toast('بکاپ دانلود شد 💾');}
-function restore(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var d=JSON.parse(ev.target.result);if(d.entries){entries=d.entries;debts=d.debts||[];if(d.balances)balances=d.balances;}else if(Array.isArray(d)){entries=d;}save();saveDebts();localStorage.setItem('dakhel_bal',JSON.stringify(balances));buildMonthPills();renderHesab();renderEntries();renderDebts();toast('بازگردانی شد ✓');}catch(err){toast('خطا ⚠️');}};r.readAsText(f);e.target.value='';}
+function restore(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var raw=ev.target.result;var d=JSON.parse(raw);if(d&&typeof d==='object'&&d.entries){entries=d.entries;debts=d.debts||[];if(d.balances)balances=d.balances;}else if(Array.isArray(d)){entries=d;}else{toast('فایل بکاپ معتبر نیست');return;}save();saveDebts();localStorage.setItem('dakhel_bal',JSON.stringify(balances));buildMonthPills();renderHesab();renderEntries();renderDebts();toast(entries.length+' تراکنش برگشت ✓');}catch(err){toast('خطا: '+err.message);}};r.readAsText(f);e.target.value='';}
 function clearAll(){if(!confirm('همه پاک بشه؟'))return;entries=[];debts=[];balances={melat:0,sad:0};save();saveDebts();localStorage.setItem('dakhel_bal',JSON.stringify(balances));buildMonthPills();renderHesab();renderEntries();renderDebts();toast('پاک شد');}
 function deleteAll(){if(!confirm('همه تراکنش‌ها پاک بشن؟\nاین کار غیرقابل بازگردونه!'))return;if(!confirm('مطمئنی؟ دیگه برگردونی نداره!'))return;entries=[];save();buildMonthPills();renderHesab();renderEntries();toast('همه تراکنش‌ها پاک شد');}
 function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2000);}
