@@ -1,12 +1,12 @@
 {
-  "name": "حسابداری",
+  "name": "حسابداری GK",
   "short_name": "حسابداری",
   "description": "ثبت دخل و خرج ماهانه",
-  "start_url": "/dakhel-app/",
-  "scope": "/dakhel-app/",
+  "start_url": "/hesabdari-gk/",
+  "scope": "/hesabdari-gk/",
   "display": "standalone",
-  "background_color": "#0f1117",
-  "theme_color": "#0f1117",
+  "background_color": "#07080d",
+  "theme_color": "#07080d",
   "orientation": "portrait",
   "icons": [
     {
