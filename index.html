@@ -524,7 +524,7 @@ document.addEventListener('keydown',function(ev){if(ev.key!=='Enter')return;var 
 
 /* INIT */
 document.addEventListener("click",function(ev){if(!ev.target.closest("#monthDropdown")&&!ev.target.closest("#monthBtn")){monthListOpen=false;var dd=document.getElementById("monthDropdown");if(dd)dd.style.display="none";}});loadTheme();document.getElementById("eyeBtn").textContent=balHidden?"👁‍🗨 نمایش موجودی":"👁 پنهان کردن";buildMonthPills();renderHesab();renderEntries();renderDebts();
-if("serviceWorker" in navigator)navigator.serviceWorker.register("/dakhel-app/sw.js");
+if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js");
 </script>
 </body>
 </html>
