@@ -215,6 +215,7 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,.045),transparent);animation:sweep 5.5s ease-in-out infinite}
 @keyframes sweep{0%,100%{right:-30%}50%{right:105%}}
 .stat-num{font-variant-numeric:tabular-nums}
+@keyframes growBar{from{width:0 !important}}
 .entry:hover .ebtn{opacity:.85}
 .debt-check{width:27px;height:27px;border-radius:9px;font-weight:900}
 .debt-check.done::after{content:'';animation:popTick .35s cubic-bezier(.34,1.7,.5,1)}
@@ -273,7 +274,13 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
     <div class="stat sg"><div class="stat-num" id="sInc">۰</div><div class="stat-label">دخل این ماه</div></div>
     <div class="stat sb"><div class="stat-num" id="sCnt">۰</div><div class="stat-label">تراکنش</div></div>
   </div>
-  <div id="compareBox" style="padding:14px 16px;border-radius:18px;background:var(--card);border:1px solid var(--border);margin-bottom:16px;display:none"><div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:8px">📊 مقایسه با ماه قبل</div><div id="compareContent" style="font-size:12.5px;line-height:2;color:var(--text)"></div></div>
+  <div id="topBox" style="padding:14px 16px;border-radius:18px;background:var(--card);border:1px solid var(--border);margin-bottom:16px;display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:700;color:var(--text2)">🥇 بیشترین خرج‌ها</div>
+      <div style="font-size:10px;color:var(--text3)" id="topSub"></div>
+    </div>
+    <div id="topContent"></div>
+  </div>
 </div>
 
 <!-- ═══ صفحه تراکنش‌ها ═══ -->
@@ -388,7 +395,7 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   </div>
 </div>
 
-<div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">v19</div>
+<div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">v20</div>
 <div class="toast" id="toast"></div>
 
 
@@ -399,7 +406,7 @@ var debts=JSON.parse(localStorage.getItem('dakhel_debts')||'[]');
 var balances=JSON.parse(localStorage.getItem('dakhel_bal')||'{"melat":0,"sad":0,"cash":0}');
 if(balances.cash===undefined)balances.cash=0;
 var type='expense',card='ملت',currentTab='all',debtType='creditor';
-var APP_VERSION='v19';
+var APP_VERSION='v20';
 var editIdx=-1,editCardVal='ملت',editDebtIdx=-1,editBalAcc='';
 
 /* THEME */
@@ -436,7 +443,7 @@ function getIcon(d){if(d.includes('اسنپ')||d.includes('تاکسی'))return '
 /* SAVE */
 function save(){localStorage.setItem('dakhel_entries',JSON.stringify(entries));}
 function saveDebts(){localStorage.setItem('dakhel_debts',JSON.stringify(debts));}
-function saveBal(){var v=fa2en(document.getElementById('balInput').value).replace(/,/g,'');if(!v){toast('مبلغ رو وارد کن');return;}balances[editBalAcc]=parseInt(v)*1000;localStorage.setItem('dakhel_bal',JSON.stringify(balances));closeBalModal();renderHesab();renderCompare();toast('موجودی ذخیره شد ✓');}
+function saveBal(){var v=fa2en(document.getElementById('balInput').value).replace(/,/g,'');if(!v){toast('مبلغ رو وارد کن');return;}balances[editBalAcc]=parseInt(v)*1000;localStorage.setItem('dakhel_bal',JSON.stringify(balances));closeBalModal();renderHesab();toast('موجودی ذخیره شد ✓');}
 
 /* HESAB */
 function renderHesab(){
@@ -472,22 +479,6 @@ function toggleMonthList(){monthListOpen=!monthListOpen;document.getElementById(
 function buildMonthDropdown(){var s=new Set();entries.forEach(function(e){s.add(e.year+"/"+e.month)});var keys=Array.from(s).sort().reverse();var box=document.getElementById("monthDropdown");box.innerHTML="";var all=document.createElement("div");all.className="fp";all.textContent="همه ماه‌ها";all.style.cssText="width:100%;text-align:center;margin-bottom:4px";all.onclick=function(){currentTab="all";document.getElementById("monthBtnText").textContent="همه ماه‌ها";toggleMonthList();renderEntries();};box.appendChild(all);keys.forEach(function(k){var parts=k.split("/");var m=parseInt(parts[1]);var y=parts[0];var p=document.createElement("div");p.className="fp";p.textContent=jMonthName(m)+" "+y;p.style.cssText="width:100%;text-align:center;margin-bottom:4px";p.onclick=function(){currentTab="m:"+k;document.getElementById("monthBtnText").textContent=jMonthName(m)+" "+y;toggleMonthList();renderEntries();};box.appendChild(p);});}
 function buildMonthPills(){var j=nowJ();currentTab="m:"+j.y+"/"+j.m;document.getElementById("monthBtnText").textContent=jMonthName(j.m)+" "+j.y;}
 function filtered(){var l=entries.slice();if(currentTab==='expense')l=l.filter(function(e){return e.type==='expense'});else if(currentTab==='income')l=l.filter(function(e){return e.type==='income'});else if(currentTab.indexOf('m:')===0){var p=currentTab.slice(2).split('/');l=l.filter(function(e){return e.year===+p[0]&&e.month===+p[1]});}var q=(document.getElementById('searchInput')&&document.getElementById('searchInput').value||'').trim().toLowerCase();if(q)l=l.filter(function(e){return e.desc.toLowerCase().indexOf(q)>=0||e.card.indexOf(q)>=0});return l;}
-function renderCompare(){
-  var j=nowJ();var j2;var cm=j.m-1,cy=j.y;
-  if(cm<1){cm=12;cy--;}
-  var expThis=entries.filter(function(e){return e.type==='expense'&&e.year===j.y&&e.month===j.m}).reduce(function(s,e){return s+e.amount},0);
-  var incThis=entries.filter(function(e){return e.type==='income'&&e.year===j.y&&e.month===j.m}).reduce(function(s,e){return s+e.amount},0);
-  var expPrev=entries.filter(function(e){return e.type==='expense'&&e.year===cy&&e.month===cm}).reduce(function(s,e){return s+e.amount},0);
-  var incPrev=entries.filter(function(e){return e.type==='income'&&e.year===cy&&e.month===cm}).reduce(function(s,e){return s+e.amount},0);
-  var box=document.getElementById('compareBox');var content=document.getElementById('compareContent');
-  if(!expPrev&&!incPrev){box.style.display='none';return;}
-  box.style.display='block';var h='';
-  if(expPrev>0){var diff=expThis-expPrev;var pct=Math.round(Math.abs(diff)/expPrev*100);var arrow=diff>0?'📈 ↑':'📉 ↓';var cls=diff>0?'color:var(--red)':'color:var(--green)';h+='<div>خرج: '+fmt(expThis)+' <span style="'+cls+'">'+arrow+' '+pct+'%</span> نسبت به '+jMonthName(cm)+'</div>';}
-  if(incPrev>0){var diff2=incThis-incPrev;var pct2=Math.round(Math.abs(diff2)/incPrev*100);var arrow2=diff2>0?'📈 ↑':'📉 ↓';var cls2=diff2>0?'color:var(--green)':'color:var(--red)';h+='<div>دخل: '+fmt(incThis)+' <span style="'+cls2+'">'+arrow2+' '+pct2+'%</span> نسبت به '+jMonthName(cm)+'</div>';}
-  var netThis=incThis-expThis;var netPrev=incPrev-expPrev;
-  if(netPrev!==0){var netDiff=netThis-netPrev;var netPct=Math.round(Math.abs(netDiff)/Math.abs(netPrev)*100);var netArrow=netDiff>0?'📈 ↑':'📉 ↓';var netCls=netDiff>0?'color:var(--green)':'color:var(--red)';h+='<div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);font-weight:800">مانده خالص: '+fmt(netThis)+' <span style="'+netCls+'">'+netArrow+' '+netPct+'%</span></div>';}
-  content.innerHTML=h;
-}
 
 function renderEntries(){var f=filtered().sort(function(a,b){if(b.year!==a.year)return b.year-a.year;if(b.month!==a.month)return b.month-a.month;if(b.day!==a.day)return b.day-a.day;var ta=(a.date.indexOf(':')>=0)?a.date.split(' ').pop():'00:00';var tb=(b.date.indexOf(':')>=0)?b.date.split(' ').pop():'00:00';return tb.localeCompare(ta);});var list=document.getElementById('entriesList');if(!f.length){list.innerHTML='<div class="empty"><div class="empty-icon">'+(entries.length?'🔍':'✨')+'</div><div class="empty-text">'+(entries.length?'نتیجه‌ای پیدا نشد':'هنوز چیزی ثبت نشده')+'</div></div>';return;}var h='',a=0;for(var i=0;i<f.length;i++){var e=f[i];var oi=entries.indexOf(e);var isE=e.type==='expense';a++;h+='<div class="entry '+(isE?'exp':'inc')+'" style="animation-delay:'+Math.min(a*.04,.4)+'s"><div class="tx-icon '+(isE?'ic-exp':'ic-inc')+'">'+getIcon(e.desc)+'</div><div class="entry-body"><div class="entry-title">'+e.desc+'</div><div class="entry-meta"><span class="chip '+(e.card==='ملت'?'chip-melat':(e.card==='نقدی'?'chip-cash':'chip-saderat'))+'">'+e.card+'</span><span>'+e.date+'</span></div></div><div class="entry-amt"><b>'+(isE?'-':'+')+' '+fmt(e.amount)+'</b><span>تومان</span></div><div class="entry-acts"><button class="ebtn edit" onclick="openEdit('+oi+')">✏️</button><button class="ebtn del" onclick="delEntry('+oi+')">✕</button></div></div>';}
   list.innerHTML=h;}
@@ -524,12 +515,43 @@ function saveEditDebt(){var name=document.getElementById('edDebtName').value.tri
 function delDebt(i){if(!confirm('پاک بشه؟'))return;debts.splice(i,1);saveDebts();renderDebts();toast('پاک شد');}
 document.getElementById('editDebtModal').addEventListener('click',function(e){if(e.target===this)closeEditDebt();});
 
+/* TOP SPENDS */
+function renderTop(){
+  var j=nowJ();
+  var m=entries.filter(function(e){return e.type==='expense'&&e.year===j.y&&e.month===j.m});
+  var box=document.getElementById('topBox');
+  if(!m.length){box.style.display='none';return;}
+  var by={};
+  m.forEach(function(e){var k=e.desc;by[k]=by[k]||{sum:0,n:0,card:e.card};by[k].sum+=e.amount;by[k].n++;});
+  var arr=Object.keys(by).map(function(k){return {d:k,sum:by[k].sum,n:by[k].n};}).sort(function(a,b){return b.sum-a.sum;}).slice(0,5);
+  var tot=arr.reduce(function(s,x){return s+x.sum},0);
+  var medals=['🥇','🥈','🥉','4️⃣','5️⃣'];
+  var h='';
+  arr.forEach(function(x,i){
+    var pct=Math.round(x.sum/tot*100);
+    var badge=x.n>1?' <span style="font-size:10px;color:var(--text3)">×'+x.n+'</span>':'';
+    h+='<div style="margin-bottom:10px">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
+      +'<span style="font-size:14px">'+medals[i]+'</span>'
+      +'<span style="font-size:12.5px;font-weight:700;flex:1">'+getIcon(x.d)+' '+x.d+badge+'</span>'
+      +'<span style="font-size:12px;font-weight:800;color:var(--red)">'+fmt(x.sum)+'</span>'
+      +'</div>'
+      +'<div style="height:5px;border-radius:3px;background:var(--bg2);overflow:hidden">'
+      +'<div style="height:100%;width:'+pct+'%;border-radius:3px;background:linear-gradient(90deg,var(--red),#ff8fa3);animation:growBar .6s cubic-bezier(.34,1.3,.64,1) both;animation-delay:'+(i*0.08)+'s"></div>'
+      +'</div>'
+      +'</div>';
+  });
+  document.getElementById('topSub').textContent=jMonthName(j.m)+' · مجموع '+fmt(tot)+' تومان';
+  document.getElementById('topContent').innerHTML=h;
+  box.style.display='block';
+}
+
 /* PDF */
 function genPDF(){var j=nowJ();var monthE=entries.filter(function(e){return e.type==='expense'&&e.year===j.y&&e.month===j.m});var monthI=entries.filter(function(e){return e.type==='income'&&e.year===j.y&&e.month===j.m});if(!monthE.length&&!monthI.length){toast('تراکنشی برای این ماه نیست');return;}var w=window.open('');var html='<html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;direction:rtl;padding:20px;max-width:700px;margin:0 auto}h1{text-align:center;color:#1a1d2e;margin-bottom:3px}h3{text-align:center;color:#888;margin-bottom:15px;font-weight:400}table{width:100%;border-collapse:collapse}th{background:#1a1d2e;color:#fff;padding:8px;font-size:11px;text-align:right}td{padding:7px 8px;border-bottom:1px solid #ddd;font-size:11px}tr.exp td{background:#fff0f0}tr.inc td{background:#e6ffeb}.sum{margin-top:15px;padding:12px;background:#f5f5f5;text-align:center;font-size:14px;font-weight:700}@media print{body{padding:10px}}</style></head><body><h1>صورتحساب '+jMonthName(j.m)+' '+j.y+'</h1><h3>خروجی ماهانه</h3><table><tr><th>ردیف</th><th>تاریخ و ساعت</th><th>مبلغ</th><th>بابت</th><th>کارت</th><th>نوع</th></tr>';var n=1;monthE.forEach(function(e){html+='<tr class="exp"><td>'+(n++)+'</td><td>'+e.date+'</td><td>'+fmt(e.amount)+' ت</td><td>'+e.desc+'</td><td>'+e.card+'</td><td>خرج</td></tr>'});monthI.forEach(function(e){html+='<tr class="inc"><td>'+(n++)+'</td><td>'+e.date+'</td><td>'+fmt(e.amount)+' ت</td><td>'+e.desc+'</td><td>'+e.card+'</td><td>دخل</td></tr>'});html+='</table><div class="sum">جمع خرج: '+fmt(monthE.reduce(function(s,e){return s+e.amount},0))+' تومان | جمع دخل: '+fmt(monthI.reduce(function(s,e){return s+e.amount},0))+' تومان</div><script>setTimeout(function(){window.print()},500)<\/script></body></html>';w.document.write(html);w.document.close();}
 
 /* BACKUP */
 function dlBackup(){var d={entries:entries,debts:debts,balances:balances};var b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='dakhel_backup_'+new Date().toISOString().split('T')[0]+'.json';a.click();URL.revokeObjectURL(u);toast('بکاپ دانلود شد 💾');}
-function restore(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var raw=ev.target.result;var d=JSON.parse(raw);if(d&&typeof d==='object'&&d.entries){entries=d.entries;debts=d.debts||[];if(d.balances)balances=d.balances;}else if(Array.isArray(d)){entries=d;}else{toast('فایل بکاپ معتبر نیست');return;}save();saveDebts();localStorage.setItem('dakhel_bal',JSON.stringify(balances));buildMonthPills();renderHesab();renderEntries();renderDebts();renderCompare();document.getElementById("verBadge").textContent=APP_VERSION;toast(entries.length+' تراکنش برگشت ✓');}catch(err){toast('خطا: '+err.message);}};r.readAsText(f);e.target.value='';}
+function restore(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var raw=ev.target.result;var d=JSON.parse(raw);if(d&&typeof d==='object'&&d.entries){entries=d.entries;debts=d.debts||[];if(d.balances)balances=d.balances;}else if(Array.isArray(d)){entries=d;}else{toast('فایل بکاپ معتبر نیست');return;}save();saveDebts();localStorage.setItem('dakhel_bal',JSON.stringify(balances));buildMonthPills();renderHesab();renderEntries();renderDebts();document.getElementById("verBadge").textContent=APP_VERSION;toast(entries.length+' تراکنش برگشت ✓');}catch(err){toast('خطا: '+err.message);}};r.readAsText(f);e.target.value='';}
 function clearAll(){if(!confirm('همه پاک بشه؟'))return;entries=[];debts=[];balances={melat:0,sad:0,cash:0};save();saveDebts();localStorage.setItem('dakhel_bal',JSON.stringify(balances));buildMonthPills();renderHesab();renderEntries();renderDebts();toast('پاک شد');}
 function deleteAll(){if(!confirm('همه تراکنش‌ها پاک بشن؟\nاین کار غیرقابل بازگردونه!'))return;if(!confirm('مطمئنی؟ دیگه برگردونی نداره!'))return;entries=[];save();buildMonthPills();renderHesab();renderEntries();toast('همه تراکنش‌ها پاک شد');}
 function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2000);}
@@ -549,7 +571,7 @@ function animNum(el,to){
   requestAnimationFrame(step);
 }
 var _oRenderHesab=renderHesab;
-renderHesab=function(){_oRenderHesab();if(balHidden)return;animNum(document.getElementById('totalBal'),balances.melat+balances.sad);animNum(document.getElementById('balMelat'),balances.melat);animNum(document.getElementById('balSad'),balances.sad);animNum(document.getElementById('balCash'),balances.cash);};
+renderHesab=function(){_oRenderHesab();if(balHidden)return;animNum(document.getElementById('totalBal'),balances.melat+balances.sad);animNum(document.getElementById('balMelat'),balances.melat);animNum(document.getElementById('balSad'),balances.sad);animNum(document.getElementById('balCash'),balances.cash);renderTop();};
 
 /* ENTER SUBMIT */
 document.addEventListener('keydown',function(ev){if(ev.key!=='Enter')return;var s1=document.getElementById('addSheet'),s2=document.getElementById('addDebtSheet');if(s1.classList.contains('show')){ev.preventDefault();addEntry();}else if(s2.classList.contains('show')){ev.preventDefault();addDebt();}});
