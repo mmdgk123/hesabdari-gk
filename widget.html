@@ -45,6 +45,8 @@ html,body{background:var(--bg);color:var(--text);font-family:'IRANSansX',system-
 .cp{flex:1;padding:13px;border:1.5px solid var(--border);border-radius:15px;text-align:center;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;color:var(--text2);background:var(--card)}
 .cp.active.melat{border-color:rgba(176,181,196,.5);background:rgba(255,255,255,.08);color:var(--text)}
 .cp.active.saderat{border-color:rgba(108,155,255,.5);background:rgba(108,155,255,.12);color:var(--blue)}
+.cp.active.cash{border-color:rgba(255,200,87,.5);background:rgba(255,200,87,.12);color:#ffc857}
+[data-theme="light"] .cp.active.cash{background:rgba(216,160,22,.1)}
 [data-theme="light"] .cp.active.melat{background:rgba(0,0,0,.06)}
 
 .submit{width:100%;padding:18px;border:none;border-radius:18px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;color:#fff;margin-top:8px;position:relative;overflow:hidden}
@@ -74,6 +76,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'IRANSansX',system-
 <div class="bal-row">
   <div class="bal-card"><small>ملت</small><b id="wMelat">۰</b></div>
   <div class="bal-card"><small>صادرات</small><b id="wSad">۰</b></div>
+  <div class="bal-card"><small>نقدی</small><b id="wCash">۰</b></div>
 </div>
 
 <div class="type-tabs">
@@ -97,7 +100,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'IRANSansX',system-
   <label>کارت</label>
   <div class="card-pills">
     <div class="cp active melat" id="wCpMelat" onclick="wSetCard('ملت')">💳 ملت</div>
-    <div class="cp" id="wCpSad" onclick="wSetCard('صادرات')">💳 صادرات</div>
+    <div class="cp" id="wCpSad" onclick="wSetCard('صادرات')">💳 صادرات</div><div class="cp" id="wCpCash" onclick="wSetCard('نقدی')">💵 نقدی</div>
   </div>
 </div>
 
@@ -113,7 +116,8 @@ html,body{background:var(--bg);color:var(--text);font-family:'IRANSansX',system-
 var wType='expense',wCard='ملت';
 var P='dakhel_';
 var entries=JSON.parse(localStorage.getItem(P+'entries')||'[]');
-var balances=JSON.parse(localStorage.getItem(P+'bal')||'{"melat":0,"sad":0}');
+var balances=JSON.parse(localStorage.getItem(P+'bal')||'{"melat":0,"sad":0,"cash":0}');
+if(balances.cash===undefined)balances.cash=0;
 
 function g2j(gy,gm,gd){var g=[0,31,59,90,120,151,181,212,243,273,304,334];var y2=gm>2?gy+1:gy;var d=355666+365*gy+Math.floor((y2+3)/4)-Math.floor((y2+99)/100)+Math.floor((y2+399)/400)+gd+g[gm-1];var jy=-1595+Math.floor(33*Math.floor(d/12053));d%=12053;jy+=4*Math.floor(d/1461);d%=1461;if(d>365){jy+=Math.floor((d-1)/365);d=(d-1)%365;}if(d<186)return[jy,1+Math.floor(d/31),1+d%31];return[jy,7+Math.floor((d-186)/30),1+(d-186)%30];}
 function jMN(m){return['','فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'][m]||'';}
@@ -135,6 +139,7 @@ function wSetCard(c){
   wCard=c;
   document.getElementById('wCpMelat').className='cp'+(c==='ملت'?' active melat':'');
   document.getElementById('wCpSad').className='cp'+(c==='صادرات'?' active saderat':'');
+  document.getElementById('wCpCash').className='cp'+(c==='نقدی'?' active cash':'');
 }
 function wAdd(){
   var amt=fa2en(document.getElementById('wAmt').value.trim()).replace(/,/g,'');
@@ -142,8 +147,11 @@ function wAdd(){
   var desc=document.getElementById('wDesc').value.trim();
   if(!desc){toast('توضیح رو وارد کن');return;}
   var j=nowJ();
+  var acc=wCard==='ملت'?'melat':(wCard==='نقدی'?'cash':'sad');
+  if(wType==='expense')balances[acc]-=parseInt(amt)*1000;else balances[acc]+=parseInt(amt)*1000;
   entries.push({type:wType,amount:parseInt(amt)*1000,desc:desc,card:wCard,date:j.str,year:j.y,month:j.m,day:j.d});
   localStorage.setItem(P+'entries',JSON.stringify(entries));
+  localStorage.setItem(P+'bal',JSON.stringify(balances));
   document.getElementById('wAmt').value='';
   document.getElementById('wDesc').value='';
   renderBal();
@@ -152,6 +160,7 @@ function wAdd(){
 function renderBal(){
   document.getElementById('wMelat').textContent=fmt(balances.melat);
   document.getElementById('wSad').textContent=fmt(balances.sad);
+  document.getElementById('wCash').textContent=fmt(balances.cash);
 }
 
 // Load theme
