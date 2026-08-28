@@ -1,5 +1,5 @@
 // Force-fresh SW: network-first for everything
-const CACHE = 'dakhel-v20';
+const CACHE = 'dakhel-v21';
 
 self.addEventListener('install', e => { self.skipWaiting(); });
 self.addEventListener('activate', e => {
