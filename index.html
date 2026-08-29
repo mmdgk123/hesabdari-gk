@@ -549,7 +549,34 @@ function renderTop(){
 }
 
 /* PDF */
-function genPDF(){var j=nowJ();var monthE=entries.filter(function(e){return e.type==='expense'&&e.year===j.y&&e.month===j.m});var monthI=entries.filter(function(e){return e.type==='income'&&e.year===j.y&&e.month===j.m});if(!monthE.length&&!monthI.length){toast('تراکنشی برای این ماه نیست');return;}var w=window.open('');var html='<html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;direction:rtl;padding:20px;max-width:700px;margin:0 auto}h1{text-align:center;color:#1a1d2e;margin-bottom:3px}h3{text-align:center;color:#888;margin-bottom:15px;font-weight:400}table{width:100%;border-collapse:collapse}th{background:#1a1d2e;color:#fff;padding:8px;font-size:11px;text-align:right}td{padding:7px 8px;border-bottom:1px solid #ddd;font-size:11px}tr.exp td{background:#fff0f0}tr.inc td{background:#e6ffeb}.sum{margin-top:15px;padding:12px;background:#f5f5f5;text-align:center;font-size:14px;font-weight:700}@media print{body{padding:10px}}</style></head><body><h1>صورتحساب '+jMonthName(j.m)+' '+j.y+'</h1><h3>خروجی ماهانه</h3><table><tr><th>ردیف</th><th>تاریخ و ساعت</th><th>مبلغ</th><th>بابت</th><th>کارت</th><th>نوع</th></tr>';var n=1;monthE.forEach(function(e){html+='<tr class="exp"><td>'+(n++)+'</td><td>'+e.date+'</td><td>'+fmt(e.amount)+' ت</td><td>'+e.desc+'</td><td>'+e.card+'</td><td>خرج</td></tr>'});monthI.forEach(function(e){html+='<tr class="inc"><td>'+(n++)+'</td><td>'+e.date+'</td><td>'+fmt(e.amount)+' ت</td><td>'+e.desc+'</td><td>'+e.card+'</td><td>دخل</td></tr>'});html+='</table><div class="sum">جمع خرج: '+fmt(monthE.reduce(function(s,e){return s+e.amount},0))+' تومان | جمع دخل: '+fmt(monthI.reduce(function(s,e){return s+e.amount},0))+' تومان</div><script>setTimeout(function(){window.print()},500)<\/script></body></html>';w.document.write(html);w.document.close();}
+function genPDF(){
+  var j=nowJ();
+  var sel=(typeof currentTab==='string'&&currentTab.indexOf('m:')===0)?currentTab.slice(2):null;
+  var list;
+  if(sel){var pp=sel.split('/');list=entries.filter(function(e){return e.year===+pp[0]&&e.month===+pp[1]});}
+  else list=entries.slice();
+  list=list.slice().sort(function(a,b){if(a.year!==b.year)return a.year-b.year;if(a.month!==b.month)return a.month-b.month;if(a.day!==b.day)return a.day-b.day;var ta=(a.date.indexOf(':')>=0)?a.date.split(' ').pop():'00:00';var tb=(b.date.indexOf(':')>=0)?b.date.split(' ').pop():'00:00';return ta.localeCompare(tb);});
+  if(!list.length){toast('تراکنشی برای این بازه نیست');return;}
+  var totE=0,totI=0;
+  list.forEach(function(e){if(e.type==='expense')totE+=e.amount;else totI+=e.amount;});
+  var title;
+  if(sel){var pp=sel.split('/');title='دخل و خرج '+jMonthName(+pp[1])+' '+pp[0];}
+  else{var last=list[list.length-1];title='دخل و خرج تا تاریخ '+last.day+' '+jMonthName(last.month)+' '+last.year;}
+  var rows='';
+  var n=1;
+  list.forEach(function(e){
+    var isE=e.type==='expense';
+    rows+='<tr class="'+(isE?'exp':'inc')+'"><td class="c">'+(n++)+'</td><td class="c">'+e.date+'</td><td class="c amt">'+fmt(e.amount)+'</td><td class="d">'+esc(e.desc)+'</td><td class="c">'+e.card+'</td><td class="t '+(isE?'te':'ti')+'">'+(isE?'خرج':'دخل')+'</td></tr>';
+  });
+  var w=window.open('');
+  var html='<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8"><title>'+title+'</title><style>@page{size:A4;margin:14mm 12mm}*{margin:0;padding:0;box-sizing:border-box}body{font-family:Vazirmatn,Tahoma,"IRANSansX",sans-serif;color:#111827}h1{text-align:center;font-size:20px;font-weight:800;margin-bottom:4px}hr{border:none;border-top:1px solid #e5e7eb;margin-bottom:12px}table{width:100%;border-collapse:collapse;font-size:10.5px}thead{display:table-header-group}th{background:#1f2937;color:#fff;padding:7px 6px;font-size:10.5px;font-weight:700;text-align:center;border:1px solid #1f2937}td{padding:6px;border:1px solid #d1d5db;vertical-align:middle}.c{text-align:center}.d{text-align:right}.amt{font-weight:700}tr.exp td{background:#fdf0f0}tr.inc td{background:#e8f6ec}.t{text-align:center;font-weight:800}.te{color:#dc2626}.ti{color:#16a34a}.sum{margin-top:14px}.sum div{padding:10px;text-align:center;font-size:12.5px;font-weight:800;border-radius:6px}.sum .se{background:#fdf0f0;color:#dc2626;border:1px solid #f5c6c6}.sum .si{background:#e8f6ec;color:#16a34a;border:1px solid #bfe3c8}</style></head><body>'
+    +'<h1>'+title+'</h1><hr>'
+    +'<table><thead><tr><th>ردیف</th><th>تاریخ و ساعت</th><th>مبلغ</th><th>بابت</th><th>کارت</th><th>نوع</th></tr></thead><tbody>'+rows+'</tbody></table>'
+    +'<div class="sum"><div class="se">جمع خرج: '+fmt(totE)+' تومان</div><div class="si">جمع دخل: '+fmt(totI)+' تومان</div></div>'
+    +'<scr'+'ipt>setTimeout(function(){window.print()},400)</scr'+'ipt></body></html>';
+  w.document.write(html);
+  w.document.close();
+}
 
 /* BACKUP */
 function dlBackup(){var d={entries:entries,debts:debts,balances:balances};var b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='dakhel_backup_'+new Date().toISOString().split('T')[0]+'.json';a.click();URL.revokeObjectURL(u);toast('بکاپ دانلود شد 💾');}
