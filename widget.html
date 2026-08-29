@@ -149,7 +149,7 @@ function wAdd(){
   var j=nowJ();
   var acc=wCard==='ملت'?'melat':(wCard==='نقدی'?'cash':'sad');
   if(wType==='expense')balances[acc]-=parseInt(amt)*1000;else balances[acc]+=parseInt(amt)*1000;
-  entries.push({type:wType,amount:parseInt(amt)*1000,desc:desc,card:wCard,date:j.str,year:j.y,month:j.m,day:j.d});
+  entries.unshift({type:wType,amount:parseInt(amt)*1000,desc:desc,card:wCard,date:j.str,year:j.y,month:j.m,day:j.d,time:j.str.split(' ').pop()});
   localStorage.setItem(P+'entries',JSON.stringify(entries));
   localStorage.setItem(P+'bal',JSON.stringify(balances));
   document.getElementById('wAmt').value='';
