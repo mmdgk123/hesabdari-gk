@@ -229,6 +229,8 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 @keyframes navBounce{0%{transform:scale(.85)}55%{transform:scale(1.14)}100%{transform:scale(1)}}
 .sheet-handle{margin-bottom:14px}
 @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+.creator{position:fixed;bottom:calc(84px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:24;font-size:10px;font-weight:600;color:var(--text2);opacity:.65;text-decoration:none;background:var(--card);border:1px solid var(--border);border-radius:99px;padding:3px 12px;white-space:nowrap;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.creator b{color:#c9a227;font-weight:800}
 
 /* ─── Edit Balance Modal ─── */
 .bal-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);z-index:120;display:none;align-items:center;justify-content:center}
@@ -307,6 +309,7 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
     <button onclick="genPDF()" style="flex:1;padding:12px;border:1.5px solid var(--border);border-radius:14px;background:var(--card);color:var(--blue);font-size:12px;font-weight:800;font-family:inherit;cursor:pointer">📄 PDF</button>
     <button onclick="deleteAll()" style="flex:1;padding:12px;border:1.5px solid rgba(255,77,109,.3);border-radius:14px;background:rgba(255,77,109,.08);color:var(--red);font-size:12px;font-weight:800;font-family:inherit;cursor:pointer">🗑 حذف همه</button>
   </div>
+  <button onclick="checkUpdate()" style="width:100%;margin-top:8px;padding:10px;border:1px solid var(--border);border-radius:14px;background:var(--card);color:var(--text2);font-size:11.5px;font-weight:800;font-family:inherit;cursor:pointer">🔄 بررسی آپدیت برنامه</button>
 </div>
 
 <!-- ═══ صفحه بدهی‌ها ═══ -->
@@ -323,6 +326,7 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 </div>
 
 <!-- ═══ FAB ═══ -->
+<a class="creator" href="https://t.me/mmdGK" target="_blank" rel="noopener">👨‍💻 سازنده: <b>@mmdGK</b></a>
 <button class="fab" id="fab" onclick="openAddSheet()">＋</button>
 
 <!-- ═══ Bottom Nav ═══ -->
@@ -396,7 +400,7 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   </div>
 </div>
 
-<div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">v22</div>
+<div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">v23</div>
 <div class="toast" id="toast"></div>
 
 
@@ -407,7 +411,7 @@ var debts=JSON.parse(localStorage.getItem('dakhel_debts')||'[]');
 var balances=JSON.parse(localStorage.getItem('dakhel_bal')||'{"melat":0,"sad":0,"cash":0}');
 if(balances.cash===undefined)balances.cash=0;
 var type='expense',card='ملت',currentTab='all',debtType='creditor';
-var APP_VERSION='v22';
+var APP_VERSION='v23';
 var editIdx=-1,editCardVal='ملت',editDebtIdx=-1,editBalAcc='';
 
 /* THEME */
@@ -580,6 +584,7 @@ function genPDF(){
 
 /* BACKUP */
 function dlBackup(){var d={entries:entries,debts:debts,balances:balances};var b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='dakhel_backup_'+new Date().toISOString().split('T')[0]+'.json';a.click();URL.revokeObjectURL(u);toast('بکاپ دانلود شد 💾');}
+function checkUpdate(){if(!confirm('کش برنامه پاک و تازه‌سازی بشه؟ (داده‌هات پاک نمیشه)'))return;var done=function(){try{location.reload(true);}catch(e){location.reload();}};if('serviceWorker' in navigator){Promise.all([caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k);}));}),navigator.serviceWorker.getRegistrations().then(function(rs){return Promise.all(rs.map(function(r){return r.unregister();}));})]).then(done).catch(done);}else{done();}}
 function restore(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var raw=ev.target.result;var d=JSON.parse(raw);if(d&&typeof d==='object'&&d.entries){entries=d.entries;debts=d.debts||[];if(d.balances){balances=d.balances;if(balances.melat===undefined)balances.melat=0;if(balances.sad===undefined)balances.sad=0;if(balances.cash===undefined)balances.cash=0;}}else if(Array.isArray(d)){entries=d;}else{toast('فایل بکاپ معتبر نیست');return;}save();saveDebts();localStorage.setItem('dakhel_bal',JSON.stringify(balances));buildMonthPills();renderHesab();renderEntries();renderDebts();document.getElementById("verBadge").textContent=APP_VERSION;toast(entries.length+' تراکنش برگشت ✓');}catch(err){toast('خطا: '+err.message);}};r.readAsText(f);e.target.value='';}
 function clearAll(){if(!confirm('همه پاک بشه؟'))return;entries=[];debts=[];balances={melat:0,sad:0,cash:0};save();saveDebts();localStorage.setItem('dakhel_bal',JSON.stringify(balances));buildMonthPills();renderHesab();renderEntries();renderDebts();toast('پاک شد');}
 function deleteAll(){if(!confirm('همه داده‌ها پاک بشن؟\nتراکنش‌ها، بدهی‌ها و موجودی‌ها!\nاین کار غیرقابل بازگردونه!'))return;if(!confirm('مطمئنی؟ دیگه برگردونی نداره!'))return;entries=[];debts=[];balances={melat:0,sad:0,cash:0};save();saveDebts();localStorage.setItem('dakhel_bal',JSON.stringify(balances));buildMonthPills();renderHesab();renderEntries();renderDebts();toast('همه داده‌ها پاک شد');}
