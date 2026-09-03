@@ -229,8 +229,8 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 @keyframes navBounce{0%{transform:scale(.85)}55%{transform:scale(1.14)}100%{transform:scale(1)}}
 .sheet-handle{margin-bottom:14px}
 @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-.creator{position:fixed;bottom:calc(84px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:24;font-size:10px;font-weight:600;color:var(--text2);opacity:.65;text-decoration:none;background:var(--card);border:1px solid var(--border);border-radius:99px;padding:3px 12px;white-space:nowrap;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-.creator b{color:#c9a227;font-weight:800}
+.creator-top{display:block;width:fit-content;margin:8px auto 0;font-size:10px;font-weight:600;color:var(--text2);opacity:.8;text-decoration:none;background:var(--card);border:1px solid var(--border);border-radius:99px;padding:3px 12px;white-space:nowrap}
+.creator-top b{color:#c9a227;font-weight:800}
 
 /* ─── Edit Balance Modal ─── */
 .bal-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);z-index:120;display:none;align-items:center;justify-content:center}
@@ -246,6 +246,7 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
     <h1 id="pageTitle">حسابداری</h1>
     <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
   </div>
+  <a class="creator-top" href="https://t.me/mmdGK" target="_blank" rel="noopener">👨‍💻 سازنده: <b>mmdGK</b></a>
 </div>
 
 <!-- ═══ صفحه حساب‌ها ═══ -->
@@ -326,7 +327,6 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 </div>
 
 <!-- ═══ FAB ═══ -->
-<a class="creator" href="https://t.me/mmdGK" target="_blank" rel="noopener">👨‍💻 سازنده: <b>mmdGK</b></a>
 <button class="fab" id="fab" onclick="openAddSheet()">＋</button>
 
 <!-- ═══ Bottom Nav ═══ -->
@@ -400,7 +400,7 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   </div>
 </div>
 
-<div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">v24</div>
+<div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">v25</div>
 <div class="toast" id="toast"></div>
 
 
@@ -411,7 +411,7 @@ var debts=JSON.parse(localStorage.getItem('dakhel_debts')||'[]');
 var balances=JSON.parse(localStorage.getItem('dakhel_bal')||'{"melat":0,"sad":0,"cash":0}');
 if(balances.cash===undefined)balances.cash=0;
 var type='expense',card='ملت',currentTab='all',debtType='creditor';
-var APP_VERSION='v24';
+var APP_VERSION='v25';
 var editIdx=-1,editCardVal='ملت',editDebtIdx=-1,editBalAcc='';
 
 /* THEME */
