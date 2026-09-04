@@ -232,6 +232,25 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 .creator-top{display:block;width:fit-content;margin:8px auto 0;font-size:10px;font-weight:600;color:var(--text2);opacity:.8;text-decoration:none;background:var(--card);border:1px solid var(--border);border-radius:99px;padding:3px 12px;white-space:nowrap}
 .creator-top b{color:#c9a227;font-weight:800}
 
+/* ─── v26 extra animations ─── */
+.btn-anim{position:relative;overflow:hidden;transition:transform .15s,filter .2s}
+.acc-card:hover{border-color:var(--border2)}
+.entry{will-change:transform}
+.entry.new-one{animation:hitNew .55s cubic-bezier(.34,1.56,.64,1)}
+@keyframes hitNew{0%{transform:scale(1)}35%{transform:scale(1.045);border-color:var(--green)}100%{transform:scale(1)}}
+.balance-hide{transition:filter .3s,opacity .3s}
+.balance-hide.blurred{filter:blur(7px);opacity:.55}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.4);transform:scale(0);animation:rip .5s ease-out forwards;pointer-events:none;z-index:1}
+@keyframes rip{to{transform:scale(3.2);opacity:0}}
+.nav-icon{position:relative}
+.stat-num{transition:transform .2s}
+.stat.bump .stat-num{animation:statBump .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes statBump{0%{transform:scale(1)}45%{transform:scale(1.22)}100%{transform:scale(1)}}
+.submit-btn.success-flash{animation:okFlash .6s}
+@keyframes okFlash{0%{filter:brightness(1.6)}100%{filter:brightness(1)}}
+.page{will-change:opacity,transform}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
 /* ─── Edit Balance Modal ─── */
 .bal-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);z-index:120;display:none;align-items:center;justify-content:center}
 .bal-modal-bg.show{display:flex;animation:fadeIn .2s}
@@ -400,7 +419,7 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   </div>
 </div>
 
-<div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">v25</div>
+<div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">v26</div>
 <div class="toast" id="toast"></div>
 
 
@@ -411,7 +430,7 @@ var debts=JSON.parse(localStorage.getItem('dakhel_debts')||'[]');
 var balances=JSON.parse(localStorage.getItem('dakhel_bal')||'{"melat":0,"sad":0,"cash":0}');
 if(balances.cash===undefined)balances.cash=0;
 var type='expense',card='ملت',currentTab='all',debtType='creditor';
-var APP_VERSION='v25';
+var APP_VERSION='v26';
 var editIdx=-1,editCardVal='ملت',editDebtIdx=-1,editBalAcc='';
 
 /* THEME */
@@ -432,7 +451,8 @@ var balHidden=true;
 function toggleBalanceVisibility(){balHidden=!balHidden;document.getElementById('eyeBtn').textContent=balHidden?'👁‍🗨 نمایش موجودی':'👁 پنهان کردن';renderHesab();}
 function switchPage(id,btn){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
-  document.getElementById('page-'+id).classList.add('active');
+  var pg=document.getElementById('page-'+id);
+  pg.classList.remove('active');void pg.offsetWidth;pg.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active')});
   btn.classList.add('active');
   var titles={hesab:'حسابداری',trans:'تراکنش‌ها',debts:'بدهی‌ها'};
@@ -460,19 +480,18 @@ function renderHesab(){
   var totI=monthI.reduce(function(s,e){return s+e.amount},0);
   var total=balances.melat+balances.sad+balances.cash;
   if(balHidden){
-    document.getElementById('totalBal').innerHTML='••••• <small>تومان</small>';
-    document.getElementById('balMelat').innerHTML='••••• <small>تومان</small>';
-    document.getElementById('balSad').innerHTML='••••• <small>تومان</small>';
-    document.getElementById('balCash').innerHTML='••••• <small>تومان</small>';
+    var els=['totalBal','balMelat','balSad','balCash'].map(function(id){return document.getElementById(id)});
+    els.forEach(function(el){el.classList.add('blurred');});
+    setTimeout(function(){els.forEach(function(el){el.innerHTML='••••• <small>تومان</small>';el.classList.remove('blurred');});},280);
   }else{
     document.getElementById('totalBal').innerHTML=fmt(total)+' <small>تومان</small>';
     document.getElementById('balMelat').innerHTML=fmt(balances.melat)+' <small>تومان</small>';
     document.getElementById('balSad').innerHTML=fmt(balances.sad)+' <small>تومان</small>';
     document.getElementById('balCash').innerHTML=fmt(balances.cash)+' <small>تومان</small>';
   }
-  document.getElementById('sExp').textContent=fmt(totE);
-  document.getElementById('sInc').textContent=fmt(totI);
-  document.getElementById('sCnt').textContent=fmt(entries.length);
+  var sE=document.getElementById('sExp'),sI=document.getElementById('sInc'),sC=document.getElementById('sCnt');
+  sE.textContent=fmt(totE);sI.textContent=fmt(totI);sC.textContent=fmt(entries.length);
+  ['sExp','sInc','sCnt'].forEach(function(id){var st=document.getElementById(id).parentElement;st.classList.remove('bump');void st.offsetWidth;st.classList.add('bump');});
 }
 function editBalance(acc){editBalAcc=acc;document.getElementById('balModalTitle').textContent='موجودی '+(acc==='melat'?'ملت':(acc==='sad'?'صادرات':'نقدی'));document.getElementById('balInput').value=Math.round(balances[acc]/1000).toLocaleString('en-US');document.getElementById('balModal').classList.add('show');}
 function closeBalModal(){document.getElementById('balModal').classList.remove('show');}
@@ -486,8 +505,10 @@ function buildMonthDropdown(){var s=new Set();entries.forEach(function(e){s.add(
 function buildMonthPills(){var j=nowJ();currentTab="m:"+j.y+"/"+j.m;document.getElementById("monthBtnText").textContent=jMonthName(j.m)+" "+j.y;}
 function filtered(){var l=entries.slice();if(currentTab==='expense')l=l.filter(function(e){return e.type==='expense'});else if(currentTab==='income')l=l.filter(function(e){return e.type==='income'});else if(currentTab.indexOf('m:')===0){var p=currentTab.slice(2).split('/');l=l.filter(function(e){return e.year===+p[0]&&e.month===+p[1]});}var q=(document.getElementById('searchInput')&&document.getElementById('searchInput').value||'').trim().toLowerCase();if(q)l=l.filter(function(e){return e.desc.toLowerCase().indexOf(q)>=0||e.card.indexOf(q)>=0});return l;}
 
-function renderEntries(){var f=filtered().sort(function(a,b){if(b.year!==a.year)return b.year-a.year;if(b.month!==a.month)return b.month-a.month;if(b.day!==a.day)return b.day-a.day;var ta=(a.date.indexOf(':')>=0)?a.date.split(' ').pop():'00:00';var tb=(b.date.indexOf(':')>=0)?b.date.split(' ').pop():'00:00';return tb.localeCompare(ta);});var list=document.getElementById('entriesList');if(!f.length){list.innerHTML='<div class="empty"><div class="empty-icon">'+(entries.length?'🔍':'✨')+'</div><div class="empty-text">'+(entries.length?'نتیجه‌ای پیدا نشد':'هنوز چیزی ثبت نشده')+'</div></div>';return;}var h='',a=0;for(var i=0;i<f.length;i++){var e=f[i];var oi=entries.indexOf(e);var isE=e.type==='expense';a++;h+='<div class="entry '+(isE?'exp':'inc')+'" style="animation-delay:'+Math.min(a*.04,.4)+'s"><div class="tx-icon '+(isE?'ic-exp':'ic-inc')+'">'+getIcon(e.desc)+'</div><div class="entry-body"><div class="entry-title">'+esc(e.desc)+'</div><div class="entry-meta"><span class="chip '+(e.card==='ملت'?'chip-melat':(e.card==='نقدی'?'chip-cash':'chip-saderat'))+'">'+esc(e.card)+'</span><span>'+e.date+'</span></div></div><div class="entry-amt"><b>'+(isE?'-':'+')+' '+fmt(e.amount)+'</b><span>تومان</span></div><div class="entry-acts"><button class="ebtn edit" onclick="openEdit('+oi+')">✏️</button><button class="ebtn del" onclick="delEntry('+oi+')">✕</button></div></div>';}
-  list.innerHTML=h;}
+function renderEntries(flash){var f=filtered().sort(function(a,b){if(b.year!==a.year)return b.year-a.year;if(b.month!==a.month)return b.month-a.month;if(b.day!==a.day)return b.day-a.day;var ta=(a.date.indexOf(':')>=0)?a.date.split(' ').pop():'00:00';var tb=(b.date.indexOf(':')>=0)?b.date.split(' ').pop():'00:00';return tb.localeCompare(ta);});var list=document.getElementById('entriesList');if(!f.length){list.innerHTML='<div class="empty"><div class="empty-icon">'+(entries.length?'🔍':'✨')+'</div><div class="empty-text">'+(entries.length?'نتیجه‌ای پیدا نشد':'هنوز چیزی ثبت نشده')+'</div></div>';return;}var h='',a=0;for(var i=0;i<f.length;i++){var e=f[i];var oi=entries.indexOf(e);var isE=e.type==='expense';a++;h+='<div class="entry '+(isE?'exp':'inc')+'" style="animation-delay:'+Math.min(a*.04,.4)+'s"><div class="tx-icon '+(isE?'ic-exp':'ic-inc')+'">'+getIcon(e.desc)+'</div><div class="entry-body"><div class="entry-title">'+esc(e.desc)+'</div><div class="entry-meta"><span class="chip '+(e.card==='ملت'?'chip-melat':(e.card==='نقدی'?'chip-cash':'chip-saderat'))+'">'+esc(e.card)+'</span><span>'+e.date+'</span></div></div><div class="entry-amt"><b>'+(isE?'-':'+')+' '+fmt(e.amount)+'</b><span>تومان</span></div><div class="entry-acts"><button class="ebtn edit" onclick="openEdit('+oi+')">✏️</button><button class="ebtn del" onclick="delEntry('+oi+')">✕</button></div></div>';}
+  list.innerHTML=h;
+  if(flash){var first=list.firstElementChild;if(first)first.classList.add('new-one');}
+}
 function setTab(t,el){currentTab=t;document.querySelectorAll('.fp').forEach(function(p){p.classList.remove('active')});el.classList.add('active');renderEntries();}
 
 /* ADD/EDIT/DEL ENTRY */
@@ -498,7 +519,11 @@ function setType(t){type=t;document.getElementById('tabExp').className='type-tab
 function setCard(c){card=c;document.getElementById('cpMelat').className='cp'+(c==='ملت'?' active melat':'');document.getElementById('cpSad').className='cp'+(c==='صادرات'?' active saderat':'');document.getElementById('cpCash').className='cp'+(c==='نقدی'?' active cash':'');}
 function setEditCard(c){editCardVal=c;document.getElementById('ecMelat').className='cp'+(c==='ملت'?' active melat':'');document.getElementById('ecSad').className='cp'+(c==='صادرات'?' active saderat':'');document.getElementById('ecCash').className='cp'+(c==='نقدی'?' active cash':'');}
 function addEntry(){var amt=fa2en(document.getElementById('amount').value.trim()).replace(/,/g,'');if(!amt||amt==0){toast('مبلغ رو وارد کن');return;}var desc=document.getElementById('desc').value.trim();if(!desc){toast('توضیح رو وارد کن');return;}var j=nowJ();entries.unshift({type:type,amount:parseInt(amt)*1000,desc:desc,card:card,date:j.str,year:j.y,month:j.m,day:j.d,time:j.str.split(' ').pop()});var acc=card==='ملت'?'melat':(card==='نقدی'?'cash':'sad');
-if(type==='expense')balances[acc]-=parseInt(amt)*1000;else balances[acc]+=parseInt(amt)*1000;localStorage.setItem('dakhel_bal',JSON.stringify(balances));save();document.getElementById('amount').value='';document.getElementById('desc').value='';buildMonthPills();closeSheet();renderEntries();renderHesab();toast(type==='expense'?'خرج ثبت شد ✓':'دخل ثبت شد ✓');}
+if(type==='expense')balances[acc]-=parseInt(amt)*1000;else balances[acc]+=parseInt(amt)*1000;localStorage.setItem('dakhel_bal',JSON.stringify(balances));save();document.getElementById('amount').value='';document.getElementById('desc').value='';buildMonthPills();closeSheet();
+var sb=document.getElementById('submitBtn');sb.classList.add('success-flash');setTimeout(function(){sb.classList.remove('success-flash')},620);
+if(navigator.vibrate){try{navigator.vibrate(12);}catch(e){}}
+renderEntries(true);renderHesab();
+toast(type==='expense'?'خرج ثبت شد ✓':'دخل ثبت شد ✓');}
 function openEdit(i){editIdx=i;editCardVal=entries[i].card;document.getElementById('editAmt').value=Math.round(entries[i].amount/1000).toLocaleString('en-US');document.getElementById('editDesc').value=entries[i].desc;setEditCard(editCardVal);document.getElementById('editModal').classList.add('show');}
 function saveEdit(){var amt=fa2en(document.getElementById('editAmt').value.trim()).replace(/,/g,'');if(!amt||amt==0){toast('مبلغ رو وارد کن');return;}var desc=document.getElementById('editDesc').value.trim();if(!desc){toast('توضیح رو وارد کن');return;}var oldE=entries[editIdx];var accOld=oldE.card==='ملت'?'melat':(oldE.card==='نقدی'?'cash':'sad');var accNew=editCardVal==='ملت'?'melat':(editCardVal==='نقدی'?'cash':'sad');var newAmt=parseInt(amt)*1000;if(oldE.type==='expense')balances[accOld]+=oldE.amount;else balances[accOld]-=oldE.amount;if(oldE.type==='expense')balances[accNew]-=newAmt;else balances[accNew]+=newAmt;entries[editIdx].amount=newAmt;entries[editIdx].desc=desc;entries[editIdx].card=editCardVal;localStorage.setItem('dakhel_bal',JSON.stringify(balances));save();closeModal();renderEntries();renderHesab();toast('ویرایش شد ✓');}
 function closeModal(){document.getElementById('editModal').classList.remove('show');}
@@ -609,6 +634,19 @@ renderHesab=function(){_oRenderHesab();renderTop();if(balHidden)return;animNum(d
 
 /* ENTER SUBMIT */
 document.addEventListener('keydown',function(ev){if(ev.key!=='Enter')return;var s1=document.getElementById('addSheet'),s2=document.getElementById('addDebtSheet');if(s1.classList.contains('show')){ev.preventDefault();addEntry();}else if(s2.classList.contains('show')){ev.preventDefault();addDebt();}});
+
+/* ═══ Ripple + haptic ═══ */
+document.addEventListener('pointerdown',function(ev){
+  var b=ev.target.closest('.submit-btn,.nav-btn,.fab,.cp,.debt-tab,.type-tab,.fp,.ebtn,.modal-btns button,.debt-check');
+  if(!b)return;
+  if(navigator.vibrate){try{navigator.vibrate(8);}catch(e){}}
+  if(b.classList.contains('fab')||b.classList.contains('nav-btn'))return;
+  var r=b.getBoundingClientRect(),d=Math.max(r.width,r.height);
+  var s=document.createElement('span');s.className='ripple';
+  s.style.width=s.style.height=d+'px';
+  s.style.left=(ev.clientX-r.left-d/2)+'px';s.style.top=(ev.clientY-r.top-d/2)+'px';
+  b.appendChild(s);setTimeout(function(){s.remove()},520);
+},{passive:true});
 
 /* INIT */
 document.addEventListener("click",function(ev){if(!ev.target.closest("#monthDropdown")&&!ev.target.closest("#monthBtn")){monthListOpen=false;var dd=document.getElementById("monthDropdown");if(dd)dd.style.display="none";}});loadTheme();document.getElementById("eyeBtn").textContent=balHidden?"👁‍🗨 نمایش موجودی":"👁 پنهان کردن";buildMonthPills();renderHesab();renderEntries();renderDebts();
