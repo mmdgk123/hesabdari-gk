@@ -44,28 +44,30 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
 
 /* ─── Account Cards ─── */
 .acc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:8px 0 20px}
-.acc-card.cash{border-image:linear-gradient(135deg,rgba(255,200,87,.45),rgba(216,160,22,.2)) 1}
-.acc-card{position:relative;overflow:hidden;border-radius:22px;padding:18px 16px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;transition:all .2s}
-.acc-card:active{transform:scale(.97)}
-.acc-card.melat{border-image:linear-gradient(135deg,rgba(223,226,236,.4),rgba(160,165,186,.2)) 1}
-.acc-card.sad{border-image:linear-gradient(135deg,rgba(108,155,255,.4),rgba(61,99,216,.2)) 1}
-.acc-card.grn{border-image:linear-gradient(135deg,rgba(45,224,165,.4),rgba(45,224,165,.15)) 1}
-.acc-card.pur{border-image:linear-gradient(135deg,rgba(177,140,255,.4),rgba(177,140,255,.15)) 1}
-.acc-card.red{border-image:linear-gradient(135deg,rgba(255,77,109,.4),rgba(255,77,109,.15)) 1}
+.acc-card{position:relative;overflow:hidden;border-radius:20px;padding:18px 14px 14px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;transition:all .2s}
+.acc-card:active{transform:scale(.96)}
+.acc-card::before{content:'';position:absolute;top:0;right:14px;left:14px;height:3px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,transparent,var(--acc,#8b93a7),transparent);box-shadow:0 2px 12px -1px var(--acc,#8b93a7)}
+.acc-card.melat{--acc:#b0b5c4;border-color:rgba(176,181,196,.35);background:radial-gradient(130% 100% at 50% 0%,rgba(176,181,196,.12),transparent 62%),var(--card)}
+.acc-card.sad{--acc:#6c9bff;border-color:rgba(108,155,255,.42);background:radial-gradient(130% 100% at 50% 0%,rgba(108,155,255,.14),transparent 62%),var(--card)}
+.acc-card.cash{--acc:#ffc857;border-color:rgba(255,200,87,.42);background:radial-gradient(130% 100% at 50% 0%,rgba(255,200,87,.14),transparent 62%),var(--card)}
+.acc-card.grn{--acc:#2de0a5;border-color:rgba(45,224,165,.42);background:radial-gradient(130% 100% at 50% 0%,rgba(45,224,165,.13),transparent 62%),var(--card)}
+.acc-card.pur{--acc:#b18cff;border-color:rgba(177,140,255,.42);background:radial-gradient(130% 100% at 50% 0%,rgba(177,140,255,.14),transparent 62%),var(--card)}
+.acc-card.red{--acc:#ff4d6d;border-color:rgba(255,77,109,.42);background:radial-gradient(130% 100% at 50% 0%,rgba(255,77,109,.13),transparent 62%),var(--card)}
 .acc-name{font-size:12px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:5px}
 .acc-name .dot{width:7px;height:7px;border-radius:50%}
 .acc-name .dot.melat-dot{background:#b0b5c4;box-shadow:0 0 8px rgba(176,181,196,.5)}
 .acc-name .dot.sad-dot{background:var(--blue);box-shadow:0 0 8px rgba(108,155,255,.5)}
-.acc-bal{font-size:22px;font-weight:1000;margin-top:8px;letter-spacing:-.5px}
+.acc-bal{font-size:21px;font-weight:1000;margin-top:8px;letter-spacing:-.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .acc-bal small{font-size:11px;font-weight:500;color:var(--text2)}
-.acc-total{padding:16px;border-radius:20px;background:var(--card);border:1px solid var(--border);text-align:center;margin-bottom:16px}
-.acc-total-label{font-size:12px;color:var(--text2);font-weight:600;margin-bottom:4px}
-.acc-total-amount{font-size:28px;font-weight:1000;letter-spacing:-.5px}
+.acc-total{padding:20px 16px;border-radius:24px;background:linear-gradient(135deg,rgba(108,155,255,.16),rgba(177,140,255,.10) 60%,rgba(45,224,165,.08)),var(--card);border:1.5px solid rgba(108,155,255,.32);text-align:center;margin-bottom:16px;box-shadow:0 14px 34px -18px rgba(108,155,255,.45)}
+.acc-total-label{font-size:12px;color:var(--text2);font-weight:700;margin-bottom:6px}
+.acc-total-amount{font-size:34px;font-weight:1000;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
 
 /* ─── Stats ─── */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px 6px;text-align:center}
-.stat-num{font-size:14px;font-weight:900;letter-spacing:-.2px}
+.stat{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--border);border-top-width:2px;border-radius:16px;padding:12px 6px;text-align:center}
+.stat.sr{border-top-color:rgba(255,77,109,.55)}.stat.sg{border-top-color:rgba(45,224,165,.55)}.stat.sb{border-top-color:rgba(108,155,255,.55)}
+.stat-num{font-size:15px;font-weight:900;letter-spacing:-.2px;font-variant-numeric:tabular-nums}
 .sr .stat-num{color:var(--red)}.sg .stat-num{color:var(--green)}.sb .stat-num{color:var(--blue)}
 .stat-label{font-size:9px;color:var(--text3);font-weight:600;margin-top:2px}
 
@@ -526,11 +528,7 @@ html{scroll-behavior:smooth}
 /* Creator badge gradient text */
 .creator-top b{background:linear-gradient(135deg,#c9a227,#e8c84a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
-/* Acc card border glow pulse on page load */
-@keyframes cardGlow{0%{filter:brightness(1)}50%{filter:brightness(1.08)}100%{filter:brightness(1)}}
-.acc-card{animation:cardGlow 2.5s ease-in-out infinite}
-.acc-card:nth-child(2){animation-delay:.3s}
-.acc-card:nth-child(3){animation-delay:.6s}
+/* Acc card entrance handled by stagger rules below (no infinite pulse) */
 
 /* Stat numbers shimmer on update */
 @keyframes numShimmer{0%{opacity:.7;transform:translateY(2px)}100%{opacity:1;transform:translateY(0)}}
@@ -554,9 +552,7 @@ html{scroll-behavior:smooth}
 .stat:nth-child(2){animation:popIn .35s .15s cubic-bezier(.21,1.02,.55,1) backwards}
 .stat:nth-child(3){animation:popIn .35s .2s cubic-bezier(.21,1.02,.55,1) backwards}
 
-/* Balance total card breathing border */
-.acc-total{border:1.5px solid var(--border);animation:borderPulse 4s ease-in-out infinite}
-@keyframes borderPulse{0%,100%{border-color:var(--border)}50%{border-color:rgba(108,155,255,.18)}}
+/* Total hero card: calm gradient, no pulsing */
 
 /* Toast enhanced shadow */
 .toast.show{box-shadow:0 16px 40px -8px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.06)}
@@ -750,7 +746,7 @@ html{scroll-behavior:smooth}
   </div>
 </div>
 
-<div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">v28</div>
+<div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">v29</div>
 <div class="toast" id="toast"></div>
 
 
@@ -766,7 +762,7 @@ function saveAccounts(){localStorage.setItem('dakhel_accs',JSON.stringify(accoun
 saveAccounts();
 accounts.forEach(function(a){if(balances[a.id]===undefined)balances[a.id]=0;});
 var type='expense',card='ملت',currentTab='all',debtType='creditor';
-var APP_VERSION='v28';
+var APP_VERSION='v29';
 var editIdx=-1,editCardVal='ملت',editDebtIdx=-1,editBalAcc='';
 
 /* THEME */
