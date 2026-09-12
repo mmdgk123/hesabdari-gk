@@ -274,6 +274,298 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 .bal-modal-bg.show{display:flex;animation:fadeIn .2s}
 .bal-modal{width:90%;max-width:340px;padding:24px;background:var(--bg2);border:1px solid var(--border2);border-radius:24px;animation:sheetUp .35s}
 .bal-modal h3{font-size:17px;font-weight:900;text-align:center;margin-bottom:16px}
+
+/* ─── v28 Visual Enhancements ─── */
+
+/* Enhanced input focus glow ring */
+.field input:focus,.field select:focus{box-shadow:0 0 0 3px rgba(108,155,255,.15),0 4px 18px -4px rgba(108,155,255,.22)}
+.search-wrap input:focus{box-shadow:0 0 0 3px rgba(108,155,255,.12),0 4px 18px -4px rgba(108,155,255,.2)}
+
+/* Theme toggle spin on press */
+.theme-toggle:active{transform:scale(.75) rotate(220deg)}
+
+/* Entry hover glow by type */
+.entry{transition:transform .2s cubic-bezier(.34,1.3,.64,1),box-shadow .25s,border-color .25s}
+.entry:hover{transform:translateX(-2px)}
+.entry.exp:hover{box-shadow:0 10px 30px -10px rgba(255,77,109,.2)}
+.entry.inc:hover{box-shadow:0 10px 30px -10px rgba(45,224,165,.2)}
+
+/* Stat cards color accent borders */
+.sr{border-bottom:2.5px solid rgba(255,77,109,.3)}
+.sg{border-bottom:2.5px solid rgba(45,224,165,.3)}
+.sb{border-bottom:2.5px solid rgba(108,155,255,.3)}
+
+/* Toast spring scale entrance */
+.toast.show{transform:translateX(-50%) translateY(0) scale(1)}
+
+/* Sheet handle breathing animation */
+@keyframes handleBreath{0%,100%{width:40px;opacity:.45}50%{width:50px;opacity:.85}}
+.sheet-handle{animation:handleBreath 2.5s ease-in-out infinite}
+
+/* FAB hover lift */
+.fab:hover{transform:scale(1.07)}
+
+/* Bottom nav active indicator dot */
+.nav-btn{position:relative}
+.nav-btn.active::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%) scale(0);width:5px;height:5px;border-radius:50%;background:var(--blue);animation:dotPop .35s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes dotPop{to{transform:translateX(-50%) scale(1)}}
+
+/* Debt tab active bottom bar */
+.debt-tab{position:relative;overflow:hidden}
+.debt-tab.active::before{content:'';position:absolute;bottom:0;left:20%;right:20%;height:3px;border-radius:3px 3px 0 0;animation:barGrow .3s cubic-bezier(.34,1.3,.64,1) forwards}
+.debt-tab.active.creditor::before{background:var(--green)}
+.debt-tab.active.debtor::before{background:var(--red)}
+@keyframes barGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* Submit button enhanced glow */
+.submit-btn.exp{box-shadow:0 12px 30px -8px rgba(225,26,72,.5),0 0 50px -20px rgba(225,26,72,.35)}
+
+/* Enhanced floaty + pulse for empty state */
+@keyframes floaty{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(-9px);opacity:1}}
+.empty-icon{animation:floaty 3.2s ease-in-out infinite}
+
+/* Edit/delete button hover glow */
+.ebtn.del:hover{background:rgba(255,77,109,.22);box-shadow:0 0 14px rgba(255,77,109,.15)}
+.ebtn.edit:hover{background:rgba(108,155,255,.22);box-shadow:0 0 14px rgba(108,155,255,.15)}
+
+/* Ambient gradient slow breathe */
+@keyframes ambientBreathe{0%,100%{opacity:1}50%{opacity:.6}}
+body::before{animation:ambientBreathe 14s ease-in-out infinite alternate}
+
+/* Acc card enhanced hover lift */
+.acc-card{transition:transform .22s cubic-bezier(.34,1.3,.64,1),box-shadow .3s,border-color .3s,background .3s}
+.acc-card:hover{transform:translateY(-3px);box-shadow:0 18px 38px -18px rgba(0,0,0,.55)}
+
+/* Entry stagger animation via nth-child */
+.entry:nth-child(1){animation-delay:.0s}
+.entry:nth-child(2){animation-delay:.04s}
+.entry:nth-child(3){animation-delay:.08s}
+.entry:nth-child(4){animation-delay:.12s}
+.entry:nth-child(5){animation-delay:.16s}
+.entry:nth-child(6){animation-delay:.20s}
+.entry:nth-child(7){animation-delay:.24s}
+.entry:nth-child(8){animation-delay:.28s}
+.entry:nth-child(9){animation-delay:.32s}
+.entry:nth-child(10){animation-delay:.36s}
+
+/* Debt card stagger */
+.debt-card:nth-child(1){animation-delay:.0s}
+.debt-card:nth-child(2){animation-delay:.05s}
+.debt-card:nth-child(3){animation-delay:.10s}
+.debt-card:nth-child(4){animation-delay:.15s}
+.debt-card:nth-child(5){animation-delay:.20s}
+.debt-card:nth-child(6){animation-delay:.25s}
+.debt-card:nth-child(7){animation-delay:.30s}
+.debt-card:nth-child(8){animation-delay:.35s}
+
+/* Filter pill bounce on activation */
+.fp.active{animation:pillBounce .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pillBounce{0%{transform:scale(.88)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+
+/* Debt check satisfying pop */
+.debt-check.done{animation:checkBounce .4s cubic-bezier(.34,1.7,.5,1)}
+@keyframes checkBounce{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
+
+/* Total balance card inner glow pulse */
+.acc-total{overflow:hidden;position:relative}
+.acc-total::after{content:'';position:absolute;inset:0;border-radius:20px;pointer-events:none;box-shadow:inset 0 0 30px -15px rgba(108,155,255,.12);animation:totalGlow 3.5s ease-in-out infinite alternate}
+@keyframes totalGlow{0%{box-shadow:inset 0 0 30px -15px rgba(108,155,255,.08)}100%{box-shadow:inset 0 0 30px -15px rgba(108,155,255,.18)}}
+
+/* Stat number tabular transition */
+.stat-num{transition:transform .25s cubic-bezier(.34,1.3,.64,1)}
+
+/* Modal save button glow */
+.modal-save{transition:all .2s}
+.modal-save:hover{box-shadow:0 8px 24px -6px rgba(108,155,255,.4)}
+.modal-save:active{transform:scale(.96)}
+
+/* Filter pills scroll fade hint */
+.filter-pills{mask-image:linear-gradient(to left,black 90%,transparent 100%);-webkit-mask-image:linear-gradient(to left,black 90%,transparent 100%)}
+
+/* Creator badge subtle hover */
+.creator-top{transition:all .25s}
+.creator-top:hover{opacity:1;background:var(--card2);border-color:var(--border2)}
+
+/* Debt sum card inner glow */
+.debt-sum{position:relative;overflow:hidden}
+.debt-sum::after{content:'';position:absolute;inset:0;border-radius:18px;pointer-events:none;box-shadow:inset 0 0 25px -12px rgba(45,224,165,.1)}
+
+/* Version badge fade in */
+#verBadge{animation:verFade 1.5s ease-in}
+@keyframes verFade{from{opacity:0}to{opacity:.3}}
+
+/* Improved scrollbar for month dropdown */
+#monthDropdown::-webkit-scrollbar{width:4px}
+#monthDropdown::-webkit-scrollbar-track{background:transparent}
+#monthDropdown::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+
+/* ─── Calendar Page ─── */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-header h2{font-size:18px;font-weight:900}
+.cal-nav{display:flex;gap:8px}
+.cal-nav button{width:36px;height:36px;border-radius:12px;border:1.5px solid var(--border);background:var(--card);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cal-nav button:active{transform:scale(.9)}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.cal-wd{text-align:center;font-size:10px;font-weight:700;color:var(--text3);padding:4px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{position:relative;border-radius:12px;padding:6px 2px;text-align:center;min-height:48px;cursor:pointer;transition:all .15s;border:1.5px solid transparent}
+.cal-day:active{transform:scale(.92)}
+.cal-day.empty{background:none;border:none;cursor:default}
+.cal-day.empty:active{transform:none}
+.cal-day-num{font-size:13px;font-weight:800;line-height:1.2}
+.cal-day.today{border-color:var(--blue);background:rgba(108,155,255,.08)}
+.cal-day.today .cal-day-num{color:var(--blue)}
+.cal-day .cal-dots{display:flex;gap:2px;justify-content:center;margin-top:3px;flex-wrap:wrap}
+.cal-dot{width:5px;height:5px;border-radius:50%}
+.cal-heat-0{background:var(--card)}
+.cal-heat-1{background:rgba(255,77,109,.08)}
+.cal-heat-2{background:rgba(255,77,109,.16)}
+.cal-heat-3{background:rgba(255,77,109,.26)}
+.cal-heat-4{background:rgba(255,77,109,.40)}
+.cal-heat-5{background:rgba(255,77,109,.58)}
+.cal-day-summary{padding:14px;border-radius:18px;background:var(--card);border:1px solid var(--border);margin-top:14px;display:none}
+.cal-day-summary.show{display:block;animation:popIn .3s cubic-bezier(.21,1.02,.55,1)}
+.cal-day-summary h3{font-size:14px;font-weight:800;margin-bottom:10px}
+.cal-legend{display:flex;gap:10px;justify-content:center;margin:12px 0 4px;flex-wrap:wrap}
+.cal-legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text3);font-weight:600}
+.cal-legend-dot{width:8px;height:8px;border-radius:50%}
+
+/* ─── v29 Visual Design Enhancements ─── */
+
+/* Smooth scrolling */
+html{scroll-behavior:smooth}
+
+/* Gradient title text */
+.header h1{background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* Glassmorphism sheets & modals */
+.sheet,.modal,.bal-modal{backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);background:rgba(13,15,23,.88)}
+[data-theme="light"] .sheet,[data-theme="light"] .modal,[data-theme="light"] .bal-modal{background:rgba(242,243,247,.92)}
+
+/* Enhanced header frosted glass */
+.header{backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:linear-gradient(180deg,rgba(7,8,13,.75) 60%,transparent)}
+[data-theme="light"] .header{background:linear-gradient(180deg,rgba(242,243,247,.78) 60%,transparent)}
+
+/* Bottom nav enhanced glass */
+.bottom-nav{backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);background:rgba(13,15,23,.82);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .bottom-nav{background:rgba(242,243,247,.85);border-top:1px solid rgba(0,0,0,.06)}
+
+/* Total balance gradient glow */
+.acc-total-amount{background:linear-gradient(135deg,var(--text) 20%,var(--blue) 50%,var(--purple) 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:balShimmer 6s ease-in-out infinite;background-size:200% 200%}
+@keyframes balShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+/* Account card type-specific hover glows */
+.acc-card.melat:hover{box-shadow:0 18px 38px -18px rgba(176,181,196,.35)}
+.acc-card.sad:hover{box-shadow:0 18px 38px -18px rgba(108,155,255,.4)}
+.acc-card.cash:hover{box-shadow:0 18px 38px -18px rgba(255,200,87,.35)}
+.acc-card.grn:hover{box-shadow:0 18px 38px -18px rgba(45,224,165,.35)}
+.acc-card.pur:hover{box-shadow:0 18px 38px -18px rgba(177,140,255,.35)}
+.acc-card.red:hover{box-shadow:0 18px 38px -18px rgba(255,77,109,.35)}
+
+/* Stat cards subtle gradient bg */
+.sr{background:linear-gradient(135deg,var(--card),rgba(255,77,109,.04))}
+.sg{background:linear-gradient(135deg,var(--card),rgba(45,224,165,.04))}
+.sb{background:linear-gradient(135deg,var(--card),rgba(108,155,255,.04))}
+
+/* Entry items subtle left glow on hover by type */
+.entry.exp:hover{border-color:rgba(255,77,109,.2)}
+.entry.inc:hover{border-color:rgba(45,224,165,.2)}
+
+/* Debt cards hover lift */
+.debt-card{transition:transform .22s cubic-bezier(.34,1.3,.64,1),box-shadow .25s,border-color .25s,background .25s}
+.debt-card:hover{transform:translateY(-2px);box-shadow:0 12px 30px -14px rgba(0,0,0,.4)}
+
+/* Calendar day hover effect */
+.cal-day:not(.empty):hover{transform:scale(1.08);box-shadow:0 6px 16px -6px rgba(0,0,0,.3);z-index:1}
+
+/* FAB enhanced gradient ring */
+.fab{border:2px solid rgba(255,255,255,.15)}
+.fab::before{content:'';position:absolute;inset:-3px;border-radius:23px;background:linear-gradient(145deg,rgba(255,95,125,.5),rgba(224,26,72,.3));z-index:-1;opacity:0;transition:opacity .3s}
+.fab:hover::before{opacity:1}
+
+/* Enhanced theme toggle */
+.theme-toggle{transition:all .35s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
+.theme-toggle::after{content:'';position:absolute;inset:0;border-radius:14px;background:radial-gradient(circle,rgba(255,255,255,.15),transparent 70%);opacity:0;transition:opacity .2s}
+.theme-toggle:hover::after{opacity:1}
+
+/* Type tab active enhanced glow */
+.type-tab.active.exp{box-shadow:0 8px 24px -6px rgba(255,77,109,.4)}
+.type-tab.active.inc{box-shadow:0 8px 24px -6px rgba(45,224,165,.4)}
+
+/* Search input focus enhanced */
+.search-wrap input:focus{box-shadow:0 0 0 3px rgba(108,155,255,.12),0 6px 20px -4px rgba(108,155,255,.18)}
+
+/* Action buttons smooth hover */
+.ebtn.edit:hover{transform:scale(1.15)}
+.ebtn.del:hover{transform:scale(1.15)}
+.ebtn{transition:all .2s cubic-bezier(.34,1.3,.64,1)}
+
+/* Card pill hover */
+.cp:hover:not(.active){border-color:var(--border2);transform:translateY(-1px)}
+
+/* Empty state icon enhanced */
+.empty-icon{text-shadow:0 0 30px rgba(108,155,255,.15)}
+
+/* Sheet handle improved */
+.sheet-handle{transition:all .3s}
+.sheet-handle:hover{background:var(--blue);width:50px}
+
+/* Debt tab smooth transitions */
+.debt-tab{transition:all .3s cubic-bezier(.34,1.3,.64,1)}
+.debt-tab:hover{background:var(--card2)}
+
+/* Submit button active state */
+.submit-btn:active{filter:brightness(.9);transform:scale(.98)}
+
+/* Calendar nav button hover */
+.cal-nav button:hover{background:var(--card2);border-color:var(--border2)}
+
+/* Modal cancel button hover */
+.modal-cancel:hover{background:var(--card2);border-color:var(--border2)}
+
+/* Creator badge gradient text */
+.creator-top b{background:linear-gradient(135deg,#c9a227,#e8c84a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* Acc card border glow pulse on page load */
+@keyframes cardGlow{0%{filter:brightness(1)}50%{filter:brightness(1.08)}100%{filter:brightness(1)}}
+.acc-card{animation:cardGlow 2.5s ease-in-out infinite}
+.acc-card:nth-child(2){animation-delay:.3s}
+.acc-card:nth-child(3){animation-delay:.6s}
+
+/* Stat numbers shimmer on update */
+@keyframes numShimmer{0%{opacity:.7;transform:translateY(2px)}100%{opacity:1;transform:translateY(0)}}
+.stat-num{animation:numShimmer .4s ease-out}
+
+/* Filter pill selected glow */
+.fp.active{box-shadow:0 4px 16px -4px rgba(108,155,255,.3)}
+[data-theme="light"] .fp.active{box-shadow:0 4px 16px -4px rgba(61,99,216,.25)}
+
+/* Page title entrance */
+.header h1{animation:slideInTitle .5s cubic-bezier(.34,1.3,.64,1)}
+@keyframes slideInTitle{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+
+/* Acc grid entrance stagger */
+.acc-card:nth-child(1){animation-delay:.05s;animation:popIn .4s .05s cubic-bezier(.21,1.02,.55,1) backwards}
+.acc-card:nth-child(2){animation-delay:.1s;animation:popIn .4s .1s cubic-bezier(.21,1.02,.55,1) backwards}
+.acc-card:nth-child(3){animation-delay:.15s;animation:popIn .4s .15s cubic-bezier(.21,1.02,.55,1) backwards}
+
+/* Stats entrance stagger */
+.stat:nth-child(1){animation:popIn .35s .1s cubic-bezier(.21,1.02,.55,1) backwards}
+.stat:nth-child(2){animation:popIn .35s .15s cubic-bezier(.21,1.02,.55,1) backwards}
+.stat:nth-child(3){animation:popIn .35s .2s cubic-bezier(.21,1.02,.55,1) backwards}
+
+/* Balance total card breathing border */
+.acc-total{border:1.5px solid var(--border);animation:borderPulse 4s ease-in-out infinite}
+@keyframes borderPulse{0%,100%{border-color:var(--border)}50%{border-color:rgba(108,155,255,.18)}}
+
+/* Toast enhanced shadow */
+.toast.show{box-shadow:0 16px 40px -8px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.06)}
+
+/* Active nav icon glow ring */
+.nav-btn.active .nav-icon{box-shadow:0 0 16px -4px rgba(108,155,255,.25)}
+
+/* Reduced motion respect */
+@media (prefers-reduced-motion:reduce){.header h1,.acc-total-amount,.sheet-handle,.acc-card,.stat,.fab,.cal-day,.debt-card,.entry{animation:none !important}}
 </style>
 </head>
 <body>
@@ -351,6 +643,28 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   <div class="entries" id="debtList"></div>
 </div>
 
+
+<!-- ═══ صفحه تقویم ═══ -->
+<div class="page" id="page-calendar">
+  <div class="cal-header">
+    <div class="cal-nav">
+      <button onclick="calNav(-1)">▶</button>
+    </div>
+    <h2 id="calTitle">مهر ۱۴۰۳</h2>
+    <div class="cal-nav">
+      <button onclick="calNav(1)">◀</button>
+    </div>
+  </div>
+  <div class="cal-weekdays" id="calWeekdays"></div>
+  <div class="cal-grid" id="calGrid"></div>
+  <div class="cal-legend">
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(255,77,109,.08)"></div>کم</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(255,77,109,.26)"></div>متوسط</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(255,77,109,.58)"></div>زیاد</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--green)"></div>دخل</div>
+  </div>
+  <div class="cal-day-summary" id="calSummary"></div>
+</div>
 <!-- ═══ FAB ═══ -->
 <button class="fab" id="fab" onclick="openAddSheet()">＋</button>
 
@@ -359,6 +673,7 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   <button class="nav-btn active" onclick="switchPage('hesab',this)"><div class="nav-icon"><span>🏦</span></div><div class="nav-label">حساب‌ها</div></button>
   <button class="nav-btn" onclick="switchPage('trans',this)"><div class="nav-icon"><span>📝</span></div><div class="nav-label">تراکنش‌ها</div></button>
   <button class="nav-btn" onclick="switchPage('debts',this)"><div class="nav-icon"><span>💰</span></div><div class="nav-label">بدهی‌ها</div></button>
+  <button class="nav-btn" onclick="switchPage('calendar',this)"><div class="nav-icon"><span>📅</span></div><div class="nav-label">تقویم</div></button>
 </nav>
 
 <!-- ═══ Debts FAB ═══ -->
@@ -435,7 +750,7 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   </div>
 </div>
 
-<div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">v27</div>
+<div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">v28</div>
 <div class="toast" id="toast"></div>
 
 
@@ -451,7 +766,7 @@ function saveAccounts(){localStorage.setItem('dakhel_accs',JSON.stringify(accoun
 saveAccounts();
 accounts.forEach(function(a){if(balances[a.id]===undefined)balances[a.id]=0;});
 var type='expense',card='ملت',currentTab='all',debtType='creditor';
-var APP_VERSION='v27';
+var APP_VERSION='v28';
 var editIdx=-1,editCardVal='ملت',editDebtIdx=-1,editBalAcc='';
 
 /* THEME */
@@ -476,12 +791,13 @@ function switchPage(id,btn){
   pg.classList.remove('active');void pg.offsetWidth;pg.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active')});
   btn.classList.add('active');
-  var titles={hesab:'حسابداری',trans:'تراکنش‌ها',debts:'بدهی‌ها'};
+  var titles={hesab:'حسابداری',trans:'تراکنش‌ها',debts:'بدهی‌ها',calendar:'تقویم هزینه‌ها'};
   document.getElementById('pageTitle').textContent=titles[id]||'حسابداری';
   document.getElementById('fab').style.display=id==='debts'?'none':'flex';
   document.getElementById('debtsFab').style.display=id==='debts'?'flex':'none';
   if(id==='trans')renderEntries();
   if(id==='debts')renderDebts();
+  if(id==='calendar')renderCalendar();
 }
 
 /* ICONS */
@@ -697,6 +1013,71 @@ document.addEventListener('pointerdown',function(ev){
 /* INIT */
 document.addEventListener("click",function(ev){if(!ev.target.closest("#monthDropdown")&&!ev.target.closest("#monthBtn")){monthListOpen=false;var dd=document.getElementById("monthDropdown");if(dd)dd.style.display="none";}});loadTheme();document.getElementById("eyeBtn").textContent=balHidden?"👁‍🗨 نمایش موجودی":"👁 پنهان کردن";buildMonthPills();renderAccounts();renderHesab();renderEntries();renderDebts();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js");
+
+/* ═══ CALENDAR ═══ */
+var calYear=nowJ().y, calMonth=nowJ().m, calSelectedDay=0;
+function jalDaysInMonth(jy,jm){if(jm<=6)return 31;if(jm<=11)return 30;var gy=jy+621;return((gy%4===3&&((gy+1)%100!==0||(gy+1)%400===0))?30:29);}
+function calNav(dir){calMonth+=dir;if(calMonth>12){calMonth=1;calYear++;}if(calMonth<1){calMonth=12;calYear--;}calSelectedDay=0;renderCalendar();}
+function j2g(jy,jm,jd){
+  var approx=jy+621,ng=null;
+  for(var g=approx-1;g<=approx+1;g++){for(var m=1;m<=6;m++){for(var d=1;d<=28;d++){var j=g2j(g,m,d);if(j[0]===jy&&j[1]===1&&j[2]===1){ng=[g,m,d];break;}if(ng)break;}if(ng)break;}if(ng)break;}
+  if(!ng)return[0,0,0];
+  var doy=(jm<=6)?(jm-1)*31+jd:186+(jm-7)*30+jd;
+  var dt=new Date(ng[0],ng[1]-1,ng[2]+doy-1);
+  return[dt.getFullYear(),dt.getMonth()+1,dt.getDate()];
+}
+function renderCalendar(){
+  var j=nowJ();
+  document.getElementById('calTitle').textContent=jMonthName(calMonth)+' '+calYear;
+  var wds=['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'];
+  document.getElementById('calWeekdays').innerHTML=wds.map(function(w){return '<div class="cal-wd">'+w+'</div>';}).join('');
+  var daysCount=jalDaysInMonth(calYear,calMonth);
+  var firstG=j2g(calYear,calMonth,1);
+  var firstDate=new Date(firstG[0],firstG[1]-1,firstG[2]);
+  var satStart=(firstDate.getDay()+1)%7;
+  var spendMap={},maxSpend=0;
+  entries.forEach(function(e){
+    if(e.year===calYear&&e.month===calMonth){
+      var key=e.day;if(!spendMap[key])spendMap[key]={spend:0,income:0,entries:[]};
+      if(e.type==='expense')spendMap[key].spend+=e.amount;else spendMap[key].income+=e.amount;
+      spendMap[key].entries.push(e);if(spendMap[key].spend>maxSpend)maxSpend=spendMap[key].spend;
+    }
+  });
+  var h='';
+  for(var i=0;i<satStart;i++)h+='<div class="cal-day empty"></div>';
+  for(var d=1;d<=daysCount;d++){
+    var isToday=(calYear===j.y&&calMonth===j.m&&d===j.d);
+    var data=spendMap[d]||{spend:0,income:0,entries:[]};
+    var heat=0;if(maxSpend>0&&data.spend>0)heat=Math.min(5,Math.ceil(data.spend/maxSpend*5));
+    var cls='cal-day cal-heat-'+heat+(isToday?' today':'');
+    if(calSelectedDay===d)cls+=' today';
+    var dots='';
+    if(data.income>0)dots+='<div class="cal-dot" style="background:var(--green)"></div>';
+    if(data.spend>0)for(var dd=0;dd<Math.min(data.entries.length,3);dd++)dots+='<div class="cal-dot" style="background:var(--red)"></div>';
+    h+='<div class="'+cls+'" onclick="selectCalDay('+d+')"><div class="cal-day-num">'+d+'</div><div class="cal-dots">'+dots+'</div></div>';
+  }
+  document.getElementById('calGrid').innerHTML=h;renderCalSummary();
+}
+function selectCalDay(d){calSelectedDay=calSelectedDay===d?0:d;renderCalendar();}
+function renderCalSummary(){
+  var box=document.getElementById('calSummary');
+  if(!calSelectedDay){box.className='cal-day-summary';box.innerHTML='';return;}
+  var dayE=entries.filter(function(e){return e.year===calYear&&e.month===calMonth&&e.day===calSelectedDay;});
+  dayE.sort(function(a,b){return b.amount-a.amount;});
+  var totE=0,totI=0;dayE.forEach(function(e){if(e.type==='expense')totE+=e.amount;else totI+=e.amount;});
+  var h='<h3>'+jMonthName(calMonth)+' '+calSelectedDay+' · ';
+  if(totE)h+='<span style="color:var(--red)">خرج: '+fmt(totE)+'</span>';
+  if(totE&&totI)h+=' · ';
+  if(totI)h+='<span style="color:var(--green)">دخل: '+fmt(totI)+'</span>';
+  if(!totE&&!totI)h+='<span style="color:var(--text3)">بدون تراکنش</span>';
+  h+='</h3>';
+  dayE.forEach(function(e){
+    var isE=e.type==='expense';
+    h+='<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-size:18px">'+getIcon(e.desc)+'</span><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(e.desc)+'</div><div style="font-size:10px;color:var(--text3)">'+esc(e.card)+' · '+e.date.split(' ').pop()+'</div></div><div style="text-align:left;font-size:13px;font-weight:900;color:'+(isE?'var(--red)':'var(--green)')+'">'+(isE?'-':'+')+' '+fmt(e.amount)+'</div></div>';
+  });
+  box.innerHTML=h;box.className='cal-day-summary show';
+}
+
 </script>
 </body>
 </html>
