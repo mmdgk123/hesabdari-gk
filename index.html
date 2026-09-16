@@ -42,26 +42,45 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
 .theme-toggle{width:40px;height:40px;border-radius:14px;border:1.5px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all .2s}
 .theme-toggle:active{transform:scale(.9)}
 
-/* ─── Account Cards ─── */
-.acc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:8px 0 20px}
-.acc-card{position:relative;overflow:hidden;border-radius:20px;padding:18px 14px 14px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;transition:all .2s}
+/* ─── Account Cards (premium) ─── */
+.acc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:10px 0 14px}
+.acc-card{position:relative;overflow:hidden;border-radius:22px;padding:16px 13px 13px;border:1px solid var(--border);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 42%),var(--card);cursor:pointer;box-shadow:0 10px 24px -16px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);transition:transform .22s cubic-bezier(.34,1.3,.64,1),box-shadow .3s,border-color .3s}
+.acc-card::before{content:'';position:absolute;inset-inline:0;top:0;height:3px;background:linear-gradient(90deg,transparent 5%,var(--acc,#8b93a7) 50%,transparent 95%);box-shadow:0 2px 14px -1px var(--acc,#8b93a7);opacity:.9}
+.acc-card::after{content:'';position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--acc,#8b93a7),transparent 85%);opacity:.55}
+.acc-card:hover{transform:translateY(-3px)}
 .acc-card:active{transform:scale(.96)}
-.acc-card::before{content:'';position:absolute;top:0;right:14px;left:14px;height:3px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,transparent,var(--acc,#8b93a7),transparent);box-shadow:0 2px 12px -1px var(--acc,#8b93a7)}
-.acc-card.melat{--acc:#b0b5c4;border-color:rgba(176,181,196,.35);background:radial-gradient(130% 100% at 50% 0%,rgba(176,181,196,.12),transparent 62%),var(--card)}
-.acc-card.sad{--acc:#6c9bff;border-color:rgba(108,155,255,.42);background:radial-gradient(130% 100% at 50% 0%,rgba(108,155,255,.14),transparent 62%),var(--card)}
-.acc-card.cash{--acc:#ffc857;border-color:rgba(255,200,87,.42);background:radial-gradient(130% 100% at 50% 0%,rgba(255,200,87,.14),transparent 62%),var(--card)}
-.acc-card.grn{--acc:#2de0a5;border-color:rgba(45,224,165,.42);background:radial-gradient(130% 100% at 50% 0%,rgba(45,224,165,.13),transparent 62%),var(--card)}
-.acc-card.pur{--acc:#b18cff;border-color:rgba(177,140,255,.42);background:radial-gradient(130% 100% at 50% 0%,rgba(177,140,255,.14),transparent 62%),var(--card)}
-.acc-card.red{--acc:#ff4d6d;border-color:rgba(255,77,109,.42);background:radial-gradient(130% 100% at 50% 0%,rgba(255,77,109,.13),transparent 62%),var(--card)}
-.acc-name{font-size:12px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:5px}
-.acc-name .dot{width:7px;height:7px;border-radius:50%}
+.acc-card:focus-visible{outline:2px solid var(--acc,#8b93a7);outline-offset:2px}
+.acc-card.melat{--acc:#b0b5c4;border-color:rgba(176,181,196,.32);background:radial-gradient(130% 100% at 50% 0%,rgba(176,181,196,.13),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 42%),var(--card)}
+.acc-card.sad{--acc:#6c9bff;border-color:rgba(108,155,255,.4);background:radial-gradient(130% 100% at 50% 0%,rgba(108,155,255,.15),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 42%),var(--card)}
+.acc-card.cash{--acc:#ffc857;border-color:rgba(255,200,87,.4);background:radial-gradient(130% 100% at 50% 0%,rgba(255,200,87,.15),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 42%),var(--card)}
+.acc-card.grn{--acc:#2de0a5;border-color:rgba(45,224,165,.4);background:radial-gradient(130% 100% at 50% 0%,rgba(45,224,165,.14),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 42%),var(--card)}
+.acc-card.pur{--acc:#b18cff;border-color:rgba(177,140,255,.4);background:radial-gradient(130% 100% at 50% 0%,rgba(177,140,255,.15),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 42%),var(--card)}
+.acc-card.red{--acc:#ff4d6d;border-color:rgba(255,77,109,.4);background:radial-gradient(130% 100% at 50% 0%,rgba(255,77,109,.14),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 42%),var(--card)}
+.acc-top{display:flex;align-items:center;gap:6px}
+.acc-ico{width:26px;height:26px;border-radius:9px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:13px;background:rgba(255,255,255,.05);border:1px solid var(--border)}
+.acc-name{font-size:11.5px;font-weight:800;color:var(--text2);display:flex;align-items:center;gap:6px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acc-name .dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
 .acc-name .dot.melat-dot{background:#b0b5c4;box-shadow:0 0 8px rgba(176,181,196,.5)}
 .acc-name .dot.sad-dot{background:var(--blue);box-shadow:0 0 8px rgba(108,155,255,.5)}
-.acc-bal{font-size:21px;font-weight:1000;margin-top:8px;letter-spacing:-.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.acc-bal small{font-size:11px;font-weight:500;color:var(--text2)}
-.acc-total{padding:20px 16px;border-radius:24px;background:linear-gradient(135deg,rgba(108,155,255,.16),rgba(177,140,255,.10) 60%,rgba(45,224,165,.08)),var(--card);border:1.5px solid rgba(108,155,255,.32);text-align:center;margin-bottom:16px;box-shadow:0 14px 34px -18px rgba(108,155,255,.45)}
-.acc-total-label{font-size:12px;color:var(--text2);font-weight:700;margin-bottom:6px}
-.acc-total-amount{font-size:34px;font-weight:1000;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.acc-edit{margin-inline-start:auto;flex:0 0 auto;width:26px;height:26px;border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text3);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;font-family:inherit}
+.acc-edit:hover{color:var(--text);border-color:var(--border2);background:rgba(255,255,255,.08)}
+.acc-edit:active{transform:scale(.88)}
+.acc-edit:focus-visible{outline:2px solid var(--acc,#8b93a7);outline-offset:1px}
+.acc-bal{font-size:21px;font-weight:1000;margin-top:10px;letter-spacing:-.5px;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--text)}
+.acc-bal small{font-size:10.5px;font-weight:600;color:var(--text3)}
+.acc-meta{font-size:9.5px;font-weight:600;color:var(--text3);margin-top:3px;letter-spacing:.1px}
+.acc-total{padding:22px 16px 18px;border-radius:26px;background:linear-gradient(135deg,rgba(108,155,255,.18),rgba(177,140,255,.10) 55%,rgba(45,224,165,.09)),var(--card);border:1px solid rgba(108,155,255,.32);text-align:center;margin-bottom:12px;box-shadow:0 18px 40px -20px rgba(108,155,255,.5),inset 0 1px 0 rgba(255,255,255,.07)}
+.acc-total-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.acc-total-label{font-size:12px;color:var(--text2);font-weight:800;display:flex;align-items:center;gap:6px}
+.acc-total-label::before{content:'';width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));box-shadow:0 0 10px rgba(108,155,255,.7)}
+.acc-total-eye{font-size:11.5px;color:var(--text3);cursor:pointer;font-weight:700;padding:6px 10px;border-radius:10px;border:1px solid transparent;transition:all .18s;background:none;font-family:inherit}
+.acc-total-eye:hover{color:var(--text);border-color:var(--border);background:rgba(255,255,255,.04)}
+.acc-total-eye:active{transform:scale(.94)}
+.acc-total-amount{font-size:36px;font-weight:1000;letter-spacing:-.5px;font-variant-numeric:tabular-nums;line-height:1.4}
+.manage-acc-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin:0 auto 16px;padding:9px 18px;font-size:11.5px;font-weight:800;font-family:inherit;color:var(--text2);background:var(--card);border:1px dashed var(--border2);border-radius:100px;cursor:pointer;transition:all .2s}
+.manage-acc-btn:hover{color:var(--text);border-color:var(--blue);border-style:solid;background:rgba(108,155,255,.07);box-shadow:0 8px 22px -12px rgba(108,155,255,.5)}
+.manage-acc-btn:active{transform:scale(.95)}
+.manage-acc-btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 
 /* ─── Stats ─── */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
@@ -111,9 +130,29 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
 .cp.active.grn{border-color:rgba(45,224,165,.5);background:rgba(45,224,165,.12);color:var(--green)}
 .cp.active.pur{border-color:rgba(177,140,255,.5);background:rgba(177,140,255,.12);color:var(--purple)}
 .cp.active.red{border-color:rgba(255,77,109,.5);background:rgba(255,77,109,.12);color:var(--red)}
-.acc-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border)}
-.acc-row input{flex:1;min-width:0;padding:10px 12px;border:1.5px solid var(--border);border-radius:12px;font-size:13px;font-family:inherit;font-weight:700;color:var(--text);background:var(--card);outline:none}
-.acc-del{width:32px;height:32px;flex:0 0 auto;border-radius:10px;border:1px solid rgba(255,77,109,.3);background:rgba(255,77,109,.08);color:var(--red);cursor:pointer;font-size:13px}
+.acc-manage-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.acc-manage-head .acc-manage-ico{width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;background:rgba(108,155,255,.12);border:1px solid rgba(108,155,255,.25)}
+.acc-manage-title{font-size:15px;font-weight:900}
+.acc-manage-sub{font-size:10.5px;color:var(--text3);font-weight:600;margin-top:2px}
+.acc-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:16px;margin-bottom:8px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0)),var(--card);box-shadow:0 6px 16px -12px rgba(0,0,0,.55);transition:border-color .2s,box-shadow .2s,transform .15s}
+.acc-row:focus-within{border-color:var(--blue);box-shadow:0 8px 22px -12px rgba(108,155,255,.45)}
+.acc-row:active{transform:scale(.99)}
+.acc-row .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.acc-row input{flex:1;min-width:0;padding:10px 12px;border:1.5px solid transparent;border-radius:12px;font-size:13px;font-family:inherit;font-weight:700;color:var(--text);background:transparent;outline:none;transition:all .18s}
+.acc-row input:hover{background:rgba(255,255,255,.03)}
+.acc-row input:focus{background:rgba(255,255,255,.05);border-color:var(--blue)}
+.acc-del{width:32px;height:32px;flex:0 0 auto;border-radius:10px;border:1px solid rgba(255,77,109,.3);background:rgba(255,77,109,.08);color:var(--red);cursor:pointer;font-size:13px;transition:all .18s;font-family:inherit}
+.acc-del:hover{background:rgba(255,77,109,.16);box-shadow:0 6px 16px -8px rgba(255,77,109,.5)}
+.acc-del:active{transform:scale(.88)}
+.acc-del:focus-visible{outline:2px solid var(--red);outline-offset:1px}
+.acc-add-row{display:flex;gap:8px;margin-top:10px;padding:10px;border:1px dashed var(--border2);border-radius:16px;background:rgba(108,155,255,.04);transition:all .2s}
+.acc-add-row:focus-within{border-color:var(--blue);border-style:solid;background:rgba(108,155,255,.07);box-shadow:0 8px 22px -12px rgba(108,155,255,.45)}
+.acc-add-row input{flex:1;min-width:0;padding:11px 12px;border:none;border-radius:12px;font-size:13px;font-family:inherit;font-weight:700;color:var(--text);background:transparent;outline:none}
+.acc-add-row input::placeholder{color:var(--text3);font-weight:600}
+.acc-add-btn{flex:0 0 auto;padding:11px 20px;border:none;border-radius:12px;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--blue),var(--purple));box-shadow:0 10px 24px -10px rgba(108,155,255,.6),inset 0 1px 0 rgba(255,255,255,.25);transition:all .2s}
+.acc-add-btn:hover{filter:brightness(1.08);box-shadow:0 12px 28px -10px rgba(108,155,255,.7),inset 0 1px 0 rgba(255,255,255,.25)}
+.acc-add-btn:active{transform:scale(.94)}
+.acc-add-btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 .entry-amt{text-align:left;flex-shrink:0}
 .entry-amt b{font-size:14.5px;font-weight:900;letter-spacing:-.3px;display:block;white-space:nowrap}
 .entry.exp .entry-amt b{color:var(--red)}
@@ -590,17 +629,17 @@ html{scroll-behavior:smooth}
 
 <!-- ═══ صفحه حساب‌ها ═══ -->
 <div class="page active" id="page-hesab">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-    <div class="acc-total-label">مانده کل</div>
-    <div style="font-size:12px;color:var(--text3);cursor:pointer;font-weight:600" onclick="toggleBalanceVisibility()" id="eyeBtn">👁 نمایش موجودی</div>
-  </div>
   <div class="acc-total">
+    <div class="acc-total-head">
+      <div class="acc-total-label">مانده کل</div>
+      <button class="acc-total-eye" onclick="toggleBalanceVisibility()" id="eyeBtn">👁 نمایش موجودی</button>
+    </div>
     <div class="acc-total-amount" id="totalBal">۰ <small>تومان</small></div>
     <div class="acc-total-sub" id="totalShort"></div>
     <div class="acc-total-words" id="totalWords"></div>
   </div>
   <div class="acc-grid" id="accGrid"></div>
-  <div style="text-align:center;margin:-6px 0 16px;font-size:11px;color:var(--text3);cursor:pointer;font-weight:600" onclick="openAccModal()">⚙️ مدیریت حساب‌ها</div>
+  <button class="manage-acc-btn" onclick="openAccModal()">⚙️ مدیریت حساب‌ها</button>
   <div class="stats" id="statsBox">
     <div class="stat sr"><div class="stat-num" id="sExp">۰</div><div class="stat-label">خرج این ماه</div></div>
     <div class="stat sg"><div class="stat-num" id="sInc">۰</div><div class="stat-label">دخل این ماه</div></div>
@@ -743,9 +782,9 @@ html{scroll-behavior:smooth}
 <!-- ═══ Manage Accounts Modal ═══ -->
 <div class="bal-modal-bg" id="accModal">
   <div class="bal-modal">
-    <h3>مدیریت حساب‌ها</h3>
+    <div class="acc-manage-head"><div class="acc-manage-ico">🏦</div><div><div class="acc-manage-title">مدیریت حساب‌ها</div><div class="acc-manage-sub">تغییر نام، حذف یا افزودن حساب</div></div></div>
     <div id="accList"></div>
-    <div class="field" style="margin-top:10px"><label>حساب جدید</label><div style="display:flex;gap:8px"><input type="text" id="newAccName" placeholder="" style="flex:1;min-width:0"><button class="modal-save" onclick="addAccount()" style="flex:0 0 auto;padding:12px 18px">➕</button></div></div>
+    <div class="acc-add-row"><input type="text" id="newAccName" placeholder="نام حساب جدید…"><button class="acc-add-btn" onclick="addAccount()">➕ افزودن</button></div>
     <div class="modal-btns"><button class="modal-cancel" onclick="closeAccModal()">بستن</button></div>
   </div>
 </div>
@@ -878,7 +917,7 @@ function renderAccounts(){
   if(!accByName(card))card=accounts.length?accounts[0].name:'';
   var h='';
   accounts.forEach(function(a){
-    h+='<div class="acc-card '+accColor(a)+'"><div class="acc-name"><span class="dot '+accColor(a)+'-dot"></span>'+esc(a.name)+' <span style="margin-right:auto;font-size:10px;cursor:pointer;opacity:.5" onclick="event.stopPropagation();editBalance(\''+a.id+'\')">✏️</span></div><div class="acc-bal" id="bal_'+a.id+'">۰ <small>تومان</small></div></div>';
+    h+='<div class="acc-card '+accColor(a)+'" tabindex="0" role="button" aria-label="'+esc(a.name)+'" onclick="editBalance(\''+a.id+'\')" onkeydown="if(event.key===\'Enter\'){editBalance(\''+a.id+'\')}"><div class="acc-top"><div class="acc-ico">'+a.icon+'</div><div class="acc-name"><span class="dot '+accColor(a)+'-dot"></span>'+esc(a.name)+'</div><button class="acc-edit" onclick="event.stopPropagation();editBalance(\''+a.id+'\')" aria-label="ویرایش موجودی">✏️</button></div><div class="acc-bal" id="bal_'+a.id+'">۰ <small>تومان</small></div><div class="acc-meta">موجودی حساب</div></div>';
   });
   document.getElementById('accGrid').innerHTML=h;
   var p='',e='';
@@ -893,7 +932,7 @@ function renderAccounts(){
 function openAccModal(){renderAccList();document.getElementById('accModal').classList.add('show');}
 function closeAccModal(){document.getElementById('accModal').classList.remove('show');}
 document.getElementById('accModal').addEventListener('click',function(e){if(e.target===this)closeAccModal();});
-function renderAccList(){var h='';accounts.forEach(function(a){h+='<div class="acc-row"><span class="dot '+accColor(a)+'-dot" style="width:9px;height:9px;border-radius:50%;flex:0 0 auto"></span><input value="'+esc(a.name)+'" onchange="renameAccount(\''+a.id+'\',this.value)"><button class="acc-del" onclick="delAccount(\''+a.id+'\')">✕</button></div>';});document.getElementById('accList').innerHTML=h||'<div style="text-align:center;color:var(--text3);font-size:12px">حسابی نیست</div>';}
+function renderAccList(){var h='';accounts.forEach(function(a){h+='<div class="acc-row acc-'+accColor(a)+'"><span class="dot '+accColor(a)+'-dot"></span><input value="'+esc(a.name)+'" onchange="renameAccount(\''+a.id+'\',this.value)" aria-label="نام حساب"><button class="acc-del" onclick="delAccount(\''+a.id+'\')" aria-label="حذف حساب">✕</button></div>';});document.getElementById('accList').innerHTML=h||'<div style="text-align:center;color:var(--text3);font-size:12px">حسابی نیست</div>';}
 function addAccount(){var v=document.getElementById('newAccName').value.trim();if(!v){toast('اسم حساب رو بنویس');return;}if(accByName(v)){toast('این اسم تکراریه');return;}var used={};accounts.forEach(function(a){used[a.color]=1;});var c='melat';for(var i=0;i<ACC_COLORS.length;i++){if(!used[ACC_COLORS[i]]){c=ACC_COLORS[i];break;}}accounts.push({id:'a'+Date.now(),name:v,icon:(v.indexOf('نقد')>=0?'💵':'💳'),color:c});document.getElementById('newAccName').value='';saveAccounts();renderAccounts();renderAccList();renderHesab();toast('حساب اضافه شد ✓');}
 function renameAccount(id,v){v=(v||'').trim();var a=accById(id);if(!a||!v){renderAccList();return;}if(v!==a.name&&accByName(v)){toast('این اسم تکراریه');renderAccList();return;}var old=a.name;a.name=v;entries.forEach(function(e){if(e.card===old)e.card=v;});save();saveAccounts();renderAccounts();renderAccList();renderEntries();renderHesab();}
 function delAccount(id){if(accounts.length<=1){toast('حداقل یه حساب لازمه');return;}var a=accById(id);if(!a)return;var bal=balances[id]||0;if(!confirm('«'+a.name+'» حذف بشه؟'+(bal?'\nموجودیش ('+fmt(bal)+' تومان) نگه داشته میشه و تراکنش‌های قبلیش می‌مونن':'')))return;accounts=accounts.filter(function(x){return x.id!==id;});saveAccounts();renderAccounts();renderAccList();renderHesab();toast('حذف شد');}
