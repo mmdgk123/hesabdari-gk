@@ -612,8 +612,17 @@ html{scroll-behavior:smooth}
 .stat{box-shadow:0 1px 2px rgba(0,0,0,.35),0 10px 24px -16px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05)}
 .stat.sr{background:linear-gradient(180deg,rgba(255,77,109,.1),rgba(255,77,109,.02) 60%),var(--card);box-shadow:0 1px 2px rgba(0,0,0,.35),0 12px 26px -16px rgba(255,77,109,.45),inset 0 1px 0 rgba(255,255,255,.05)}
 .stat.sg{background:linear-gradient(180deg,rgba(45,224,165,.1),rgba(45,224,165,.02) 60%),var(--card);box-shadow:0 1px 2px rgba(0,0,0,.35),0 12px 26px -16px rgba(45,224,165,.42),inset 0 1px 0 rgba(255,255,255,.05)}
+.stat.sb{background:linear-gradient(180deg,rgba(108,155,255,.1),rgba(108,155,255,.02) 60%),var(--card);box-shadow:0 1px 2px rgba(0,0,0,.35),0 12px 26px -16px rgba(108,155,255,.42),inset 0 1px 0 rgba(255,255,255,.05)}
 .stat:active{transform:scale(.96)}
 [data-theme="light"] .entry,[data-theme="light"] .stat{box-shadow:0 1px 2px rgba(20,25,45,.08),0 10px 24px -16px rgba(20,25,45,.18),inset 0 1px 0 rgba(255,255,255,.6)}
+/* compact slim header bar: title + version + creator + toggle in one line */
+.header{padding:6px 12px 5px}
+.header-row{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;white-space:nowrap;overflow:hidden}
+.header h1{font-size:15px;font-weight:800;white-space:nowrap;flex-shrink:0}
+#verBadge{position:static;transform:none;font-size:9px;font-weight:700;opacity:.45;color:var(--text);pointer-events:none;flex-shrink:0;font-variant-numeric:tabular-nums}
+.header .creator-top{display:inline-flex;align-items:center;width:auto;margin:0;font-size:9px;font-weight:600;padding:1px 8px;flex-shrink:0}
+.header .theme-toggle{width:26px;height:26px;font-size:13px;border-radius:9px;margin-inline-start:auto;flex-shrink:0}
+.header .theme-toggle::after{border-radius:9px}
 @media (prefers-reduced-motion:reduce){.header h1,.acc-total-amount,.sheet-handle,.acc-card,.stat,.fab,.cal-day,.debt-card,.entry{animation:none !important}}
 </style>
 </head>
@@ -622,9 +631,10 @@ html{scroll-behavior:smooth}
 <div class="header">
   <div class="header-row">
     <h1 id="pageTitle">حسابداری</h1>
+    <span id="verBadge">1.1</span>
+    <a class="creator-top" href="https://t.me/mmdGK" target="_blank" rel="noopener">👨‍💻 سازنده: <b>mmdGK</b></a>
     <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
   </div>
-  <a class="creator-top" href="https://t.me/mmdGK" target="_blank" rel="noopener">👨‍💻 سازنده: <b>mmdGK</b></a>
 </div>
 
 <!-- ═══ صفحه حساب‌ها ═══ -->
@@ -800,7 +810,6 @@ html{scroll-behavior:smooth}
   </div>
 </div>
 
-<div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">1.1</div>
 <div class="toast" id="toast"></div>
 
 <script>
