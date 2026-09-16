@@ -600,20 +600,20 @@ html{scroll-behavior:smooth}
 .nav-btn.active .nav-icon{box-shadow:0 0 16px -4px rgba(108,155,255,.25)}
 
 /* Reduced motion respect */
-/* ─── v1.1: three-state amounts + net-worth chart ─── */
+/* ─── v1.1: three-state amounts ─── */
 .acc-total-sub{font-size:13px;font-weight:800;color:var(--blue);margin-top:8px;font-variant-numeric:tabular-nums}
 .acc-total-words{font-size:11px;font-weight:500;color:var(--text2);margin-top:5px;line-height:2;padding:0 10px}
-.nw-box{padding:14px 16px;border-radius:18px;background:var(--card);border:1px solid var(--border);margin-bottom:16px}
-.nw-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.nw-title{font-size:11px;font-weight:800;color:var(--text2)}
-.nw-hint{font-size:9.5px;color:var(--text3);font-weight:600}
-.nw-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.nw-chip{font-size:10.5px;font-weight:800;padding:5px 11px;border-radius:99px;background:var(--bg2);border:1px solid var(--border);color:var(--text2);font-variant-numeric:tabular-nums}
-.nw-chip.up{color:var(--green);border-color:rgba(45,224,165,.35)}
-.nw-chip.dn{color:var(--red);border-color:rgba(255,77,109,.35)}
-#nwChart{width:100%;display:block}
-.nw-empty{text-align:center;font-size:12px;color:var(--text3);line-height:2.2;font-weight:600;padding:14px 6px 6px}
-.nw-note{text-align:center;font-size:10px;color:var(--text3);font-weight:600;margin-top:8px}
+/* ─── txn cards: depth + per-type tint, press states ─── */
+.entry{box-shadow:0 1px 2px rgba(0,0,0,.35),0 8px 22px -14px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.04)}
+.entry.exp{background:linear-gradient(180deg,rgba(255,77,109,.07),rgba(255,77,109,.02) 55%),var(--card);border-color:rgba(255,77,109,.22);border-inline-start:3px solid rgba(255,77,109,.65);box-shadow:0 1px 2px rgba(0,0,0,.35),0 10px 24px -14px rgba(255,77,109,.35),inset 0 1px 0 rgba(255,255,255,.04)}
+.entry.inc{background:linear-gradient(180deg,rgba(45,224,165,.07),rgba(45,224,165,.02) 55%),var(--card);border-color:rgba(45,224,165,.22);border-inline-start:3px solid rgba(45,224,165,.65);box-shadow:0 1px 2px rgba(0,0,0,.35),0 10px 24px -14px rgba(45,224,165,.32),inset 0 1px 0 rgba(255,255,255,.04)}
+.entry.exp:active{background:linear-gradient(180deg,rgba(255,77,109,.12),rgba(255,77,109,.04)),var(--card);transform:scale(.985);box-shadow:0 2px 6px rgba(0,0,0,.4),0 4px 12px -8px rgba(255,77,109,.4)}
+.entry.inc:active{background:linear-gradient(180deg,rgba(45,224,165,.12),rgba(45,224,165,.04)),var(--card);transform:scale(.985);box-shadow:0 2px 6px rgba(0,0,0,.4),0 4px 12px -8px rgba(45,224,165,.4)}
+.stat{box-shadow:0 1px 2px rgba(0,0,0,.35),0 10px 24px -16px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05)}
+.stat.sr{background:linear-gradient(180deg,rgba(255,77,109,.1),rgba(255,77,109,.02) 60%),var(--card);box-shadow:0 1px 2px rgba(0,0,0,.35),0 12px 26px -16px rgba(255,77,109,.45),inset 0 1px 0 rgba(255,255,255,.05)}
+.stat.sg{background:linear-gradient(180deg,rgba(45,224,165,.1),rgba(45,224,165,.02) 60%),var(--card);box-shadow:0 1px 2px rgba(0,0,0,.35),0 12px 26px -16px rgba(45,224,165,.42),inset 0 1px 0 rgba(255,255,255,.05)}
+.stat:active{transform:scale(.96)}
+[data-theme="light"] .entry,[data-theme="light"] .stat{box-shadow:0 1px 2px rgba(20,25,45,.08),0 10px 24px -16px rgba(20,25,45,.18),inset 0 1px 0 rgba(255,255,255,.6)}
 @media (prefers-reduced-motion:reduce){.header h1,.acc-total-amount,.sheet-handle,.acc-card,.stat,.fab,.cal-day,.debt-card,.entry{animation:none !important}}
 </style>
 </head>
@@ -651,16 +651,6 @@ html{scroll-behavior:smooth}
       <div style="font-size:10px;color:var(--text3)" id="topSub"></div>
     </div>
     <div id="topContent"></div>
-  </div>
-  <div class="nw-box" id="nwBox">
-    <div class="nw-head">
-      <div class="nw-title">📈 رشد دارایی</div>
-      <div class="nw-hint">روزانه ذخیره می‌شود</div>
-    </div>
-    <div class="nw-chips" id="nwChips"></div>
-    <canvas id="nwChart"></canvas>
-    <div class="nw-note" id="nwNote" style="display:none">📐 مقادیر تقریبی از روی تراکنش‌ها بازسازی شده</div>
-    <div class="nw-empty" id="nwEmpty" style="display:none">🌱 هنوز نموداری نیست<br>از فردا که برگردی، رشد دارایی‌ات رو اینجا می‌بینی</div>
   </div>
 </div>
 
@@ -703,7 +693,6 @@ html{scroll-behavior:smooth}
   </div>
   <div class="entries" id="debtList"></div>
 </div>
-
 
 <!-- ═══ صفحه تقویم ═══ -->
 <div class="page" id="page-calendar">
@@ -814,7 +803,6 @@ html{scroll-behavior:smooth}
 <div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">1.1</div>
 <div class="toast" id="toast"></div>
 
-
 <script>
 /* DATA */
 var entries=JSON.parse(localStorage.getItem('dakhel_entries')||'[]');
@@ -847,41 +835,6 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function faDigits(s){var m={'0':'۰','1':'۱','2':'۲','3':'۳','4':'۴','5':'۵','6':'۶','7':'۷','8':'۸','9':'۹'};return String(s).replace(/[0-9]/g,function(c){return m[c];});}
 function shortFmt(n){n=Math.floor(Math.abs(n)||0);if(n<1000)return fmt(n)+' تومان';var u=[[1000000000,'میلیارد'],[1000000,'میلیون'],[1000,'هزار']];for(var i=0;i<u.length;i++){if(n>=u[i][0]){var v=Math.floor(n/u[i][0]*10)/10;var s=(v%1===0)?faDigits(v.toFixed(0)):faDigits(v.toFixed(1));return s+' '+u[i][1]+' تومان';}}return fmt(n)+' تومان';}
 function numToWordsFa(n){var neg=n<0;n=Math.floor(Math.abs(n)||0);if(n===0)return 'صفر تومان';var y=['','یک','دو','سه','چهار','پنج','شش','هفت','هشت','نه'];var t=['ده','یازده','دوازده','سیزده','چهارده','پانزده','شانزده','هفده','هجده','نوزده'];var dd=['','ده','بیست','سی','چهل','پنجاه','شصت','هفتاد','هشتاد','نود'];var hh=['','یکصد','دویست','سیصد','چهارصد','پانصد','ششصد','هفتصد','هشتصد','نهصد'];function three(x){var r=[];var s=Math.floor(x/100),o=x%100;if(s)r.push(hh[s]);if(o>=10&&o<20)r.push(t[o-10]);else{var e=Math.floor(o/10),f=o%10;if(e)r.push(dd[e]);if(f)r.push(y[f]);}return r.join(' و ');}var sc=['','هزار','میلیون','میلیارد','هزار میلیارد'];var p=[],gi=0;while(n>0&&gi<sc.length){var g=n%1000;if(g){var w=three(g);p.unshift(sc[gi]?w+' '+sc[gi]:w);}n=Math.floor(n/1000);gi++;}return (neg?'منفی ':'')+p.join(' و ')+' تومان';}
-
-/* ─── v1.1: net-worth history (dakhel_history, cap 365) ─── */
-function totalNet(){return accounts.reduce(function(s,a){return s+(balances[a.id]||0)},0);}
-function todayKey(){try{return new Date().toLocaleString('sv-SE',{timeZone:'Asia/Tehran'}).split(' ')[0];}catch(e){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}}
-function loadHist(){try{var h=JSON.parse(localStorage.getItem('dakhel_history')||'[]');return Array.isArray(h)?h:[];}catch(e){return[];}}
-function saveHistSnap(){try{var h=loadHist();var k=todayKey(),t=totalNet();if(h.length&&h[h.length-1].date===k)h[h.length-1].total=t;else h.push({date:k,total:t});while(h.length>365)h.shift();localStorage.setItem('dakhel_history',JSON.stringify(h));}catch(e){}}
-/* ─── backfill net-worth history from transactions (estimates, capped 365) ─── */
-function backfillHist(){try{
-var h=loadHist();if(h.length>=2||!entries||!entries.length)return h;
-var tj=nowJ();function cmp(a,b){return a[0]!==b[0]?a[0]-b[0]:(a[1]!==b[1]?a[1]-b[1]:a[2]-b[2]);}
-var flows={},oldest=null,valid=0;
-for(var i=0;i<entries.length;i++){var e=entries[i],y=e.year,m=e.month,d=e.day;
-if(typeof y!=='number'||typeof m!=='number'||typeof d!=='number'||isNaN(y)||isNaN(m)||isNaN(d)){var mt=/([\d\u06F0-\u06F9]+)\D+([\d\u06F0-\u06F9]+)\D+([\d\u06F0-\u06F9]+)/.exec(fa2en(String(e.date||'')));if(!mt)continue;y=+mt[1];m=+mt[2];d=+mt[3];}
-if(!(y>=1300&&y<=1500&&m>=1&&m<=12&&d>=1&&d<=31))continue;
-if(cmp([y,m,d],[tj.y,tj.m,tj.d])>0)continue;
-var amt=+e.amount||0,fl=e.type==='income'?amt:-amt,k=y+'/'+m+'/'+d;
-flows[k]=(flows[k]||0)+fl;valid++;
-if(!oldest||cmp([y,m,d],oldest)<0)oldest=[y,m,d];}
-if(!valid||!oldest)return h;
-var tp=todayKey().split('-'),base=Date.UTC(+tp[0],+tp[1]-1,+tp[2]);
-function gk(off){return new Date(base-off*864e5).toISOString().slice(0,10);}
-var have={};h.forEach(function(x){have[x.date]=1;});
-var T=totalNet(),cur=T;
-for(var off=1;off<365;off++){
-var gd=new Date(base-off*864e5),jj=g2j(gd.getUTCFullYear(),gd.getUTCMonth()+1,gd.getUTCDate());
-if(cmp(jj,oldest)<0)break;
-var pk=gk(off-1),pj=new Date(base-(off-1)*864e5),jf=g2j(pj.getUTCFullYear(),pj.getUTCMonth()+1,pj.getUTCDate());
-cur-=(flows[jf[0]+'/'+jf[1]+'/'+jf[2]]||0);
-var key=gk(off);if(!have[key]){h.push({date:key,total:Math.round(cur),est:1});have[key]=1;}}
-if(!have[gk(0)]){h.push({date:gk(0),total:T});have[gk(0)]=1;}
-h.sort(function(a,b){return a.date<b.date?-1:1;});while(h.length>365)h.shift();
-try{localStorage.setItem('dakhel_history',JSON.stringify(h));}catch(e2){}
-return h;}catch(e){try{return loadHist();}catch(e2){return[];}}}
-function nwPct(h,days){if(h.length<2)return null;var last=h[h.length-1];var t1=Date.parse(last.date);if(isNaN(t1))return null;var base=null;for(var i=0;i<h.length;i++){var t0=Date.parse(h[i].date);if(isNaN(t0))continue;if((t1-t0)/864e5<=days){base=h[i];break;}}if(!base)base=h[0];if(!base||!base.total)return null;return (last.total-base.total)/Math.abs(base.total)*100;}
-function renderNw(){var box=document.getElementById('nwBox');if(!box)return;var h=backfillHist();var chips=document.getElementById('nwChips'),cv=document.getElementById('nwChart'),ph=document.getElementById('nwEmpty'),nt=document.getElementById('nwNote');var defs=[['۱ ماهه',30],['۳ ماهه',90],['۶ ماهه',180],['۱ ساله',365]];var ch='';defs.forEach(function(d){var p=nwPct(h,d[1]);var t=p===null?'—':(p>=0?'+':'')+faDigits(p.toFixed(1))+'٪';ch+='<span class="nw-chip '+(p===null?'':(p>=0?'up':'dn'))+'">'+d[0]+' '+t+'</span>';});chips.innerHTML=ch;var hasEst=h.some(function(x){return x.est;});if(nt)nt.style.display=(h.length>=2&&hasEst)?'block':'none';if(h.length<2){cv.style.display='none';ph.style.display='block';return;}cv.style.display='block';ph.style.display='none';try{var dpr=window.devicePixelRatio||1;var W=cv.clientWidth||cv.parentElement.clientWidth||300,H=120;cv.width=W*dpr;cv.height=H*dpr;cv.style.height=H+'px';var x=cv.getContext('2d');x.scale(dpr,dpr);x.clearRect(0,0,W,H);var vs=h.map(function(e){return e.total;});var mn=Math.min.apply(null,vs),mx=Math.max.apply(null,vs);if(mx===mn)mx=mn+1;function px(i){return vs.length<2?W/2:8+i*(W-16)/(vs.length-1);}function py(v){return H-16-(v-mn)/(mx-mn)*(H-34);}x.beginPath();vs.forEach(function(v,i){if(i===0)x.moveTo(px(i),py(v));else x.lineTo(px(i),py(v));});x.strokeStyle='#6c9bff';x.lineWidth=2;x.lineJoin='round';x.lineCap='round';x.stroke();x.lineTo(px(vs.length-1),H);x.lineTo(px(0),H);x.closePath();var g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'rgba(108,155,255,.28)');g.addColorStop(1,'rgba(108,155,255,0)');x.fillStyle=g;x.fill();vs.forEach(function(v,i){if(i===0||i===vs.length-1||vs.length<=10){x.beginPath();x.arc(px(i),py(v),2.5,0,7);x.fillStyle='#6c9bff';x.fill();}});var dark=document.documentElement.getAttribute('data-theme')!=='light';x.fillStyle=dark?'#9aa0b4':'#6b7085';x.font='10px Tahoma';x.textAlign='right';x.fillText(fmt(mx),W-4,12);x.fillText(fmt(mn),W-4,H-4);}catch(e){cv.style.display='none';ph.style.display='block';}}
 
 /* PAGE NAV */
 var balHidden=true;
@@ -1093,7 +1046,7 @@ function animNum(el,to){
   requestAnimationFrame(step);
 }
 var _oRenderHesab=renderHesab;
-renderHesab=function(){_oRenderHesab();renderTop();saveHistSnap();renderNw();var _t=accounts.reduce(function(s,a){return s+(balances[a.id]||0)},0);var sh=document.getElementById('totalShort'),wo=document.getElementById('totalWords');if(balHidden){if(sh)sh.textContent='•••••';if(wo)wo.textContent='';return;}if(sh)sh.textContent=shortFmt(_t);if(wo)wo.textContent=numToWordsFa(_t);animNum(document.getElementById('totalBal'),_t);accounts.forEach(function(a){animNum(document.getElementById('bal_'+a.id),balances[a.id]||0);});};
+renderHesab=function(){_oRenderHesab();renderTop();var _t=accounts.reduce(function(s,a){return s+(balances[a.id]||0)},0);var sh=document.getElementById('totalShort'),wo=document.getElementById('totalWords');if(balHidden){if(sh)sh.textContent='•••••';if(wo)wo.textContent='';return;}if(sh)sh.textContent=shortFmt(_t);if(wo)wo.textContent=numToWordsFa(_t);animNum(document.getElementById('totalBal'),_t);accounts.forEach(function(a){animNum(document.getElementById('bal_'+a.id),balances[a.id]||0);});};
 
 /* ENTER SUBMIT */
 document.addEventListener('keydown',function(ev){if(ev.key!=='Enter')return;var s1=document.getElementById('addSheet'),s2=document.getElementById('addDebtSheet');if(s1.classList.contains('show')){ev.preventDefault();addEntry();}else if(s2.classList.contains('show')){ev.preventDefault();addDebt();}});
