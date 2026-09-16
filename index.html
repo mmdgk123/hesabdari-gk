@@ -299,8 +299,9 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 @keyframes hitNew{0%{transform:scale(1)}35%{transform:scale(1.045);border-color:var(--green)}100%{transform:scale(1)}}
 .balance-hide{transition:filter .3s,opacity .3s}
 .balance-hide.blurred{filter:blur(7px);opacity:.55}
-.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.4);transform:scale(0);animation:rip .5s ease-out forwards;pointer-events:none;z-index:1}
-@keyframes rip{to{transform:scale(3.2);opacity:0}}
+/* ─── subtle touch feedback (GPU-only: transform/opacity, ~130ms) ─── */
+body .submit-btn,body .modal-btns button,body .modal-save,body .install-btn,body .btn,body .cp,body .debt-tab,body .type-tab,body .fp,body .nav-btn,body .ebtn,body .debt-check{transition:transform .13s ease-out,opacity .13s ease-out}
+body .submit-btn:active,body .modal-btns button:active,body .modal-save:active,body .install-btn:active,body .btn:active,body .cp:active,body .debt-tab:active,body .type-tab:active,body .fp:active,body .nav-btn:active,body .ebtn:active,body .debt-check:active{transform:scale(.97);opacity:.82}
 .nav-icon{position:relative}
 .stat-num{transition:transform .2s}
 .stat.bump .stat-num{animation:statBump .45s cubic-bezier(.34,1.56,.64,1)}
@@ -636,7 +637,7 @@ html{scroll-behavior:smooth}
 <div class="header">
   <div class="header-row">
     <h1 id="pageTitle">حسابداری</h1>
-    <span id="verBadge">1.2</span>
+    <span id="verBadge">1.3</span>
     <a class="creator-top" href="https://t.me/mmdGK" target="_blank" rel="noopener">👨‍💻 سازنده: <b>mmdGK</b></a>
     <button class="install-btn" onclick="openInstallSheet()">📲 نصب</button>
     <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
@@ -851,7 +852,7 @@ function saveAccounts(){localStorage.setItem('dakhel_accs',JSON.stringify(accoun
 saveAccounts();
 accounts.forEach(function(a){if(balances[a.id]===undefined)balances[a.id]=0;});
 var type='expense',card='ملت',currentTab='all',debtType='creditor';
-var APP_VERSION='1.2';
+var APP_VERSION='1.3';
 var editIdx=-1,editCardVal='ملت',editDebtIdx=-1,editBalAcc='';
 
 /* THEME */
@@ -1090,17 +1091,11 @@ renderHesab=function(){_oRenderHesab();renderTop();var _t=accounts.reduce(functi
 /* ENTER SUBMIT */
 document.addEventListener('keydown',function(ev){if(ev.key!=='Enter')return;var s1=document.getElementById('addSheet'),s2=document.getElementById('addDebtSheet');if(s1.classList.contains('show')){ev.preventDefault();addEntry();}else if(s2.classList.contains('show')){ev.preventDefault();addDebt();}});
 
-/* ═══ Ripple + haptic ═══ */
+/* ═══ Haptic touch feedback (visual press is pure CSS) ═══ */
 document.addEventListener('pointerdown',function(ev){
   var b=ev.target.closest('.submit-btn,.nav-btn,.fab,.cp,.debt-tab,.type-tab,.fp,.ebtn,.modal-btns button,.debt-check');
   if(!b)return;
   if(navigator.vibrate){try{navigator.vibrate(8);}catch(e){}}
-  if(b.classList.contains('fab')||b.classList.contains('nav-btn'))return;
-  var r=b.getBoundingClientRect(),d=Math.max(r.width,r.height);
-  var s=document.createElement('span');s.className='ripple';
-  s.style.width=s.style.height=d+'px';
-  s.style.left=(ev.clientX-r.left-d/2)+'px';s.style.top=(ev.clientY-r.top-d/2)+'px';
-  b.appendChild(s);setTimeout(function(){s.remove()},520);
 },{passive:true});
 
 /* INIT */
