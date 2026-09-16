@@ -619,11 +619,15 @@ html{scroll-behavior:smooth}
 /* one-row compact header: title+version+telegram+actions in a single vertically-centered row */
 .header{padding:2px 12px 4px}
 .header-row{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;white-space:nowrap;overflow:hidden}
+.h-start{display:flex;align-items:center;gap:6px;flex-shrink:0;min-width:0}
+.h-center{flex:1 1 auto;display:flex;justify-content:center;align-items:center;min-width:0}
+.h-end{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .header h1{font-size:20px;font-weight:900;line-height:1.2;margin:0;padding:0;white-space:nowrap;flex-shrink:0}
 #verBadge{position:static;transform:none;font-size:8px;font-weight:700;opacity:.45;color:var(--text);pointer-events:none;flex-shrink:0;font-variant-numeric:tabular-nums;line-height:1.2}
-.header .creator-top{display:inline-flex;align-items:center;width:auto;margin:0;font-size:9px;font-weight:600;padding:1px 8px;background:var(--card);border:1px solid var(--border);border-radius:99px;white-space:nowrap;flex-shrink:0;line-height:1.4}
+.header .creator-top{display:inline-flex;align-items:center;gap:4px;width:auto;margin:0;font-size:13px;font-weight:800;padding:4px 14px;background:var(--card);border:1px solid var(--border);border-radius:99px;white-space:nowrap;flex-shrink:0;line-height:1.4}
+.header .creator-top b{font-weight:900}
 .header .theme-toggle{width:26px;height:26px;font-size:13px;border-radius:9px;flex-shrink:0}
-.install-btn{flex-shrink:0;font-size:10px;font-weight:800;font-family:inherit;white-space:nowrap;cursor:pointer;color:var(--text);background:var(--card);border:1.5px solid var(--border);border-radius:9px;padding:0 8px;height:26px;line-height:1;margin-inline-start:auto}
+.install-btn{flex-shrink:0;font-size:10px;font-weight:800;font-family:inherit;white-space:nowrap;cursor:pointer;color:var(--text);background:var(--card);border:1.5px solid var(--border);border-radius:9px;padding:0 8px;height:26px;line-height:1;margin:0}
 .install-btn:active{transform:scale(.93)}
 .inst-sec{margin-bottom:14px}
 .inst-sec h4{font-size:13px;font-weight:900;margin-bottom:8px}
@@ -636,11 +640,17 @@ html{scroll-behavior:smooth}
 
 <div class="header">
   <div class="header-row">
-    <h1 id="pageTitle">حسابداری</h1>
-    <span id="verBadge">1.7</span>
-    <a class="creator-top" href="https://t.me/mmdGK" target="_blank" rel="noopener">👨‍💻 تلگرام: <b>mmdGK</b></a>
-    <button class="install-btn" onclick="openInstallSheet()">📲 نصب</button>
-    <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
+    <div class="h-start">
+      <h1 id="pageTitle">حسابداری</h1>
+      <span id="verBadge">1.8</span>
+    </div>
+    <div class="h-center">
+      <a class="creator-top" href="https://t.me/mmdGK" target="_blank" rel="noopener">👨‍💻 تلگرام: <b>mmdGK</b></a>
+    </div>
+    <div class="h-end">
+      <button class="install-btn" onclick="openInstallSheet()">📲 نصب</button>
+      <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
+    </div>
   </div>
 </div>
 
@@ -852,7 +862,7 @@ function saveAccounts(){localStorage.setItem('dakhel_accs',JSON.stringify(accoun
 saveAccounts();
 accounts.forEach(function(a){if(balances[a.id]===undefined)balances[a.id]=0;});
 var type='expense',card='ملت',currentTab='all',debtType='creditor';
-var APP_VERSION='1.7';
+var APP_VERSION='1.8';
 var editIdx=-1,editCardVal='ملت',editDebtIdx=-1,editBalAcc='';
 
 /* THEME */
