@@ -621,7 +621,12 @@ html{scroll-behavior:smooth}
 .header h1{font-size:15px;font-weight:800;white-space:nowrap;flex-shrink:0}
 #verBadge{position:static;transform:none;font-size:9px;font-weight:700;opacity:.45;color:var(--text);pointer-events:none;flex-shrink:0;font-variant-numeric:tabular-nums}
 .header .creator-top{display:inline-flex;align-items:center;width:auto;margin:0;font-size:9px;font-weight:600;padding:1px 8px;flex-shrink:0}
-.header .theme-toggle{width:26px;height:26px;font-size:13px;border-radius:9px;margin-inline-start:auto;flex-shrink:0}
+.header .theme-toggle{width:26px;height:26px;font-size:13px;border-radius:9px;flex-shrink:0}
+.install-btn{flex-shrink:0;font-size:10px;font-weight:800;font-family:inherit;white-space:nowrap;cursor:pointer;color:var(--text);background:var(--card);border:1.5px solid var(--border);border-radius:9px;padding:0 8px;height:26px;line-height:1;margin-inline-start:auto}
+.install-btn:active{transform:scale(.93)}
+.inst-sec{margin-bottom:14px}
+.inst-sec h4{font-size:13px;font-weight:900;margin-bottom:8px}
+.inst-sec li{font-size:12px;font-weight:600;color:var(--text2);background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px 10px;line-height:1.7;list-style:none;margin-bottom:6px}
 .header .theme-toggle::after{border-radius:9px}
 @media (prefers-reduced-motion:reduce){.header h1,.acc-total-amount,.sheet-handle,.acc-card,.stat,.fab,.cal-day,.debt-card,.entry{animation:none !important}}
 </style>
@@ -631,8 +636,9 @@ html{scroll-behavior:smooth}
 <div class="header">
   <div class="header-row">
     <h1 id="pageTitle">حسابداری</h1>
-    <span id="verBadge">1.1</span>
+    <span id="verBadge">1.2</span>
     <a class="creator-top" href="https://t.me/mmdGK" target="_blank" rel="noopener">👨‍💻 سازنده: <b>mmdGK</b></a>
+    <button class="install-btn" onclick="openInstallSheet()">📲 نصب</button>
     <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
   </div>
 </div>
@@ -810,6 +816,27 @@ html{scroll-behavior:smooth}
   </div>
 </div>
 
+<!-- ═══ Install Guide Sheet ═══ -->
+<div class="sheet-bg" id="installSheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h3 style="font-size:15px;font-weight:900;text-align:center;margin-bottom:14px">📲 نصب برنامه روی گوشی</h3>
+    <div class="inst-sec">
+      <h4>🤖 اندروید (کروم)</h4>
+      <li>۱️⃣ منوی ⋮ بالای کروم را باز کنید</li>
+      <li>۲️⃣ گزینه «Add to Home screen» یا «نصب برنامه» را بزنید</li>
+      <li>۳️⃣ تأیید کنید تا آیکون روی صفحه اصلی بیاید</li>
+    </div>
+    <div class="inst-sec">
+      <h4>🍎 آیفون (سافاری)</h4>
+      <li>۱️⃣ دکمه Share (⎙) پایین سافاری را بزنید</li>
+      <li>۲️⃣ گزینه «Add to Home Screen» را انتخاب کنید</li>
+      <li>۳️⃣ دکمه Add را بزنید</li>
+    </div>
+    <div class="modal-btns"><button class="modal-cancel" onclick="closeInstallSheet()" style="flex:1">بستن</button></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -824,7 +851,7 @@ function saveAccounts(){localStorage.setItem('dakhel_accs',JSON.stringify(accoun
 saveAccounts();
 accounts.forEach(function(a){if(balances[a.id]===undefined)balances[a.id]=0;});
 var type='expense',card='ملت',currentTab='all',debtType='creditor';
-var APP_VERSION='1.1';
+var APP_VERSION='1.2';
 var editIdx=-1,editCardVal='ملت',editDebtIdx=-1,editBalAcc='';
 
 /* THEME */
@@ -952,6 +979,9 @@ toast(type==='expense'?'خرج ثبت شد ✓':'دخل ثبت شد ✓');}
 function openEdit(i){editIdx=i;editCardVal=entries[i].card;document.getElementById('editAmt').value=Math.round(entries[i].amount/1000).toLocaleString('en-US');document.getElementById('editDesc').value=entries[i].desc;setEditCard(editCardVal);document.getElementById('editModal').classList.add('show');}
 function saveEdit(){var amt=fa2en(document.getElementById('editAmt').value.trim()).replace(/,/g,'');if(!amt||amt==0){toast('مبلغ رو وارد کن');return;}var desc=document.getElementById('editDesc').value.trim();if(!desc){toast('توضیح رو وارد کن');return;}var oldE=entries[editIdx];var _oo=accByName(oldE.card),_nn=accByName(editCardVal);var accOld=_oo?_oo.id:null,accNew=_nn?_nn.id:null;var newAmt=parseInt(amt)*1000;if(accOld){if(oldE.type==='expense')balances[accOld]+=oldE.amount;else balances[accOld]-=oldE.amount;}if(accNew){if(oldE.type==='expense')balances[accNew]-=newAmt;else balances[accNew]+=newAmt;}entries[editIdx].amount=newAmt;entries[editIdx].desc=desc;entries[editIdx].card=editCardVal;localStorage.setItem('dakhel_bal',JSON.stringify(balances));save();closeModal();renderEntries();renderHesab();toast('ویرایش شد ✓');}
 function closeModal(){document.getElementById('editModal').classList.remove('show');}
+function openInstallSheet(){document.getElementById('installSheet').classList.add('show');}
+function closeInstallSheet(){document.getElementById('installSheet').classList.remove('show');}
+document.getElementById('installSheet').addEventListener('click',function(e){if(e.target===this)closeInstallSheet();});
 document.getElementById('editModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
 function delEntry(i){if(!confirm('پاک بشه؟'))return;var e=entries[i];var _dd=accByName(e.card);var acc=_dd?_dd.id:null;
 if(acc){if(e.type==='expense')balances[acc]+=e.amount;else balances[acc]-=e.amount;}localStorage.setItem('dakhel_bal',JSON.stringify(balances));entries.splice(i,1);save();renderEntries();renderHesab();toast('پاک شد');}
