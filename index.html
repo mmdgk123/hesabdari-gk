@@ -642,7 +642,7 @@ html{scroll-behavior:smooth}
   <div class="header-row">
     <div class="h-start">
       <h1 id="pageTitle">حسابداری</h1>
-      <span id="verBadge">1.8</span>
+      <span id="verBadge">1.9</span>
     </div>
     <div class="h-center">
       <a class="creator-top" href="https://t.me/mmdGK" target="_blank" rel="noopener">👨‍💻 تلگرام: <b>mmdGK</b></a>
@@ -862,7 +862,7 @@ function saveAccounts(){localStorage.setItem('dakhel_accs',JSON.stringify(accoun
 saveAccounts();
 accounts.forEach(function(a){if(balances[a.id]===undefined)balances[a.id]=0;});
 var type='expense',card='ملت',currentTab='all',debtType='creditor';
-var APP_VERSION='1.8';
+var APP_VERSION='1.9';
 var editIdx=-1,editCardVal='ملت',editDebtIdx=-1,editBalAcc='';
 
 /* THEME */
@@ -1074,7 +1074,7 @@ function genPDF(){
 }
 
 /* BACKUP */
-function dlBackup(){var d={entries:entries,debts:debts,balances:balances,accounts:accounts};var b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='dakhel_backup_'+new Date().toISOString().split('T')[0]+'.json';a.click();URL.revokeObjectURL(u);toast('بکاپ دانلود شد 💾');}
+function dlBackup(){var d={entries:entries,debts:debts,balances:balances,accounts:accounts};var b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='hesabdari-backup-'+new Date().toISOString().split('T')[0]+'.json';a.click();URL.revokeObjectURL(u);toast('بکاپ دانلود شد 💾');}
 function checkUpdate(){if(!confirm('کش برنامه پاک و تازه‌سازی بشه؟ (داده‌هات پاک نمیشه)'))return;var done=function(){try{location.reload(true);}catch(e){location.reload();}};if('serviceWorker' in navigator){Promise.all([caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k);}));}),navigator.serviceWorker.getRegistrations().then(function(rs){return Promise.all(rs.map(function(r){return r.unregister();}));})]).then(done).catch(done);}else{done();}}
 function restore(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var raw=ev.target.result;var d=JSON.parse(raw);if(d&&typeof d==='object'&&d.entries){entries=d.entries;debts=d.debts||[];if(d.balances){balances=d.balances;if(d.accounts&&Array.isArray(d.accounts)&&d.accounts.length){accounts=d.accounts;saveAccounts();}accounts.forEach(function(a){if(balances[a.id]===undefined)balances[a.id]=0;});}}else if(Array.isArray(d)){entries=d;}else{toast('فایل بکاپ معتبر نیست');return;}save();saveDebts();localStorage.setItem('dakhel_bal',JSON.stringify(balances));buildMonthPills();renderAccounts();renderHesab();renderEntries();renderDebts();document.getElementById("verBadge").textContent=APP_VERSION;toast(entries.length+' تراکنش برگشت ✓');}catch(err){toast('خطا: '+err.message);}};r.readAsText(f);e.target.value='';}
 function clearAll(){if(!confirm('همه پاک بشه؟'))return;entries=[];debts=[];accounts=JSON.parse(JSON.stringify(ACC_DEF));balances={};accounts.forEach(function(a){balances[a.id]=0;});saveAccounts();renderAccounts();save();saveDebts();localStorage.setItem('dakhel_bal',JSON.stringify(balances));buildMonthPills();renderAccounts();renderHesab();renderEntries();renderDebts();toast('پاک شد');}
