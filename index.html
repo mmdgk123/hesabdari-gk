@@ -561,6 +561,19 @@ html{scroll-behavior:smooth}
 .nav-btn.active .nav-icon{box-shadow:0 0 16px -4px rgba(108,155,255,.25)}
 
 /* Reduced motion respect */
+/* ─── v1.1: three-state amounts + net-worth chart ─── */
+.acc-total-sub{font-size:13px;font-weight:800;color:var(--blue);margin-top:8px;font-variant-numeric:tabular-nums}
+.acc-total-words{font-size:11px;font-weight:500;color:var(--text2);margin-top:5px;line-height:2;padding:0 10px}
+.nw-box{padding:14px 16px;border-radius:18px;background:var(--card);border:1px solid var(--border);margin-bottom:16px}
+.nw-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.nw-title{font-size:11px;font-weight:800;color:var(--text2)}
+.nw-hint{font-size:9.5px;color:var(--text3);font-weight:600}
+.nw-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.nw-chip{font-size:10.5px;font-weight:800;padding:5px 11px;border-radius:99px;background:var(--bg2);border:1px solid var(--border);color:var(--text2);font-variant-numeric:tabular-nums}
+.nw-chip.up{color:var(--green);border-color:rgba(45,224,165,.35)}
+.nw-chip.dn{color:var(--red);border-color:rgba(255,77,109,.35)}
+#nwChart{width:100%;display:block}
+.nw-empty{text-align:center;font-size:12px;color:var(--text3);line-height:2.2;font-weight:600;padding:14px 6px 6px}
 @media (prefers-reduced-motion:reduce){.header h1,.acc-total-amount,.sheet-handle,.acc-card,.stat,.fab,.cal-day,.debt-card,.entry{animation:none !important}}
 </style>
 </head>
@@ -582,6 +595,8 @@ html{scroll-behavior:smooth}
   </div>
   <div class="acc-total">
     <div class="acc-total-amount" id="totalBal">۰ <small>تومان</small></div>
+    <div class="acc-total-sub" id="totalShort"></div>
+    <div class="acc-total-words" id="totalWords"></div>
   </div>
   <div class="acc-grid" id="accGrid"></div>
   <div style="text-align:center;margin:-6px 0 16px;font-size:11px;color:var(--text3);cursor:pointer;font-weight:600" onclick="openAccModal()">⚙️ مدیریت حساب‌ها</div>
@@ -596,6 +611,15 @@ html{scroll-behavior:smooth}
       <div style="font-size:10px;color:var(--text3)" id="topSub"></div>
     </div>
     <div id="topContent"></div>
+  </div>
+  <div class="nw-box" id="nwBox">
+    <div class="nw-head">
+      <div class="nw-title">📈 رشد دارایی</div>
+      <div class="nw-hint">روزانه ذخیره می‌شود</div>
+    </div>
+    <div class="nw-chips" id="nwChips"></div>
+    <canvas id="nwChart"></canvas>
+    <div class="nw-empty" id="nwEmpty" style="display:none">🌱 هنوز نموداری نیست<br>از فردا که برگردی، رشد دارایی‌ات رو اینجا می‌بینی</div>
   </div>
 </div>
 
@@ -746,7 +770,7 @@ html{scroll-behavior:smooth}
   </div>
 </div>
 
-<div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">1.0</div>
+<div id="verBadge" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;opacity:.3;color:var(--text);z-index:999;pointer-events:none">1.1</div>
 <div class="toast" id="toast"></div>
 
 
@@ -762,7 +786,7 @@ function saveAccounts(){localStorage.setItem('dakhel_accs',JSON.stringify(accoun
 saveAccounts();
 accounts.forEach(function(a){if(balances[a.id]===undefined)balances[a.id]=0;});
 var type='expense',card='ملت',currentTab='all',debtType='creditor';
-var APP_VERSION='1.0';
+var APP_VERSION='1.1';
 var editIdx=-1,editCardVal='ملت',editDebtIdx=-1,editBalAcc='';
 
 /* THEME */
@@ -777,6 +801,19 @@ function fmt(n){return n.toLocaleString('fa-IR');}
 function nowJ(){var s=new Date().toLocaleString('sv-SE',{timeZone:'Asia/Tehran'});var p=s.split(' '),d=p[0].split('-'),t=p[1].split(':');var j=g2j(+d[0],+d[1],+d[2]);return{str:j[0]+'/'+String(j[1]).padStart(2,'0')+'/'+String(j[2]).padStart(2,'0')+' '+jMonthName(j[1])+' '+t[0]+':'+t[1],y:j[0],m:j[1],d:j[2]};}
 function fmtAmt(el){var v=fa2en(el.value).replace(/[^\d]/g,'');el.value=v?parseInt(v).toLocaleString('en-US'):'';}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+/* ─── v1.1: three-state amounts ─── */
+function faDigits(s){var m={'0':'۰','1':'۱','2':'۲','3':'۳','4':'۴','5':'۵','6':'۶','7':'۷','8':'۸','9':'۹'};return String(s).replace(/[0-9]/g,function(c){return m[c];});}
+function shortFmt(n){n=Math.floor(Math.abs(n)||0);if(n<1000)return fmt(n)+' تومان';var u=[[1000000000,'میلیارد'],[1000000,'میلیون'],[1000,'هزار']];for(var i=0;i<u.length;i++){if(n>=u[i][0]){var v=Math.floor(n/u[i][0]*10)/10;var s=(v%1===0)?faDigits(v.toFixed(0)):faDigits(v.toFixed(1));return s+' '+u[i][1]+' تومان';}}return fmt(n)+' تومان';}
+function numToWordsFa(n){var neg=n<0;n=Math.floor(Math.abs(n)||0);if(n===0)return 'صفر تومان';var y=['','یک','دو','سه','چهار','پنج','شش','هفت','هشت','نه'];var t=['ده','یازده','دوازده','سیزده','چهارده','پانزده','شانزده','هفده','هجده','نوزده'];var dd=['','ده','بیست','سی','چهل','پنجاه','شصت','هفتاد','هشتاد','نود'];var hh=['','یکصد','دویست','سیصد','چهارصد','پانصد','ششصد','هفتصد','هشتصد','نهصد'];function three(x){var r=[];var s=Math.floor(x/100),o=x%100;if(s)r.push(hh[s]);if(o>=10&&o<20)r.push(t[o-10]);else{var e=Math.floor(o/10),f=o%10;if(e)r.push(dd[e]);if(f)r.push(y[f]);}return r.join(' و ');}var sc=['','هزار','میلیون','میلیارد','هزار میلیارد'];var p=[],gi=0;while(n>0&&gi<sc.length){var g=n%1000;if(g){var w=three(g);p.unshift(sc[gi]?w+' '+sc[gi]:w);}n=Math.floor(n/1000);gi++;}return (neg?'منفی ':'')+p.join(' و ')+' تومان';}
+
+/* ─── v1.1: net-worth history (dakhel_history, cap 365) ─── */
+function totalNet(){return accounts.reduce(function(s,a){return s+(balances[a.id]||0)},0);}
+function todayKey(){try{return new Date().toLocaleString('sv-SE',{timeZone:'Asia/Tehran'}).split(' ')[0];}catch(e){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}}
+function loadHist(){try{var h=JSON.parse(localStorage.getItem('dakhel_history')||'[]');return Array.isArray(h)?h:[];}catch(e){return[];}}
+function saveHistSnap(){try{var h=loadHist();var k=todayKey(),t=totalNet();if(h.length&&h[h.length-1].date===k)h[h.length-1].total=t;else h.push({date:k,total:t});while(h.length>365)h.shift();localStorage.setItem('dakhel_history',JSON.stringify(h));}catch(e){}}
+function nwPct(h,days){if(h.length<2)return null;var last=h[h.length-1];var t1=Date.parse(last.date);if(isNaN(t1))return null;var base=null;for(var i=0;i<h.length;i++){var t0=Date.parse(h[i].date);if(isNaN(t0))continue;if((t1-t0)/864e5<=days){base=h[i];break;}}if(!base)base=h[0];if(!base||!base.total)return null;return (last.total-base.total)/Math.abs(base.total)*100;}
+function renderNw(){var box=document.getElementById('nwBox');if(!box)return;var h=loadHist();var chips=document.getElementById('nwChips'),cv=document.getElementById('nwChart'),ph=document.getElementById('nwEmpty');var defs=[['۱ ماهه',30],['۳ ماهه',90],['۶ ماهه',180],['۱ ساله',365]];var ch='';defs.forEach(function(d){var p=nwPct(h,d[1]);var t=p===null?'—':(p>=0?'+':'')+faDigits(p.toFixed(1))+'٪';ch+='<span class="nw-chip '+(p===null?'':(p>=0?'up':'dn'))+'">'+d[0]+' '+t+'</span>';});chips.innerHTML=ch;if(h.length<2){cv.style.display='none';ph.style.display='block';return;}cv.style.display='block';ph.style.display='none';try{var dpr=window.devicePixelRatio||1;var W=cv.clientWidth||cv.parentElement.clientWidth||300,H=120;cv.width=W*dpr;cv.height=H*dpr;cv.style.height=H+'px';var x=cv.getContext('2d');x.scale(dpr,dpr);x.clearRect(0,0,W,H);var vs=h.map(function(e){return e.total;});var mn=Math.min.apply(null,vs),mx=Math.max.apply(null,vs);if(mx===mn)mx=mn+1;function px(i){return vs.length<2?W/2:8+i*(W-16)/(vs.length-1);}function py(v){return H-16-(v-mn)/(mx-mn)*(H-34);}x.beginPath();vs.forEach(function(v,i){if(i===0)x.moveTo(px(i),py(v));else x.lineTo(px(i),py(v));});x.strokeStyle='#6c9bff';x.lineWidth=2;x.lineJoin='round';x.lineCap='round';x.stroke();x.lineTo(px(vs.length-1),H);x.lineTo(px(0),H);x.closePath();var g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'rgba(108,155,255,.28)');g.addColorStop(1,'rgba(108,155,255,0)');x.fillStyle=g;x.fill();vs.forEach(function(v,i){if(i===0||i===vs.length-1||vs.length<=10){x.beginPath();x.arc(px(i),py(v),2.5,0,7);x.fillStyle='#6c9bff';x.fill();}});var dark=document.documentElement.getAttribute('data-theme')!=='light';x.fillStyle=dark?'#9aa0b4':'#6b7085';x.font='10px Tahoma';x.textAlign='right';x.fillText(fmt(mx),W-4,12);x.fillText(fmt(mn),W-4,H-4);}catch(e){cv.style.display='none';ph.style.display='block';}}
 
 /* PAGE NAV */
 var balHidden=true;
@@ -988,7 +1025,7 @@ function animNum(el,to){
   requestAnimationFrame(step);
 }
 var _oRenderHesab=renderHesab;
-renderHesab=function(){_oRenderHesab();renderTop();if(balHidden)return;var _t=accounts.reduce(function(s,a){return s+(balances[a.id]||0)},0);animNum(document.getElementById('totalBal'),_t);accounts.forEach(function(a){animNum(document.getElementById('bal_'+a.id),balances[a.id]||0);});};
+renderHesab=function(){_oRenderHesab();renderTop();saveHistSnap();renderNw();var _t=accounts.reduce(function(s,a){return s+(balances[a.id]||0)},0);var sh=document.getElementById('totalShort'),wo=document.getElementById('totalWords');if(balHidden){if(sh)sh.textContent='•••••';if(wo)wo.textContent='';return;}if(sh)sh.textContent=shortFmt(_t);if(wo)wo.textContent=numToWordsFa(_t);animNum(document.getElementById('totalBal'),_t);accounts.forEach(function(a){animNum(document.getElementById('bal_'+a.id),balances[a.id]||0);});};
 
 /* ENTER SUBMIT */
 document.addEventListener('keydown',function(ev){if(ev.key!=='Enter')return;var s1=document.getElementById('addSheet'),s2=document.getElementById('addDebtSheet');if(s1.classList.contains('show')){ev.preventDefault();addEntry();}else if(s2.classList.contains('show')){ev.preventDefault();addDebt();}});
