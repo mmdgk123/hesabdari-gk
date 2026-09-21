@@ -1151,7 +1151,7 @@ function renderCalendar(){
     if(calSelectedDay===d)cls+=' today';
     var dots='';
     if(data.income>0)dots+='<div class="cal-dot" style="background:var(--green)"></div>';
-    if(data.spend>0)for(var dd=0;dd<Math.min(data.entries.length,3);dd++)dots+='<div class="cal-dot" style="background:var(--red)"></div>';
+    if(data.spend>0)for(var dd=0;dd<Math.min(data.entries.filter(function(x){return x.type==='expense';}).length,3);dd++)dots+='<div class="cal-dot" style="background:var(--red)"></div>';
     h+='<div class="'+cls+'" onclick="selectCalDay('+d+')"><div class="cal-day-num">'+d+'</div><div class="cal-dots">'+dots+'</div></div>';
   }
   document.getElementById('calGrid').innerHTML=h;renderCalSummary();
