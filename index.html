@@ -601,6 +601,7 @@ html{scroll-behavior:smooth}
 .nav-btn.active .nav-icon{box-shadow:0 0 16px -4px rgba(108,155,255,.25)}
 
 /* Reduced motion respect */
+
 /* ─── v1.1: three-state amounts ─── */
 .acc-total-sub{font-size:13px;font-weight:800;color:var(--blue);margin-top:8px;font-variant-numeric:tabular-nums}
 .acc-total-words{font-size:11px;font-weight:500;color:var(--text2);margin-top:5px;line-height:2;padding:0 10px}
@@ -742,6 +743,19 @@ html{scroll-behavior:smooth}
   </div>
   <div class="cal-day-summary" id="calSummary"></div>
 </div>
+<!-- ═══ صفحه طلا و ارز ═══ -->
+<div class="page" id="page-gold">
+  <div class="acc-total" style="padding-bottom:12px">
+    <div class="acc-total-head">
+      <div class="acc-total-label">🥇 طلا و ارز</div>
+      <button class="acc-total-eye" onclick="refreshRates(this)" id="goldRefreshBtn">🔄 بروزرسانی</button>
+    </div>
+    <div class="acc-total-sub" id="goldUpdated">برای دیدن قیمت‌ها، بروزرسانی بزن</div>
+  </div>
+  <div class="entries" id="goldList" style="margin-top:12px"></div>
+  <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:10px;line-height:1.8">منبع: tgju.org (بازار آزاد ایران)<br>قیمت‌ها تخمینی و لحظه‌ای است؛ برای خرید/فروش با صراف تماس بگیر</div>
+</div>
+
 <!-- ═══ FAB ═══ -->
 <button class="fab" id="fab" onclick="openAddSheet()">＋</button>
 
@@ -751,6 +765,7 @@ html{scroll-behavior:smooth}
   <button class="nav-btn" onclick="switchPage('trans',this)"><div class="nav-icon"><span>📝</span></div><div class="nav-label">تراکنش‌ها</div></button>
   <button class="nav-btn" onclick="switchPage('debts',this)"><div class="nav-icon"><span>💰</span></div><div class="nav-label">بدهی‌ها</div></button>
   <button class="nav-btn" onclick="switchPage('calendar',this)"><div class="nav-icon"><span>📅</span></div><div class="nav-label">تقویم</div></button>
+  <button class="nav-btn" onclick="switchPage('gold',this)"><div class="nav-icon"><span>🥇</span></div><div class="nav-label">طلا و ارز</div></button>
 </nav>
 
 <!-- ═══ Debts FAB ═══ -->
@@ -877,6 +892,60 @@ function fmt(n){return n.toLocaleString('fa-IR');}
 function nowJ(){var s=new Date().toLocaleString('sv-SE',{timeZone:'Asia/Tehran'});var p=s.split(' '),d=p[0].split('-'),t=p[1].split(':');var j=g2j(+d[0],+d[1],+d[2]);return{str:j[0]+'/'+String(j[1]).padStart(2,'0')+'/'+String(j[2]).padStart(2,'0')+' '+jMonthName(j[1])+' '+t[0]+':'+t[1],y:j[0],m:j[1],d:j[2]};}
 function fmtAmt(el){var v=fa2en(el.value).replace(/[^\d]/g,'');el.value=v?parseInt(v).toLocaleString('en-US'):'';}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+/* ─── Gold & currency rates (tgju.org, same source as the 6h cron) ─── */
+var RATES_CACHE = JSON.parse(localStorage.getItem('rates') || 'null');
+function tgjuNum(v){ if(!v) return 0; return parseInt(String(v).replace(/[^0-9]/g,'')) || 0; }
+function renderRates(items){
+  var iconMap = {'geram18':'🥇','price_dollar_rl':'💵','price_eur':'💶'};
+  var nameMap = {'geram18':'گرم طلای ۱۸ عیار','price_dollar_rl':'دلار آمریکا','price_eur':'یورو'};
+  var colorMap = {'geram18':'#ffd870','price_dollar_rl':'#5ff0c0','price_eur':'#cbb4ff'};
+  var h = '';
+  items.forEach(function(r){
+    var chgHtml = '';
+    if (r.dp !== null && r.dp !== undefined){
+      var up = r.dp >= 0;
+      chgHtml = '<div style="font-size:10.5px;font-weight:800;margin-top:3px;color:' + (up ? 'var(--green)' : 'var(--red)') + '">' + (up ? '▲' : '▼') + ' ' + Math.abs(r.dp).toLocaleString('fa-IR', {maximumFractionDigits:2}) + '٪</div>';
+    }
+    h += '<div style="display:flex;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid var(--border)">' +
+         '<div style="width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;background:rgba(255,255,255,.05);border:1px solid var(--border)">' + (iconMap[r.key] || '💱') + '</div>' +
+         '<div style="flex:1;min-width:0"><div style="font-size:12.5px;font-weight:800">' + (nameMap[r.key] || r.key) + '</div>' + chgHtml + '</div>' +
+         '<div style="text-align:left;font-size:14px;font-weight:900;color:' + (colorMap[r.key] || 'var(--text)') + ';font-variant-numeric:tabular-nums">' + fmt(r.toman) + ' <span style="font-size:9.5px;font-weight:700;color:var(--text3)">تومان</span></div></div>';
+  });
+  document.getElementById('goldList').innerHTML = h;
+}
+function refreshRates(btn){
+  btn = btn || document.getElementById('goldRefreshBtn');
+  var old = btn.innerHTML;
+  btn.innerHTML = '⏳ در حال دریافت...';
+  btn.style.pointerEvents = 'none';
+  fetch('https://call.tgju.org/ajax.json', {cache: 'no-store'})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var c = d.current || {};
+      var items = ['geram18', 'price_dollar_rl', 'price_eur'].map(function(k){
+        var g = c[k] || {};
+        return {key: k, toman: Math.round(tgjuNum(g.p) / 10), dp: (g.dp === '' || g.dp === undefined) ? null : parseFloat(g.dp)};
+      });
+      RATES_CACHE = {items: items, time: new Date().toLocaleString('fa-IR', {timeZone: 'Asia/Tehran', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'})};
+      localStorage.setItem('rates', JSON.stringify(RATES_CACHE));
+      renderRates(items);
+      document.getElementById('goldUpdated').textContent = 'آخرین بروزرسانی: ' + RATES_CACHE.time;
+      btn.innerHTML = '🔄 بروزرسانی';
+      btn.style.pointerEvents = '';
+    })
+    .catch(function(){
+      btn.innerHTML = old;
+      btn.style.pointerEvents = '';
+      if (navigator.vibrate) navigator.vibrate(40);
+      alert('دریافت قیمت‌ها ناموفق بود — اینترنت را چک کن');
+    });
+}
+if (RATES_CACHE){
+  renderRates(RATES_CACHE.items);
+  document.getElementById('goldUpdated').textContent = 'آخرین بروزرسانی: ' + RATES_CACHE.time;
+}
+
 
 /* ─── v1.1: three-state amounts ─── */
 function faDigits(s){var m={'0':'۰','1':'۱','2':'۲','3':'۳','4':'۴','5':'۵','6':'۶','7':'۷','8':'۸','9':'۹'};return String(s).replace(/[0-9]/g,function(c){return m[c];});}
