@@ -1127,20 +1127,34 @@ function genPDF(){
   var totE=0,totI=0;
   list.forEach(function(e){if(e.type==='expense')totE+=e.amount;else totI+=e.amount;});
   var title;
-  if(sel){var pp=sel.split('/');title='دخل و خرج '+jMonthName(+pp[1])+' '+pp[0];}
-  else{var last=list[list.length-1];title='دخل و خرج تا تاریخ '+last.day+' '+jMonthName(last.month)+' '+last.year;}
+  if(sel){var pp=sel.split('/');title='دخل و خرج '+jMonthName(+pp[1])+' '+String(pp[0]).replace(/[0-9]/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[d];});}
+  else{var last=list[list.length-1];var fad=function(x){return String(x).replace(/[0-9]/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[d];});};title='دخل و خرج تا تاریخ '+fad(last.day)+' '+jMonthName(last.month)+' '+fad(last.year);}
+  function pad2(x){return String(x).padStart(2,'0');}
+  function txTime(e){var m=(e.date||'').match(/(\d{1,2}:\d{2})\s*$/);return e.time||(m?m[1]:'00:00');}
+  function faDigits(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',').replace(/[0-9]/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[d];});}
+  function sumDigits(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'،');}
   var rows='';
-  var n=1;
-  list.forEach(function(e){
+  list.forEach(function(e,i){
     var isE=e.type==='expense';
-    rows+='<tr class="'+(isE?'exp':'inc')+'"><td class="c">'+(n++)+'</td><td class="c">'+e.date+'</td><td class="c amt">'+fmt(e.amount)+'</td><td class="d">'+esc(e.desc)+'</td><td class="c">'+e.card+'</td><td class="t '+(isE?'te':'ti')+'">'+(isE?'خرج':'دخل')+'</td></tr>';
+    var n=i+1;
+    var bg=(n%2===0)?(isE?'#FFF3F3':'#F3FFF3'):'';
+    var yr=e.year,mo=e.month,dy=e.day;
+    if(yr===undefined){var pm=(e.date||'').match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/);if(pm){yr=+pm[1];mo=+pm[2];dy=+pm[3];}}
+    var ds=(yr!==undefined)?(yr+'-'+pad2(mo)+'-'+pad2(dy)+' '+txTime(e)):esc(e.date||'');
+    rows+='<tr'+(bg?' style="background:'+bg+'"':'')+'><td>'+n+'</td><td dir="ltr">'+ds+'</td><td>'+faDigits(e.amount)+'</td><td class="desc">'+esc(e.desc)+'</td><td>'+esc(e.card||'')+'</td><td class="'+(isE?'te':'ti')+'">'+(isE?'خرج':'دخل')+'</td></tr>';
   });
+  var css='@page{size:A4;margin:14mm 10mm 23mm 10mm}*{margin:0;padding:0;box-sizing:border-box}body{background:#fff;font-family:Vazirmatn,Tahoma,IRANSansX,sans-serif;color:#000;font-weight:400}h1{font-size:18pt;line-height:22pt;font-weight:400;text-align:center;color:#000;margin-bottom:4pt}hr{border:none;border-top:0.7pt solid #B4B4B4;margin-bottom:9pt}table{width:100%;border-collapse:collapse;table-layout:fixed}thead{display:table-header-group}tr{page-break-inside:avoid}th{background:#2D2D41;color:#fff;font-size:8pt;font-weight:400;text-align:center;border:0.5pt solid #B4B4B4;height:22.6pt;padding:0 3pt;vertical-align:middle}td{font-size:7pt;line-height:9pt;color:#000;text-align:center;border:0.5pt solid #B4B4B4;height:19.9pt;padding:0 3pt;vertical-align:middle;white-space:nowrap;overflow:hidden}td.desc{text-align:right}td.te{color:#C82828}td.ti{color:#1E823C}tr.se td,tr.si td{font-size:10pt;line-height:13pt;white-space:normal;overflow:visible}tr.se td{background:#FDEBEB;color:#C82828;height:25pt}tr.si td{background:#EBFDEB;color:#1E823C;height:26pt}';
   var w=window.open('');
-  var html='<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8"><title>'+title+'</title><style>@page{size:A4;margin:14mm 12mm}*{margin:0;padding:0;box-sizing:border-box}body{font-family:Vazirmatn,Tahoma,"IRANSansX",sans-serif;color:#111827}h1{text-align:center;font-size:20px;font-weight:800;margin-bottom:4px}hr{border:none;border-top:1px solid #e5e7eb;margin-bottom:12px}table{width:100%;border-collapse:collapse;font-size:10.5px}thead{display:table-header-group}th{background:#1f2937;color:#fff;padding:7px 6px;font-size:10.5px;font-weight:700;text-align:center;border:1px solid #1f2937}td{padding:6px;border:1px solid #d1d5db;vertical-align:middle}.c{text-align:center}.d{text-align:right}.amt{font-weight:700}tr.exp td{background:#fdf0f0}tr.inc td{background:#e8f6ec}.t{text-align:center;font-weight:800}.te{color:#dc2626}.ti{color:#16a34a}.sum{margin-top:14px}.sum div{padding:10px;text-align:center;font-size:12.5px;font-weight:800;border-radius:6px}.sum .se{background:#fdf0f0;color:#dc2626;border:1px solid #f5c6c6}.sum .si{background:#e8f6ec;color:#16a34a;border:1px solid #bfe3c8}</style></head><body>'
+  var html='<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8"><title>'+title+'</title>'
+    +'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400&display=swap" rel="stylesheet">'
+    +'<style>'+css+'</style></head><body>'
     +'<h1>'+title+'</h1><hr>'
-    +'<table><thead><tr><th>ردیف</th><th>تاریخ و ساعت</th><th>مبلغ</th><th>بابت</th><th>کارت</th><th>نوع</th></tr></thead><tbody>'+rows+'</tbody></table>'
-    +'<div class="sum"><div class="se">جمع خرج: '+fmt(totE)+' تومان</div><div class="si">جمع دخل: '+fmt(totI)+' تومان</div></div>'
-    +'<scr'+'ipt>setTimeout(function(){window.print()},400)</scr'+'ipt></body></html>';
+    +'<table><colgroup><col style="width:4.58%"><col style="width:18.4%"><col style="width:14.38%"><col style="width:41.4%"><col style="width:12.63%"><col style="width:8.61%"></colgroup>'
+    +'<thead><tr><th>ردیف</th><th>تاریخ و ساعت</th><th>مبلغ</th><th>بابت</th><th>کارت</th><th>نوع</th></tr></thead><tbody>'+rows
+    +'<tr class="se"><td colspan="6">جمع خرج: '+sumDigits(totE)+' تومان</td></tr>'
+    +'<tr class="si"><td colspan="6">جمع دخل: '+sumDigits(totI)+' تومان</td></tr>'
+    +'</tbody></table>'
+    +'<scr'+'ipt>function go(){setTimeout(function(){window.print()},150)}if(document.fonts&&document.fonts.ready){document.fonts.ready.then(go)}else{setTimeout(go,600)}</scr'+'ipt></body></html>';
   w.document.write(html);
   w.document.close();
 }
