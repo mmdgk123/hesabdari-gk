@@ -647,7 +647,7 @@ html{scroll-behavior:smooth}
   <div class="header-row">
     <div class="h-start">
       <h1 id="pageTitle">حسابداری</h1>
-      <span id="verBadge">2.5</span>
+      <span id="verBadge">2.6</span>
     </div>
     <div class="h-center">
       <a class="creator-top" href="https://t.me/mmdGK" target="_blank" rel="noopener">👨‍💻 تلگرام: <b>mmdGK</b></a>
@@ -881,7 +881,7 @@ function saveAccounts(){localStorage.setItem('dakhel_accs',JSON.stringify(accoun
 saveAccounts();
 accounts.forEach(function(a){if(balances[a.id]===undefined)balances[a.id]=0;});
 var type='expense',card='ملت',currentTab='all',debtType='creditor';
-var APP_VERSION='2.5';
+var APP_VERSION='2.6';
 try{document.getElementById('verBadge').textContent=APP_VERSION;}catch(e){}
 var editIdx=-1,editCardVal='ملت',editDebtIdx=-1,editBalAcc='';
 
@@ -973,7 +973,7 @@ function switchPage(id,btn){
   document.getElementById('pageTitle').textContent=titles[id]||'حسابداری';
   document.getElementById('fab').style.display=id==='debts'?'none':'flex';
   document.getElementById('debtsFab').style.display=id==='debts'?'flex':'none';
-  if(id==='trans')renderEntries();
+  if(id==='trans'){entriesLimit=10;renderEntries();}
   if(id==='debts')renderDebts();
   if(id==='calendar')renderCalendar();
 }
