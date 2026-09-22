@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="حسابداری">
 <meta name="theme-color" content="#07080d"><script>try{var _t=localStorage.getItem("dakhel_theme");if(_t)document.documentElement.setAttribute("data-theme",_t);}catch(e){}</script>
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon-180.png?v=2.9"><link rel="apple-touch-icon" sizes="192x192" href="icon-192.png?v=2.9"><link rel="apple-touch-icon" sizes="512x512" href="icon-512.png?v=2.9">
 <link rel="manifest" href="manifest.json">
 <title>حسابداری</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IRANSansX:wght@300;400;500;600;700;800;900;1000&display=swap" rel="stylesheet">
@@ -647,7 +647,7 @@ html{scroll-behavior:smooth}
   <div class="header-row">
     <div class="h-start">
       <h1 id="pageTitle">حسابداری</h1>
-      <span id="verBadge">2.8</span>
+      <span id="verBadge">2.9</span>
     </div>
     <div class="h-center">
       <a class="creator-top" href="https://t.me/mmdGK" target="_blank" rel="noopener">👨‍💻 تلگرام: <b>mmdGK</b></a>
@@ -881,7 +881,7 @@ function saveAccounts(){localStorage.setItem('dakhel_accs',JSON.stringify(accoun
 saveAccounts();
 accounts.forEach(function(a){if(balances[a.id]===undefined)balances[a.id]=0;});
 var type='expense',card='ملت',currentTab='all',debtType='creditor';
-var APP_VERSION='2.8';
+var APP_VERSION='2.9';
 try{document.getElementById('verBadge').textContent=APP_VERSION;}catch(e){}
 var editIdx=-1,editCardVal='ملت',editDebtIdx=-1,editBalAcc='';
 
