@@ -919,22 +919,25 @@ function refreshRates(btn){
   var old = btn.innerHTML;
   btn.innerHTML = '⏳ در حال دریافت...';
   btn.style.pointerEvents = 'none';
-  fetch('https://call.tgju.org/ajax.json', {cache: 'no-store'})
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      var c = d.current || {};
-      var items = ['geram18', 'price_dollar_rl', 'price_eur'].map(function(k){
-        var g = c[k] || {};
-        return {key: k, toman: Math.round(tgjuNum(g.p) / 10), dp: (g.dp === '' || g.dp === undefined) ? null : parseFloat(g.dp)};
+  var keys = ['geram18', 'price_dollar_rl', 'price_eur'];
+  Promise.all(keys.map(function(k){
+    return fetch('https://api.tgju.org/v1/market/indicator/summary-table-data/' + k, {cache: 'no-store'})
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        var row = (d.data || [['0']])[0];
+        var p = tgjuNum(row[0]);
+        var dpRaw = String(row[5] || '').replace(/<[^>]*>/g, '').trim();
+        var dp = dpRaw ? parseFloat(dpRaw) : null;
+        return {key: k, toman: Math.round(p / 10), dp: dp};
       });
+  })).then(function(items){
       RATES_CACHE = {items: items, time: new Date().toLocaleString('fa-IR', {timeZone: 'Asia/Tehran', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'})};
       localStorage.setItem('rates', JSON.stringify(RATES_CACHE));
       renderRates(items);
       document.getElementById('goldUpdated').textContent = 'آخرین بروزرسانی: ' + RATES_CACHE.time;
       btn.innerHTML = '🔄 بروزرسانی';
       btn.style.pointerEvents = '';
-    })
-    .catch(function(){
+    }).catch(function(){
       btn.innerHTML = old;
       btn.style.pointerEvents = '';
       if (navigator.vibrate) navigator.vibrate(40);
