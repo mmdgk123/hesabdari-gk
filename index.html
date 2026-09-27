@@ -56,12 +56,17 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
 .acc-card.grn{--acc:#2de0a5;border-color:rgba(45,224,165,.4);background:radial-gradient(130% 100% at 50% 0%,rgba(45,224,165,.14),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 42%),var(--card)}
 .acc-card.pur{--acc:#b18cff;border-color:rgba(177,140,255,.4);background:radial-gradient(130% 100% at 50% 0%,rgba(177,140,255,.15),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 42%),var(--card)}
 .acc-card.red{--acc:#ff4d6d;border-color:rgba(255,77,109,.4);background:radial-gradient(130% 100% at 50% 0%,rgba(255,77,109,.14),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 42%),var(--card)}
+.acc-card.org{--acc:#ff9f45;border-color:rgba(255,159,69,.4);background:radial-gradient(130% 100% at 50% 0%,rgba(255,159,69,.15),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 42%),var(--card)}
+.acc-card.brn{--acc:#c08457;border-color:rgba(192,132,87,.42);background:radial-gradient(130% 100% at 50% 0%,rgba(192,132,87,.16),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 42%),var(--card)}
+.acc-card.pink{--acc:#ff8ad4;border-color:rgba(255,138,212,.4);background:radial-gradient(130% 100% at 50% 0%,rgba(255,138,212,.14),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 42%),var(--card)}
+.acc-card.sky{--acc:#7dd3fc;border-color:rgba(125,211,252,.4);background:radial-gradient(130% 100% at 50% 0%,rgba(125,211,252,.15),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 42%),var(--card)}
 .acc-top{display:flex;align-items:center;gap:6px}
 .acc-ico{width:26px;height:26px;border-radius:9px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:13px;background:rgba(255,255,255,.05);border:1px solid var(--border)}
 .acc-name{font-size:11.5px;font-weight:800;color:var(--text2);display:flex;align-items:center;gap:6px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .acc-name .dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
 .acc-name .dot.melat-dot{background:#b0b5c4;box-shadow:0 0 8px rgba(176,181,196,.5)}
 .acc-name .dot.sad-dot{background:var(--blue);box-shadow:0 0 8px rgba(108,155,255,.5)}
+.acc-name .dot.cash-dot{background:#ffc857;box-shadow:0 0 8px rgba(255,200,87,.5)}
 .acc-edit{margin-inline-start:auto;flex:0 0 auto;width:26px;height:26px;border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text3);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;font-family:inherit}
 .acc-edit:hover{color:var(--text);border-color:var(--border2);background:rgba(255,255,255,.08)}
 .acc-edit:active{transform:scale(.88)}
@@ -122,14 +127,34 @@ body{font-family:'IRANSansX',system-ui,sans-serif;background:var(--bg);color:var
 .acc-name .dot.grn-dot{background:#2de0a5;box-shadow:0 0 8px rgba(45,224,165,.5)}
 .acc-name .dot.pur-dot{background:#b18cff;box-shadow:0 0 8px rgba(177,140,255,.5)}
 .acc-name .dot.red-dot{background:#ff4d6d;box-shadow:0 0 8px rgba(255,77,109,.5)}
+.acc-name .dot.org-dot{background:#ff9f45;box-shadow:0 0 8px rgba(255,159,69,.5)}
+.acc-name .dot.brn-dot{background:#c08457;box-shadow:0 0 8px rgba(192,132,87,.55)}
+.acc-name .dot.pink-dot{background:#ff8ad4;box-shadow:0 0 8px rgba(255,138,212,.5)}
+.acc-name .dot.sky-dot{background:#7dd3fc;box-shadow:0 0 8px rgba(125,211,252,.5)}
 .chip-grn{background:rgba(45,224,165,.12);color:#5ff0c0;border:1px solid rgba(45,224,165,.28)}
 .chip-pur{background:rgba(177,140,255,.12);color:#cbb4ff;border:1px solid rgba(177,140,255,.28)}
 .chip-red{background:rgba(255,77,109,.12);color:#ff8ba0;border:1px solid rgba(255,77,109,.28)}
+.chip-org{background:rgba(255,159,69,.12);color:#ffb877;border:1px solid rgba(255,159,69,.28)}
+.chip-brn{background:rgba(192,132,87,.14);color:#e0aa82;border:1px solid rgba(192,132,87,.3)}
+.chip-pink{background:rgba(255,138,212,.12);color:#ffa8de;border:1px solid rgba(255,138,212,.28)}
+.chip-sky{background:rgba(125,211,252,.12);color:#9ddcff;border:1px solid rgba(125,211,252,.28)}
+[data-theme="light"] .chip-org{background:rgba(180,105,20,.1);color:#b46914;border-color:rgba(180,105,20,.22)}
+[data-theme="light"] .chip-brn{background:rgba(140,90,50,.1);color:#8a5a34;border-color:rgba(140,90,50,.24)}
+[data-theme="light"] .chip-pink{background:rgba(209,83,159,.1);color:#d1539f;border-color:rgba(209,83,159,.22)}
+[data-theme="light"] .chip-sky{background:rgba(43,142,196,.1);color:#2b8ec4;border-color:rgba(43,142,196,.22)}
 .chip-new{background:rgba(154,160,180,.12);color:#b9bdd0;border:1px solid rgba(154,160,180,.28)}
 .cp.active.sad{border-color:rgba(108,155,255,.5);background:rgba(108,155,255,.12);color:var(--blue)}
 .cp.active.grn{border-color:rgba(45,224,165,.5);background:rgba(45,224,165,.12);color:var(--green)}
 .cp.active.pur{border-color:rgba(177,140,255,.5);background:rgba(177,140,255,.12);color:var(--purple)}
 .cp.active.red{border-color:rgba(255,77,109,.5);background:rgba(255,77,109,.12);color:var(--red)}
+.cp.active.org{border-color:rgba(255,159,69,.5);background:rgba(255,159,69,.12);color:#ff9f45}
+.cp.active.brn{border-color:rgba(192,132,87,.55);background:rgba(192,132,87,.14);color:#d69a6a}
+.cp.active.pink{border-color:rgba(255,138,212,.5);background:rgba(255,138,212,.12);color:#ff8ad4}
+.cp.active.sky{border-color:rgba(125,211,252,.5);background:rgba(125,211,252,.12);color:#7dd3fc}
+[data-theme="light"] .cp.active.org{background:rgba(180,105,20,.08)}
+[data-theme="light"] .cp.active.brn{background:rgba(140,90,50,.09)}
+[data-theme="light"] .cp.active.pink{background:rgba(209,83,159,.08)}
+[data-theme="light"] .cp.active.sky{background:rgba(43,142,196,.08)}
 .acc-manage-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .acc-manage-head .acc-manage-ico{width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;background:rgba(108,155,255,.12);border:1px solid rgba(108,155,255,.25)}
 .acc-manage-title{font-size:15px;font-weight:900}
@@ -507,6 +532,10 @@ html{scroll-behavior:smooth}
 .acc-card.grn:hover{box-shadow:0 18px 38px -18px rgba(45,224,165,.35)}
 .acc-card.pur:hover{box-shadow:0 18px 38px -18px rgba(177,140,255,.35)}
 .acc-card.red:hover{box-shadow:0 18px 38px -18px rgba(255,77,109,.35)}
+.acc-card.org:hover{box-shadow:0 18px 38px -18px rgba(255,159,69,.35)}
+.acc-card.brn:hover{box-shadow:0 18px 38px -18px rgba(192,132,87,.4)}
+.acc-card.pink:hover{box-shadow:0 18px 38px -18px rgba(255,138,212,.35)}
+.acc-card.sky:hover{box-shadow:0 18px 38px -18px rgba(125,211,252,.35)}
 
 /* Stat cards subtle gradient bg */
 .sr{background:linear-gradient(135deg,var(--card),rgba(255,77,109,.04))}
@@ -875,13 +904,17 @@ var entries=JSON.parse(localStorage.getItem('dakhel_entries')||'[]');
 var debts=JSON.parse(localStorage.getItem('dakhel_debts')||'[]');
 var balances=JSON.parse(localStorage.getItem('dakhel_bal')||'{"melat":0,"sad":0,"cash":0}');
 var ACC_DEF=[{id:'melat',name:'ملت',icon:'💳',color:'melat'},{id:'sad',name:'صادرات',icon:'💳',color:'sad'},{id:'cash',name:'نقدی',icon:'💵',color:'cash'}];
-var ACC_COLORS=['melat','sad','cash','grn','pur','red'];
+var ACC_COLORS=['melat','sad','cash','pur','org','brn','pink','sky'];
 var accounts=JSON.parse(localStorage.getItem('dakhel_accs')||'null');if(!Array.isArray(accounts)||!accounts.length){accounts=JSON.parse(JSON.stringify(ACC_DEF));}
 function saveAccounts(){localStorage.setItem('dakhel_accs',JSON.stringify(accounts));}
 saveAccounts();
+/* رنگ‌های قدیمی حساب (سبز/قرمز) → رنگ جدید، چون با دخل/خرج اشتباه گرفته میشه */
+var ACC_OLD2NEW={grn:'org',red:'brn'};
+function migrateAccColors(){var ch=false;accounts.forEach(function(a){if(a&&ACC_OLD2NEW[a.color]){a.color=ACC_OLD2NEW[a.color];ch=true;}});if(ch)saveAccounts();}
+migrateAccColors();
 accounts.forEach(function(a){if(balances[a.id]===undefined)balances[a.id]=0;});
 var type='expense',card='ملت',currentTab='all',debtType='creditor';
-var APP_VERSION='2.9';
+var APP_VERSION='3.0';
 try{document.getElementById('verBadge').textContent=APP_VERSION;}catch(e){}
 var editIdx=-1,editCardVal='ملت',editDebtIdx=-1,editBalAcc='';
 
@@ -1172,7 +1205,7 @@ function genPDF(){
 /* BACKUP */
 function dlBackup(){var d={entries:entries,debts:debts,balances:balances,accounts:accounts};var b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='hesabdari-backup-'+new Date().toISOString().split('T')[0]+'.json';a.click();URL.revokeObjectURL(u);toast('بکاپ دانلود شد 💾');}
 function checkUpdate(){if(!confirm('کش برنامه پاک و تازه‌سازی بشه؟ (داده‌هات پاک نمیشه)'))return;var done=function(){try{location.reload(true);}catch(e){location.reload();}};if('serviceWorker' in navigator){Promise.all([caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k);}));}),navigator.serviceWorker.getRegistrations().then(function(rs){return Promise.all(rs.map(function(r){return r.unregister();}));})]).then(done).catch(done);}else{done();}}
-function restore(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var raw=ev.target.result;var d=JSON.parse(raw);if(d&&typeof d==='object'&&d.entries){entries=d.entries;debts=d.debts||[];if(d.balances){balances=d.balances;if(d.accounts&&Array.isArray(d.accounts)&&d.accounts.length){accounts=d.accounts;saveAccounts();}accounts.forEach(function(a){if(balances[a.id]===undefined)balances[a.id]=0;});}}else if(Array.isArray(d)){entries=d;}else{toast('فایل بکاپ معتبر نیست');return;}save();saveDebts();localStorage.setItem('dakhel_bal',JSON.stringify(balances));buildMonthPills();renderAccounts();renderHesab();renderEntries();renderDebts();document.getElementById("verBadge").textContent=APP_VERSION;toast(entries.length+' تراکنش برگشت ✓');}catch(err){toast('خطا: '+err.message);}};r.readAsText(f);e.target.value='';}
+function restore(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var raw=ev.target.result;var d=JSON.parse(raw);if(d&&typeof d==='object'&&d.entries){entries=d.entries;debts=d.debts||[];if(d.balances){balances=d.balances;if(d.accounts&&Array.isArray(d.accounts)&&d.accounts.length){accounts=d.accounts;saveAccounts();migrateAccColors();}accounts.forEach(function(a){if(balances[a.id]===undefined)balances[a.id]=0;});}}else if(Array.isArray(d)){entries=d;}else{toast('فایل بکاپ معتبر نیست');return;}save();saveDebts();localStorage.setItem('dakhel_bal',JSON.stringify(balances));buildMonthPills();renderAccounts();renderHesab();renderEntries();renderDebts();document.getElementById("verBadge").textContent=APP_VERSION;toast(entries.length+' تراکنش برگشت ✓');}catch(err){toast('خطا: '+err.message);}};r.readAsText(f);e.target.value='';}
 function clearAll(){if(!confirm('همه پاک بشه؟'))return;entries=[];debts=[];accounts=JSON.parse(JSON.stringify(ACC_DEF));balances={};accounts.forEach(function(a){balances[a.id]=0;});saveAccounts();renderAccounts();save();saveDebts();localStorage.setItem('dakhel_bal',JSON.stringify(balances));buildMonthPills();renderAccounts();renderHesab();renderEntries();renderDebts();toast('پاک شد');}
 function deleteAll(){if(!confirm('همه داده‌ها پاک بشن؟\nتراکنش‌ها، بدهی‌ها و موجودی‌ها!\nاین کار غیرقابل بازگردونه!'))return;if(!confirm('مطمئنی؟ دیگه برگردونی نداره!'))return;entries=[];debts=[];accounts=JSON.parse(JSON.stringify(ACC_DEF));balances={};accounts.forEach(function(a){balances[a.id]=0;});saveAccounts();renderAccounts();save();saveDebts();localStorage.setItem('dakhel_bal',JSON.stringify(balances));buildMonthPills();renderAccounts();renderHesab();renderEntries();renderDebts();toast('همه داده‌ها پاک شد');}
 function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2000);}
