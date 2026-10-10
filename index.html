@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="حسابداری">
-<meta name="theme-color" content="#07080d"><script>try{var _t=localStorage.getItem("dakhel_theme");if(_t)document.documentElement.setAttribute("data-theme",_t);var _f=localStorage.getItem("dakhel_font");if(_f)document.documentElement.setAttribute("data-font",_f);var _p=localStorage.getItem("dakhel_pad");if(_p)document.documentElement.setAttribute("data-pad",_p);}catch(e){}</script>
+<meta name="theme-color" content="#07080d"><script>try{var _t=localStorage.getItem("dakhel_theme");if(_t)document.documentElement.setAttribute("data-theme",_t);}catch(e){}</script>
 <link rel="apple-touch-icon" href="apple-touch-icon-180.png?v=2.9"><link rel="apple-touch-icon" sizes="192x192" href="icon-192.png?v=2.9"><link rel="apple-touch-icon" sizes="512x512" href="icon-512.png?v=2.9">
 <link rel="manifest" href="manifest.json">
 <title>حسابداری</title>
@@ -680,41 +680,6 @@ html{scroll-behavior:smooth}
 .inst-sec li{font-size:12px;font-weight:600;color:var(--text2);background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px 10px;line-height:1.7;list-style:none;margin-bottom:6px}
 .header .theme-toggle::after{border-radius:9px}
 @media (prefers-reduced-motion:reduce){.header h1,.acc-total-amount,.sheet-handle,.acc-card,.stat,.fab,.cal-day,.debt-card,.entry{animation:none !important}}
-/* ─── v3.4: glass purple (Moda ref) ─── */
-.acc-total{background:linear-gradient(135deg,rgba(177,140,255,.30),rgba(108,155,255,.20) 55%,rgba(45,224,165,.08)),var(--card);border-color:rgba(177,140,255,.45);box-shadow:0 18px 44px -20px rgba(177,140,255,.55),inset 0 1px 0 rgba(255,255,255,.09)}
-.acc-total::before{background:linear-gradient(90deg,transparent,rgba(255,255,255,.09),transparent)}
-.bottom-nav{background:rgba(13,15,23,.72);border-top:1px solid rgba(177,140,255,.16)}
-[data-theme="light"] .bottom-nav{background:rgba(242,243,247,.78);border-top:1px solid rgba(124,92,200,.14)}
-.nav-btn.active .nav-icon{background:rgba(177,140,255,.18);box-shadow:0 0 16px -4px rgba(177,140,255,.35)}
-.nav-btn.active .nav-label{color:var(--purple)}
-.fab{background:linear-gradient(145deg,#b18cff,#6c9bff);box-shadow:0 14px 36px -10px rgba(140,110,255,.6),inset 0 1.5px 0 rgba(255,255,255,.3)}
-.debt-sum{background:linear-gradient(180deg,rgba(177,140,255,.12),rgba(177,140,255,.03)),var(--card);border-color:rgba(177,140,255,.35)}
-.fam-box{background:linear-gradient(135deg,rgba(177,140,255,.16),rgba(108,155,255,.08)),var(--card)}
-.submit-btn{background:linear-gradient(135deg,var(--purple),#6c9bff)}
-.modal-save{background:linear-gradient(135deg,var(--purple),#6c9bff)}
-/* ─── display size (font + density) ─── */
-.set-group{margin-bottom:16px}
-.set-group>div:first-child{font-size:12px;font-weight:800;color:var(--text2);margin-bottom:8px}
-.set-opts{display:flex;gap:8px}
-.set-opt{flex:1;padding:12px 6px;border:1.5px solid var(--border);border-radius:14px;text-align:center;font-size:12.5px;font-weight:800;cursor:pointer;color:var(--text2);background:var(--card);transition:all .2s;font-family:inherit}
-.set-opt small{display:block;font-size:9.5px;font-weight:600;color:var(--text3);margin-top:3px}
-.set-opt.active{border-color:rgba(177,140,255,.55);background:rgba(177,140,255,.13);color:#cbb4ff;box-shadow:0 8px 22px -14px rgba(177,140,255,.8)}
-[data-theme="light"] .set-opt.active{background:rgba(124,92,200,.1);color:#7c5cc8}
-/* ─── font + density levels ─── */
-html[data-font="s"] body{zoom:.88}
-html[data-font="l"] body{zoom:1.15}
-html[data-pad="s"] .page{padding:0 10px}
-html[data-pad="s"] .entry{padding:9px 10px;gap:8px}
-html[data-pad="s"] .acc-total{padding:16px 12px 13px}
-html[data-pad="s"] .nav-btn{padding:5px 0}
-html[data-pad="s"] .sheet,.modal{padding-left:16px;padding-right:16px}
-html[data-pad="l"] .page{padding:0 22px}
-html[data-pad="l"] .entry{padding:17px 18px;gap:16px}
-html[data-pad="l"] .acc-total{padding:28px 20px 22px}
-html[data-pad="l"] .nav-btn{padding:12px 0}
-html[data-pad="l"] .nav-label{font-size:12px}
-html[data-pad="l"] .fab{width:70px;height:70px}
-html[data-pad="l"] .field input,.field select{padding:17px}
 </style>
 </head>
 <body>
@@ -845,26 +810,6 @@ html[data-pad="l"] .field input,.field select{padding:17px}
   <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:10px;line-height:1.8">منبع: tgju.org (بازار آزاد ایران) · به‌روزرسانی خودکار هر ۱۰ دقیقه<br>قیمت‌ها لحظه‌ای و تخمینی است؛ برای خرید/فروش با صراف تماس بگیر</div>
 </div>
 
-<!-- ═══ صفحه تنظیمات ═══ -->
-<div class="page" id="page-settings">
-  <div class="set-group">
-    <div>🔠 اندازه فونت</div>
-    <div class="set-opts" id="fontOpts">
-      <button class="set-opt" data-v="s" onclick="setFont('s')">کوچیک<small>جمع‌وجور</small></button>
-      <button class="set-opt" data-v="m" onclick="setFont('m')">معمولی<small>پیش‌فرض</small></button>
-      <button class="set-opt" data-v="l" onclick="setFont('l')">بزرگ<small>خواناتر</small></button>
-    </div>
-  </div>
-  <div class="set-group">
-    <div>📐 ابعاد برنامه</div>
-    <div class="set-opts" id="padOpts">
-      <button class="set-opt" data-v="s" onclick="setPad('s')">فشرده<small>جا بیشتر</small></button>
-      <button class="set-opt" data-v="m" onclick="setPad('m')">راحت<small>پیش‌فرض</small></button>
-      <button class="set-opt" data-v="l" onclick="setPad('l')">درشت<small>دکمه بزرگ‌تر</small></button>
-    </div>
-  </div>
-</div>
-
 <!-- ═══ FAB ═══ -->
 <button class="fab" id="fab" onclick="openAddSheet()">＋</button>
 
@@ -875,7 +820,6 @@ html[data-pad="l"] .field input,.field select{padding:17px}
   <button class="nav-btn" onclick="switchPage('debts',this)"><div class="nav-icon"><span>💰</span></div><div class="nav-label">بدهی‌ها</div></button>
   <button class="nav-btn" onclick="switchPage('calendar',this)"><div class="nav-icon"><span>📅</span></div><div class="nav-label">تقویم</div></button>
   <button class="nav-btn" onclick="switchPage('gold',this)"><div class="nav-icon"><span>🥇</span></div><div class="nav-label">طلا و ارز</div></button>
-  <button class="nav-btn" onclick="switchPage('settings',this)"><div class="nav-icon"><span>⚙️</span></div><div class="nav-label">تنظیمات</div></button>
 </nav>
 
 <!-- ═══ Debts FAB ═══ -->
@@ -993,7 +937,7 @@ function migrateAccColors(){var ch=false;accounts.forEach(function(a){if(a&&ACC_
 migrateAccColors();
 accounts.forEach(function(a){if(balances[a.id]===undefined)balances[a.id]=0;});
 var type='expense',card='ملت',currentTab='all',debtType='creditor',who='me';
-var APP_VERSION='3.4';
+var APP_VERSION='3.5';
 try{document.getElementById('verBadge').textContent=APP_VERSION;}catch(e){}
 var editIdx=-1,editCardVal='ملت',editDebtIdx=-1,editBalAcc='',editWho='me';
 
@@ -1111,12 +1055,6 @@ function faDigits(s){var m={'0':'۰','1':'۱','2':'۲','3':'۳','4':'۴','5':'۵
 function shortFmt(n){n=Math.floor(Math.abs(n)||0);if(n<1000)return fmt(n)+' تومان';var u=[[1000000000,'میلیارد'],[1000000,'میلیون'],[1000,'هزار']];for(var i=0;i<u.length;i++){if(n>=u[i][0]){var v=Math.floor(n/u[i][0]*10)/10;var s=(v%1===0)?faDigits(v.toFixed(0)):faDigits(v.toFixed(1));return s+' '+u[i][1]+' تومان';}}return fmt(n)+' تومان';}
 function numToWordsFa(n){var neg=n<0;n=Math.floor(Math.abs(n)||0);if(n===0)return 'صفر تومان';var y=['','یک','دو','سه','چهار','پنج','شش','هفت','هشت','نه'];var t=['ده','یازده','دوازده','سیزده','چهارده','پانزده','شانزده','هفده','هجده','نوزده'];var dd=['','ده','بیست','سی','چهل','پنجاه','شصت','هفتاد','هشتاد','نود'];var hh=['','یکصد','دویست','سیصد','چهارصد','پانصد','ششصد','هفتصد','هشتصد','نهصد'];function three(x){var r=[];var s=Math.floor(x/100),o=x%100;if(s)r.push(hh[s]);if(o>=10&&o<20)r.push(t[o-10]);else{var e=Math.floor(o/10),f=o%10;if(e)r.push(dd[e]);if(f)r.push(y[f]);}return r.join(' و ');}var sc=['','هزار','میلیون','میلیارد','هزار میلیارد'];var p=[],gi=0;while(n>0&&gi<sc.length){var g=n%1000;if(g){var w=three(g);p.unshift(sc[gi]?w+' '+sc[gi]:w);}n=Math.floor(n/1000);gi++;}return (neg?'منفی ':'')+p.join(' و ')+' تومان';}
 
-/* DISPLAY SIZE (font + density) */
-function markSet(id,v){var box=document.getElementById(id);if(!box)return;var b=box.querySelectorAll('.set-opt');for(var i=0;i<b.length;i++)b[i].classList.toggle('active',b[i].getAttribute('data-v')===v);}
-function setFont(v){try{localStorage.setItem('dakhel_font',v);}catch(e){}document.documentElement.setAttribute('data-font',v);markSet('fontOpts',v);}
-function setPad(v){try{localStorage.setItem('dakhel_pad',v);}catch(e){}document.documentElement.setAttribute('data-pad',v);markSet('padOpts',v);}
-function loadDisplay(){var f='m',p='m';try{f=localStorage.getItem('dakhel_font')||'m';p=localStorage.getItem('dakhel_pad')||'m';}catch(e){}if(f!=='s'&&f!=='m'&&f!=='l')f='m';if(p!=='s'&&p!=='m'&&p!=='l')p='m';document.documentElement.setAttribute('data-font',f);document.documentElement.setAttribute('data-pad',p);markSet('fontOpts',f);markSet('padOpts',p);}
-
 /* PAGE NAV */
 var balHidden=true;
 function toggleBalanceVisibility(){balHidden=!balHidden;document.getElementById('eyeBtn').textContent=balHidden?'👁‍🗨 نمایش موجودی':'👁 پنهان کردن';renderHesab();}
@@ -1126,7 +1064,7 @@ function switchPage(id,btn){
   pg.classList.remove('active');void pg.offsetWidth;pg.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active')});
   btn.classList.add('active');
-  var titles={hesab:'حسابداری',trans:'تراکنش‌ها',debts:'بدهی‌ها',calendar:'تقویم هزینه‌ها',gold:'طلا و ارز',settings:'تنظیمات'};
+  var titles={hesab:'حسابداری',trans:'تراکنش‌ها',debts:'بدهی‌ها',calendar:'تقویم هزینه‌ها'};
   document.getElementById('pageTitle').textContent=titles[id]||'حسابداری';
   document.getElementById('fab').style.display=id==='debts'?'none':'flex';
   document.getElementById('debtsFab').style.display=id==='debts'?'flex':'none';
@@ -1388,7 +1326,7 @@ document.addEventListener('pointerdown',function(ev){
 },{passive:true});
 
 /* INIT */
-document.addEventListener("click",function(ev){if(!ev.target.closest("#monthDropdown")&&!ev.target.closest("#monthBtn")){monthListOpen=false;var dd=document.getElementById("monthDropdown");if(dd)dd.style.display="none";}});loadTheme();loadDisplay();document.getElementById("eyeBtn").textContent=balHidden?"👁‍🗨 نمایش موجودی":"👁 پنهان کردن";buildMonthPills();renderAccounts();renderHesab();renderEntries();renderDebts();
+document.addEventListener("click",function(ev){if(!ev.target.closest("#monthDropdown")&&!ev.target.closest("#monthBtn")){monthListOpen=false;var dd=document.getElementById("monthDropdown");if(dd)dd.style.display="none";}});loadTheme();document.getElementById("eyeBtn").textContent=balHidden?"👁‍🗨 نمایش موجودی":"👁 پنهان کردن";buildMonthPills();renderAccounts();renderHesab();renderEntries();renderDebts();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js");
 
 /* ═══ CALENDAR ═══ */
