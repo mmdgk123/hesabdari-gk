@@ -881,10 +881,34 @@ html{scroll-behavior:smooth}
     <h3>ویرایش تراکنش</h3>
     <div class="field"><label>مبلغ (هزار تومان)</label><input type="text" id="editAmt" inputmode="numeric" oninput="fmtAmt(this)"></div>
     <div class="field"><label>توضیح</label><input type="text" id="editDesc"></div>
-    <div class="field"><label>تاریخ</label><div style="display:flex;gap:8px"><input type="text" id="editDay" inputmode="numeric" placeholder="روز" style="text-align:center;flex:1;min-width:0"><input type="text" id="editMonth" inputmode="numeric" placeholder="ماه" style="text-align:center;flex:1;min-width:0"><input type="text" id="editYear" inputmode="numeric" placeholder="سال" style="text-align:center;flex:1.4;min-width:0"></div></div>
+    <div class="field"><label>تاریخ</label><input type="text" id="editDateText" readonly onclick="openDatePick()" style="text-align:center;cursor:pointer"></div>
     <div class="field"><label>کارت (پول از کجا میره؟)</label><div class="card-pills" id="editPills"></div></div>
     <div class="field"><label>پول کیه؟</label><div class="card-pills" id="editWhoPills"></div></div>
     <div class="modal-btns"><button class="modal-cancel" onclick="closeModal()">لغو</button><button class="modal-save" onclick="saveEdit()">ذخیره</button></div>
+  </div>
+</div>
+
+<!-- ═══ Date Picker Modal ═══ -->
+<style>
+.dp-nav{flex:0 0 52px;padding:9px 0;border-radius:12px;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:20px;font-weight:900;font-family:inherit;cursor:pointer}
+.dp-wds{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:11px;color:var(--text3);font-weight:700;margin-bottom:6px}
+.dp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:16px}
+.dp-day{padding:11px 0;text-align:center;border-radius:12px;background:var(--card);border:1px solid var(--border);font-weight:700;font-size:14.5px;color:var(--text);cursor:pointer}
+.dp-day.sel{background:linear-gradient(135deg,var(--blue),#3d63d8);color:#fff;border-color:transparent}
+.dp-day.today{border-color:var(--blue);color:var(--blue)}
+.dp-day.sel.today{color:#fff}
+</style>
+<div class="modal-bg" id="datePickModal" style="z-index:130">
+  <div class="modal">
+    <h3>📅 انتخاب تاریخ</h3>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <button class="dp-nav" onclick="dpNav(1)">‹</button>
+      <div id="dpTitle" style="flex:1;text-align:center;font-weight:900;font-size:16px"></div>
+      <button class="dp-nav" onclick="dpNav(-1)">›</button>
+    </div>
+    <div class="dp-wds"><div>ش</div><div>ی</div><div>د</div><div>س</div><div>چ</div><div>پ</div><div>ج</div></div>
+    <div class="dp-grid" id="dpGrid"></div>
+    <div class="modal-btns"><button class="modal-cancel" onclick="closeDatePick()">بستن</button><button class="modal-save" onclick="dpToday()">امروز</button></div>
   </div>
 </div>
 
@@ -1191,8 +1215,16 @@ var sb=document.getElementById('submitBtn');sb.classList.add('success-flash');se
 if(navigator.vibrate){try{navigator.vibrate(12);}catch(e){}}
 renderEntries(true);renderHesab();
 toast(type==='expense'?'خرج ثبت شد ✓':'دخل ثبت شد ✓');}
-function openEdit(i){editIdx=i;editCardVal=entries[i].card;editWho=entries[i].who||'me';renderWhoPills();document.getElementById('editAmt').value=Math.round(entries[i].amount/1000).toLocaleString('en-US');document.getElementById('editDesc').value=entries[i].desc;document.getElementById('editDay').value=entries[i].day;document.getElementById('editMonth').value=entries[i].month;document.getElementById('editYear').value=entries[i].year;setEditCard(editCardVal);document.getElementById('editModal').classList.add('show');}
-function saveEdit(){var amt=fa2en(document.getElementById('editAmt').value.trim()).replace(/,/g,'');if(!amt||amt==0){toast('مبلغ رو وارد کن');return;}var desc=document.getElementById('editDesc').value.trim();if(!desc){toast('توضیح رو وارد کن');return;}var eD=parseInt(fa2en(document.getElementById('editDay').value.trim())),eM=parseInt(fa2en(document.getElementById('editMonth').value.trim())),eY=parseInt(fa2en(document.getElementById('editYear').value.trim()));var maxD=(eM>=1&&eM<=6)?31:30;if(!eY||!eM||!eD||eM<1||eM>12||eD<1||eD>maxD||eY<1300||eY>1500){toast('تاریخ درست نیست');return;}var oldE=entries[editIdx];var _oo=accByName(oldE.card),_nn=accByName(editCardVal);var accOld=_oo?_oo.id:null,accNew=_nn?_nn.id:null;var newAmt=parseInt(amt)*1000;if(accOld){if(oldE.type==='expense')balances[accOld]+=oldE.amount;else balances[accOld]-=oldE.amount;}if(accNew){if(oldE.type==='expense')balances[accNew]-=newAmt;else balances[accNew]+=newAmt;}entries[editIdx].amount=newAmt;entries[editIdx].desc=desc;entries[editIdx].card=editCardVal;entries[editIdx].who=editWho;var tPart=(entries[editIdx].date&&entries[editIdx].date.indexOf(':')>=0)?entries[editIdx].date.split(' ').pop():(entries[editIdx].time||'00:00');entries[editIdx].date=eY+'/'+String(eM).padStart(2,'0')+'/'+String(eD).padStart(2,'0')+' '+jMonthName(eM)+' '+tPart;entries[editIdx].year=eY;entries[editIdx].month=eM;entries[editIdx].day=eD;localStorage.setItem('dakhel_bal',JSON.stringify(balances));save();closeModal();renderEntries();renderHesab();toast('ویرایش شد ✓');}
+var editDate={y:0,m:0,d:0},dpY=0,dpM=0;
+function fmtEditDate(){document.getElementById('editDateText').value=faCount(editDate.d)+' '+jMonthName(editDate.m)+' '+faCount(editDate.y);}
+function openDatePick(){dpY=editDate.y;dpM=editDate.m;renderDatePick();document.getElementById('datePickModal').classList.add('show');}
+function closeDatePick(){document.getElementById('datePickModal').classList.remove('show');}
+function dpNav(dir){dpM+=dir;if(dpM>12){dpM=1;dpY++;}if(dpM<1){dpM=12;dpY--;}renderDatePick();}
+function renderDatePick(){document.getElementById('dpTitle').textContent=jMonthName(dpM)+' '+faCount(dpY);var daysCount=jalDaysInMonth(dpY,dpM);var firstG=j2g(dpY,dpM,1);var satStart=(new Date(firstG[0],firstG[1]-1,firstG[2]).getDay()+1)%7;var j=nowJ();var h='';for(var i=0;i<satStart;i++)h+='<div></div>';for(var d=1;d<=daysCount;d++){var cls='dp-day';if(dpY===editDate.y&&dpM===editDate.m&&d===editDate.d)cls+=' sel';if(dpY===j.y&&dpM===j.m&&d===j.d)cls+=' today';h+='<div class="'+cls+'" onclick="dpPick('+d+')">'+faCount(d)+'</div>';}document.getElementById('dpGrid').innerHTML=h;}
+function dpPick(d){editDate={y:dpY,m:dpM,d:d};fmtEditDate();closeDatePick();}
+function dpToday(){var j=nowJ();editDate={y:j.y,m:j.m,d:j.d};fmtEditDate();closeDatePick();}
+function openEdit(i){editIdx=i;editCardVal=entries[i].card;editWho=entries[i].who||'me';renderWhoPills();document.getElementById('editAmt').value=Math.round(entries[i].amount/1000).toLocaleString('en-US');document.getElementById('editDesc').value=entries[i].desc;editDate={y:entries[i].year,m:entries[i].month,d:entries[i].day};fmtEditDate();setEditCard(editCardVal);document.getElementById('editModal').classList.add('show');}
+function saveEdit(){var amt=fa2en(document.getElementById('editAmt').value.trim()).replace(/,/g,'');if(!amt||amt==0){toast('مبلغ رو وارد کن');return;}var desc=document.getElementById('editDesc').value.trim();if(!desc){toast('توضیح رو وارد کن');return;}var eD=editDate.d,eM=editDate.m,eY=editDate.y;if(!eY||!eM||!eD||eD>jalDaysInMonth(eY,eM)){toast('تاریخ درست نیست');return;}var oldE=entries[editIdx];var _oo=accByName(oldE.card),_nn=accByName(editCardVal);var accOld=_oo?_oo.id:null,accNew=_nn?_nn.id:null;var newAmt=parseInt(amt)*1000;if(accOld){if(oldE.type==='expense')balances[accOld]+=oldE.amount;else balances[accOld]-=oldE.amount;}if(accNew){if(oldE.type==='expense')balances[accNew]-=newAmt;else balances[accNew]+=newAmt;}entries[editIdx].amount=newAmt;entries[editIdx].desc=desc;entries[editIdx].card=editCardVal;entries[editIdx].who=editWho;var tPart=(entries[editIdx].date&&entries[editIdx].date.indexOf(':')>=0)?entries[editIdx].date.split(' ').pop():(entries[editIdx].time||'00:00');entries[editIdx].date=eY+'/'+String(eM).padStart(2,'0')+'/'+String(eD).padStart(2,'0')+' '+jMonthName(eM)+' '+tPart;entries[editIdx].year=eY;entries[editIdx].month=eM;entries[editIdx].day=eD;localStorage.setItem('dakhel_bal',JSON.stringify(balances));save();closeModal();renderEntries();renderHesab();toast('ویرایش شد ✓');}
 function closeModal(){document.getElementById('editModal').classList.remove('show');}
 function openInstallSheet(){document.getElementById('installSheet').classList.add('show');}
 function closeInstallSheet(){document.getElementById('installSheet').classList.remove('show');}
