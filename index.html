@@ -835,6 +835,7 @@ html{scroll-behavior:smooth}
     </div>
     <div class="field"><label>مبلغ</label><div style="position:relative"><input type="text" id="amount" inputmode="numeric" placeholder="" oninput="fmtAmt(this)" style="padding-left:85px;font-size:20px;font-weight:900"><span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--text3);font-weight:600">هزار تومان</span></div></div>
     <div class="field"><label>توضیح</label><input type="text" id="desc" placeholder=""></div>
+    <div class="field"><label>تاریخ</label><input type="text" id="addDateText" readonly onclick="openDatePick('add')" style="text-align:center;cursor:pointer"></div>
     <div class="field"><label>کارت (پول از کجا میره؟)</label><div class="card-pills" id="cardPills"></div></div>
     <div class="field"><label>پول کیه؟</label><div class="card-pills" id="whoPills"></div></div>
     <button class="submit-btn exp" id="submitBtn" onclick="addEntry()">ثبت خرج</button>
@@ -1179,7 +1180,7 @@ function renderEntries(flash){var f=filtered().sort(function(a,b){if(b.year!==a.
 function setTab(t,el){currentTab=t;document.querySelectorAll('.fp').forEach(function(p){p.classList.remove('active')});el.classList.add('active');renderEntries();}
 
 /* ADD/EDIT/DEL ENTRY */
-function openAddSheet(){document.getElementById('addSheet').classList.add('show');setTimeout(function(){document.getElementById('amount').focus()},350);}
+function openAddSheet(){var j=nowJ();addDate={y:j.y,m:j.m,d:j.d};fmtAddDate();document.getElementById('addSheet').classList.add('show');setTimeout(function(){document.getElementById('amount').focus()},350);}
 function closeSheet(){document.getElementById('addSheet').classList.remove('show');}
 document.getElementById('addSheet').addEventListener('click',function(e){if(e.target===this)closeSheet();});
 function setType(t){type=t;document.getElementById('tabExp').className='type-tab'+(t==='expense'?' active exp':'');document.getElementById('tabInc').className='type-tab'+(t==='income'?' active inc':'');var b=document.getElementById('submitBtn');b.className='submit-btn '+(t==='expense'?'exp':'inc');b.textContent=t==='expense'?'ثبت خرج':'ثبت دخل';}
@@ -1209,20 +1210,22 @@ function renderFam(){
   document.getElementById('famNote').textContent=t.cnt?('از '+faCount(t.cnt)+' تراکنش'):'';
 }
 function setEditCard(c){editCardVal=c;accounts.forEach(function(a){var el=document.getElementById('ec_'+a.id);if(el)el.className='cp'+(c===a.name?' active '+accColor(a):'');});}
-function addEntry(){var amt=fa2en(document.getElementById('amount').value.trim()).replace(/,/g,'');if(!amt||amt==0){toast('مبلغ رو وارد کن');return;}var desc=document.getElementById('desc').value.trim();if(!desc){toast('توضیح رو وارد کن');return;}var j=nowJ();entries.unshift({type:type,amount:parseInt(amt)*1000,desc:desc,card:card,who:who,date:j.str,year:j.y,month:j.m,day:j.d,time:j.str.split(' ').pop()});var _ac=accByName(card);var acc=_ac?_ac.id:null;
+function addEntry(){var amt=fa2en(document.getElementById('amount').value.trim()).replace(/,/g,'');if(!amt||amt==0){toast('مبلغ رو وارد کن');return;}var desc=document.getElementById('desc').value.trim();if(!desc){toast('توضیح رو وارد کن');return;}var j=nowJ();var tm=j.str.split(' ').pop();var dstr=addDate.y+'/'+String(addDate.m).padStart(2,'0')+'/'+String(addDate.d).padStart(2,'0')+' '+jMonthName(addDate.m)+' '+tm;entries.unshift({type:type,amount:parseInt(amt)*1000,desc:desc,card:card,who:who,date:dstr,year:addDate.y,month:addDate.m,day:addDate.d,time:tm});var _ac=accByName(card);var acc=_ac?_ac.id:null;
 if(acc){if(type==='expense')balances[acc]-=parseInt(amt)*1000;else balances[acc]+=parseInt(amt)*1000;}localStorage.setItem('dakhel_bal',JSON.stringify(balances));save();document.getElementById('amount').value='';document.getElementById('desc').value='';buildMonthPills();closeSheet();
 var sb=document.getElementById('submitBtn');sb.classList.add('success-flash');setTimeout(function(){sb.classList.remove('success-flash')},620);
 if(navigator.vibrate){try{navigator.vibrate(12);}catch(e){}}
 renderEntries(true);renderHesab();
 toast(type==='expense'?'خرج ثبت شد ✓':'دخل ثبت شد ✓');}
-var editDate={y:0,m:0,d:0},dpY=0,dpM=0;
+var editDate={y:0,m:0,d:0},addDate={y:0,m:0,d:0},dpY=0,dpM=0,dpTarget='edit';
 function fmtEditDate(){document.getElementById('editDateText').value=faCount(editDate.d)+' '+jMonthName(editDate.m)+' '+faCount(editDate.y);}
-function openDatePick(){dpY=editDate.y;dpM=editDate.m;renderDatePick();document.getElementById('datePickModal').classList.add('show');}
+function fmtAddDate(){document.getElementById('addDateText').value=faCount(addDate.d)+' '+jMonthName(addDate.m)+' '+faCount(addDate.y);}
+function dpSet(y,m,d){if(dpTarget==='add'){addDate={y:y,m:m,d:d};fmtAddDate();}else{editDate={y:y,m:m,d:d};fmtEditDate();}}
+function openDatePick(t){dpTarget=t||'edit';var c=dpTarget==='add'?addDate:editDate;dpY=c.y;dpM=c.m;renderDatePick();document.getElementById('datePickModal').classList.add('show');}
 function closeDatePick(){document.getElementById('datePickModal').classList.remove('show');}
 function dpNav(dir){dpM+=dir;if(dpM>12){dpM=1;dpY++;}if(dpM<1){dpM=12;dpY--;}renderDatePick();}
-function renderDatePick(){document.getElementById('dpTitle').textContent=jMonthName(dpM)+' '+faCount(dpY);var daysCount=jalDaysInMonth(dpY,dpM);var firstG=j2g(dpY,dpM,1);var satStart=(new Date(firstG[0],firstG[1]-1,firstG[2]).getDay()+1)%7;var j=nowJ();var h='';for(var i=0;i<satStart;i++)h+='<div></div>';for(var d=1;d<=daysCount;d++){var cls='dp-day';if(dpY===editDate.y&&dpM===editDate.m&&d===editDate.d)cls+=' sel';if(dpY===j.y&&dpM===j.m&&d===j.d)cls+=' today';h+='<div class="'+cls+'" onclick="dpPick('+d+')">'+faCount(d)+'</div>';}document.getElementById('dpGrid').innerHTML=h;}
-function dpPick(d){editDate={y:dpY,m:dpM,d:d};fmtEditDate();closeDatePick();}
-function dpToday(){var j=nowJ();editDate={y:j.y,m:j.m,d:j.d};fmtEditDate();closeDatePick();}
+function renderDatePick(){document.getElementById('dpTitle').textContent=jMonthName(dpM)+' '+faCount(dpY);var daysCount=jalDaysInMonth(dpY,dpM);var firstG=j2g(dpY,dpM,1);var satStart=(new Date(firstG[0],firstG[1]-1,firstG[2]).getDay()+1)%7;var j=nowJ();var sel=(dpTarget==='add'?addDate:editDate);var h='';for(var i=0;i<satStart;i++)h+='<div></div>';for(var d=1;d<=daysCount;d++){var cls='dp-day';if(dpY===sel.y&&dpM===sel.m&&d===sel.d)cls+=' sel';if(dpY===j.y&&dpM===j.m&&d===j.d)cls+=' today';h+='<div class="'+cls+'" onclick="dpPick('+d+')">'+faCount(d)+'</div>';}document.getElementById('dpGrid').innerHTML=h;}
+function dpPick(d){dpSet(dpY,dpM,d);closeDatePick();}
+function dpToday(){var j=nowJ();dpSet(j.y,j.m,j.d);closeDatePick();}
 function openEdit(i){editIdx=i;editCardVal=entries[i].card;editWho=entries[i].who||'me';renderWhoPills();document.getElementById('editAmt').value=Math.round(entries[i].amount/1000).toLocaleString('en-US');document.getElementById('editDesc').value=entries[i].desc;editDate={y:entries[i].year,m:entries[i].month,d:entries[i].day};fmtEditDate();setEditCard(editCardVal);document.getElementById('editModal').classList.add('show');}
 function saveEdit(){var amt=fa2en(document.getElementById('editAmt').value.trim()).replace(/,/g,'');if(!amt||amt==0){toast('مبلغ رو وارد کن');return;}var desc=document.getElementById('editDesc').value.trim();if(!desc){toast('توضیح رو وارد کن');return;}var eD=editDate.d,eM=editDate.m,eY=editDate.y;if(!eY||!eM||!eD||eD>jalDaysInMonth(eY,eM)){toast('تاریخ درست نیست');return;}var oldE=entries[editIdx];var _oo=accByName(oldE.card),_nn=accByName(editCardVal);var accOld=_oo?_oo.id:null,accNew=_nn?_nn.id:null;var newAmt=parseInt(amt)*1000;if(accOld){if(oldE.type==='expense')balances[accOld]+=oldE.amount;else balances[accOld]-=oldE.amount;}if(accNew){if(oldE.type==='expense')balances[accNew]-=newAmt;else balances[accNew]+=newAmt;}entries[editIdx].amount=newAmt;entries[editIdx].desc=desc;entries[editIdx].card=editCardVal;entries[editIdx].who=editWho;var tPart=(entries[editIdx].date&&entries[editIdx].date.indexOf(':')>=0)?entries[editIdx].date.split(' ').pop():(entries[editIdx].time||'00:00');entries[editIdx].date=eY+'/'+String(eM).padStart(2,'0')+'/'+String(eD).padStart(2,'0')+' '+jMonthName(eM)+' '+tPart;entries[editIdx].year=eY;entries[editIdx].month=eM;entries[editIdx].day=eD;localStorage.setItem('dakhel_bal',JSON.stringify(balances));save();closeModal();renderEntries();renderHesab();toast('ویرایش شد ✓');}
 function closeModal(){document.getElementById('editModal').classList.remove('show');}
