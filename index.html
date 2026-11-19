@@ -50,7 +50,7 @@ try{
       </div>
       <div class="hero-amount" id="totalBal">۰ <small>تومان</small></div>
       <div class="hero-short" id="totalShort"></div>
-      <div class="hero-words" id="totalWords"></div>
+      <div class="hero-cmp" id="heroCmp"></div>
       <div class="hero-grid">
         <div class="hg"><small>دخل این ماه</small><b id="statInc">۰</b></div>
         <div class="hg"><small>خرج این ماه</small><b id="statExp">۰</b></div>
@@ -62,11 +62,28 @@ try{
       </div>
     </div>
 
+    <div class="quick">
+      <button class="qa" data-act="addExpense"><i>➖</i><span>خرج</span></button>
+      <button class="qa" data-act="addIncome"><i>➕</i><span>دخل</span></button>
+      <button class="qa" data-act="addDebt"><i>🤝</i><span>بدهی</span></button>
+      <button class="qa" data-act="manageAcc"><i>🏦</i><span>حساب</span></button>
+    </div>
+
     <div class="sec-head">
       <span>حساب‌ها</span>
-      <button class="link-btn" id="btnManageAcc">مدیریت حساب‌ها</button>
+      <button class="link-btn" id="btnManageAcc">مدیریت</button>
     </div>
     <div class="acc-row" id="accRow"></div>
+
+    <div class="card" id="catBox" hidden>
+      <div class="card-head"><span>دسته‌بندی خرج این ماه</span><span class="muted" id="catSub"></span></div>
+      <div id="catList"></div>
+    </div>
+
+    <div class="card" id="recentBox" hidden>
+      <div class="card-head"><span>آخرین تراکنش‌ها</span><button class="link-btn" data-act="page" data-page="tx">همه</button></div>
+      <div id="recentList"></div>
+    </div>
 
     <div class="card">
       <div class="card-head"><span>۶ ماه گذشته</span><span class="muted" id="trendSub">دخل و خرج</span></div>
@@ -261,6 +278,14 @@ try{
       </div>
 
       <div class="field">
+        <label>موجودی حساب‌ها</label>
+        <div class="seg" id="balSeg">
+          <button class="seg-btn" data-act="balVis" data-v="show">نمایش</button>
+          <button class="seg-btn" data-act="balVis" data-v="hide">پنهان</button>
+        </div>
+      </div>
+
+      <div class="field">
         <label>بودجه ماهانه (هزار تومان)</label>
         <input type="text" id="budgetInput" inputmode="numeric" placeholder="مثلاً ۱۰٬۰۰۰" autocomplete="off">
         <div class="muted" style="margin-top:6px">خالی بگذاری، نوار بودجه نمایش داده نمی‌شود.</div>
@@ -277,7 +302,7 @@ try{
       </div>
       <button class="btn-ghost" id="btnCheckUpdate" style="margin-bottom:8px">🔄 بررسی آپدیت برنامه</button>
       <button class="btn-ghost btn-danger" id="btnWipe" style="margin-bottom:10px">🗑 پاک کردن همه داده‌ها</button>
-      <p class="fineprint" id="verLine">نسخه ۴.۰</p>
+      <p class="fineprint" id="verLine">نسخه ۴.۱</p>
       <a class="credit" href="https://t.me/mmdGK" target="_blank" rel="noopener">ساخته‌شده توسط <b>mmdGK</b></a>
       <input type="file" id="fileIn" accept=".json,application/json" hidden>
     </div>

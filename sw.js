@@ -1,5 +1,5 @@
-/* حساب‌یار ۴.۰ — network-first، تا آپدیت‌ها فوری بیایند ولی آفلاین هم باز شود */
-const CACHE = 'dakhel-4.0';
+/* حساب‌یار ۴.۱ — network-first، تا آپدیت‌ها فوری بیایند ولی آفلاین هم باز شود */
+const CACHE = 'dakhel-4.1';
 const ASSETS = [
   './',
   './index.html',

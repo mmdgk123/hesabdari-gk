@@ -6,7 +6,7 @@
 'use strict';
 
 /* ────────────────────────── constants ────────────────────────── */
-var VERSION = '4.0';
+var VERSION = '4.1';
 
 var SK = {
   entries: 'dakhel_entries',
@@ -51,6 +51,9 @@ var ICON_RULES = [
   [['سوخت'], '⛽'],
   [['عینک', 'لوازم'], '🧴']
 ];
+
+var CATS = ['خرید', 'حمل‌ونقل', 'قبض و شارژ', 'درمان', 'ورزش', 'رستوران',
+            'خانه', 'پوشاک', 'آرایش', 'هدیه', 'وام و قرض', 'درآمد', 'سوخت', 'لوازم'];
 
 var RATES_URL = 'https://mmdgk123.github.io/hesabdari-rates/rates.json';
 var RATES_META = {
@@ -114,39 +117,6 @@ function fmtShort(n) {
     }
   }
   return sign + fmt(num) + ' تومان';
-}
-function numToWordsFa(n) {
-  var neg = Number(n) < 0;
-  n = Math.floor(Math.abs(Number(n) || 0));
-  if (n === 0) return 'صفر تومان';
-  var ones = ['', 'یک', 'دو', 'سه', 'چهار', 'پنج', 'شش', 'هفت', 'هشت', 'نه'];
-  var teens = ['ده', 'یازده', 'دوازده', 'سیزده', 'چهارده', 'پانزده', 'شانزده', 'هفده', 'هجده', 'نوزده'];
-  var tens = ['', 'ده', 'بیست', 'سی', 'چهل', 'پنجاه', 'شصت', 'هفتاد', 'هشتاد', 'نود'];
-  var hund = ['', 'یکصد', 'دویست', 'سیصد', 'چهارصد', 'پانصد', 'ششصد', 'هفتصد', 'هشتصد', 'نهصد'];
-  function three(x) {
-    var out = [];
-    var h = Math.floor(x / 100), rest = x % 100;
-    if (h) out.push(hund[h]);
-    if (rest >= 10 && rest < 20) out.push(teens[rest - 10]);
-    else {
-      var t = Math.floor(rest / 10), o = rest % 10;
-      if (t) out.push(tens[t]);
-      if (o) out.push(ones[o]);
-    }
-    return out.join(' و ');
-  }
-  var scales = ['', 'هزار', 'میلیون', 'میلیارد', 'هزار میلیارد'];
-  var parts = [], gi = 0;
-  while (n > 0 && gi < scales.length) {
-    var g = n % 1000;
-    if (g) {
-      var w = three(g);
-      parts.unshift(scales[gi] ? w + ' ' + scales[gi] : w);
-    }
-    n = Math.floor(n / 1000);
-    gi++;
-  }
-  return (neg ? 'منفی ' : '') + parts.join(' و ') + ' تومان';
 }
 function pad2(n) { return (n < 10 ? '0' : '') + n; }
 function esc(s) {
@@ -327,7 +297,7 @@ var state = {
   calY: 0,
   calM: 0,
   calDay: 0,
-  hidden: readLS('dakhel_hidden', '0') === '1',
+  hidden: readLS('dakhel_balvis', 'show') === 'hide',
   theme: readLS(SK.theme, 'system'),
   entryMode: 'add',
   editId: '',
@@ -507,21 +477,23 @@ function renderHome() {
       : fmt(total) + ' <small>تومان</small>';
   }
   setText('totalShort', state.hidden ? '' : fmtShort(total));
-  setText('totalWords', state.hidden ? '' : numToWordsFa(total));
   setText('eyeBtn', state.hidden ? 'نمایش' : 'پنهان');
 
-  setText('statInc', fmt(t.inc));
-  setText('statExp', fmt(t.exp));
+  var mask = '••••';
+  setText('statInc', state.hidden ? mask : fmt(t.inc));
+  setText('statExp', state.hidden ? mask : fmt(t.exp));
   var net = t.inc - t.exp;
   var netEl = $('statNet');
   if (netEl) {
-    netEl.textContent = (net < 0 ? '−' : '') + fmt(Math.abs(net));
-    netEl.className = net > 0 ? 'pos' : (net < 0 ? 'neg' : '');
+    netEl.textContent = state.hidden
+      ? mask
+      : (net < 0 ? '−' : '') + fmt(Math.abs(net));
+    netEl.className = state.hidden ? '' : (net > 0 ? 'pos' : (net < 0 ? 'neg' : ''));
   }
 
   var box = $('budgetBox');
   if (box) {
-    if (budget > 0) {
+    if (budget > 0 && !state.hidden) {
       box.hidden = false;
       var pct = Math.min(100, Math.round(t.exp / budget * 100));
       var bar = $('budgetBar');
@@ -539,6 +511,124 @@ function renderHome() {
   renderTrend();
   renderTop();
   renderFam();
+  renderCompare(j);
+  renderCats(j);
+  renderRecent();
+}
+
+/* ── مقایسه با ماه قبل ── */
+function prevMonth(y, m) {
+  return m === 1 ? { y: y - 1, m: 12 } : { y: y, m: m - 1 };
+}
+
+function renderCompare(j) {
+  var box = $('heroCmp');
+  if (!box) return;
+  if (state.hidden) { box.innerHTML = ''; return; }
+
+  var p = prevMonth(j.y, j.m);
+  var cur = monthTotals(j.y, j.m);
+  var old = monthTotals(p.y, p.m);
+
+  var curNet = cur.inc - cur.exp;
+  var oldNet = old.inc - old.exp;
+
+  var chip = '';
+  if (old.exp > 0) {
+    var diff = Math.round((cur.exp - old.exp) / old.exp * 100);
+    var cls = diff > 0 ? 'down' : (diff < 0 ? 'up' : '');
+    var arrow = diff > 0 ? '▲' : (diff < 0 ? '▼' : '•');
+    var word = diff > 0 ? 'بیشتر' : (diff < 0 ? 'کمتر' : 'مثل قبل');
+    chip = '<span class="cmp-chip ' + cls + '">' + arrow + ' ' +
+           toFa(Math.abs(diff)) + '٪ ' + word + ' از ' + MONTHS[p.m] + '</span>';
+  }
+
+  var hint;
+  if (!old.inc && !old.exp) {
+    hint = 'ماه قبل تراکنشی نداشتی';
+  } else {
+    var d = curNet - oldNet;
+    if (d === 0) hint = 'مانده ماه مثل ' + MONTHS[p.m] + ' است';
+    else if (d > 0) hint = fmtShort(d) + ' بهتر از ' + MONTHS[p.m];
+    else hint = fmtShort(-d) + ' کمتر خرج کردی از ' + MONTHS[p.m];
+  }
+
+  box.innerHTML = chip + '<span class="cmp-hint">' + esc(hint) + '</span>';
+}
+
+/* ── دسته‌بندی خرج ماه ── */
+/* index = نخستین ردیف ICON_RULES که کلیدواژه‌اش در توضیح آمده */
+function catOf(desc) {
+  var s = String(desc || '');
+  for (var i = 0; i < ICON_RULES.length; i++) {
+    var words = ICON_RULES[i][0];
+    for (var k = 0; k < words.length; k++) {
+      if (s.indexOf(words[k]) >= 0) return i;
+    }
+  }
+  return -1;
+}
+
+function renderCats(j) {
+  var box = $('catBox');
+  if (!box) return;
+  if (state.hidden) { box.hidden = true; return; }
+
+  var by = {}, order = [], total = 0;
+  for (var i = 0; i < entries.length; i++) {
+    var e = entries[i];
+    if (e.type !== 'expense' || e.year !== j.y || e.month !== j.m) continue;
+    var c = catOf(e.desc);
+    if (!by[c]) { by[c] = 0; order.push(c); }
+    by[c] += e.amount;
+    total += e.amount;
+  }
+  if (!order.length) { box.hidden = true; return; }
+
+  order.sort(function (a, b) { return by[b] - by[a]; });
+  var h = '';
+  order.slice(0, 5).forEach(function (k, idx) {
+    var icon = k >= 0 ? ICON_RULES[k][1] : '📝';
+    var name = k >= 0 ? (CATS[k] || 'سایر') : 'سایر';
+    var pct = total ? Math.round(by[k] / total * 100) : 0;
+    h += '<div class="cat-item">' +
+           '<div class="cat-head">' +
+             '<span class="cat-ico">' + icon + '</span>' +
+             '<span class="cat-name">' + esc(name) + '</span>' +
+             '<span class="cat-pct">' + toFa(pct) + '٪</span>' +
+             '<span class="cat-val">' + fmt(by[k]) + '</span>' +
+           '</div>' +
+           '<div class="cat-bar"><i style="width:' + pct + '%;transition-delay:' +
+             (idx * 0.05) + 's"></i></div>' +
+         '</div>';
+  });
+  setHTML('catList', h);
+  setText('catSub', 'جمع ' + fmtShort(total));
+  box.hidden = false;
+}
+
+/* ── آخرین تراکنش‌ها ── */
+function renderRecent() {
+  var box = $('recentBox');
+  if (!box) return;
+  if (state.hidden) { box.hidden = true; return; }
+  var list = sortEntries(entries).slice(0, 4);
+  if (!list.length) { box.hidden = true; return; }
+
+  var h = '';
+  list.forEach(function (e) {
+    var isExp = e.type === 'expense';
+    h += '<div class="recent-row" data-act="tx" data-id="' + esc(e.id) + '">' +
+           '<span class="recent-ico">' + iconFor(e.desc) + '</span>' +
+           '<span class="recent-nm">' + esc(e.desc) + '</span>' +
+           '<span class="recent-dt">' + toFa(e.day) + ' ' + MONTHS_SHORT[e.month] + '</span>' +
+           '<span class="recent-vl ' + (isExp ? 'exp' : 'inc') + '">' +
+             (state.hidden ? '•••' : (isExp ? '−' : '+') + ' ' + fmt(e.amount)) +
+           '</span>' +
+         '</div>';
+  });
+  setHTML('recentList', h);
+  box.hidden = false;
 }
 
 function renderAccounts() {
@@ -1468,6 +1558,10 @@ function openSettings() {
       : '';
   }
   setText('verLine', 'نسخه ' + toFa(VERSION));
+  var bs = document.querySelectorAll('#balSeg .seg-btn');
+  for (var i = 0; i < bs.length; i++) {
+    bs[i].classList.toggle('is-on', bs[i].dataset.v === (state.hidden ? 'hide' : 'show'));
+  }
   applyTheme(state.theme);
   openBox('sheetSettings');
 }
@@ -1751,23 +1845,46 @@ function onDocClick(ev) {
       closeBox('modalDate');
       renderEntrySheet();
       break;
+    case 'balVis':
+      setHidden(target.dataset.v === 'hide');
+      break;
   }
+}
+
+function setHidden(v) {
+  state.hidden = !!v;
+  writeLS('dakhel_balvis', state.hidden ? 'hide' : 'show');
+  renderHome();
+  var seg = document.querySelectorAll('#balSeg .seg-btn');
+  for (var i = 0; i < seg.length; i++) {
+    seg[i].classList.toggle('is-on', seg[i].dataset.v === (state.hidden ? 'hide' : 'show'));
+  }
+  buzz(8);
 }
 
 function bind() {
   $('btnTheme').addEventListener('click', cycleTheme);
   $('btnSettings').addEventListener('click', openSettings);
   $('eyeBtn').addEventListener('click', function () {
-    state.hidden = !state.hidden;
-    writeLS('dakhel_hidden', state.hidden ? '1' : '0');
-    renderHome();
-    buzz(8);
+    setHidden(!state.hidden);
   });
   $('btnManageAcc').addEventListener('click', openAccounts);
   $('fab').addEventListener('click', function () {
     if (state.page === 'debts') openDebt('');
     else openEntry('add');
   });
+
+  var qa = document.querySelectorAll('.quick .qa');
+  for (var qi = 0; qi < qa.length; qi++) {
+    qa[qi].addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      var kind = this.dataset.act;
+      if (kind === 'manageAcc') { openAccounts(); return; }
+      if (kind === 'addDebt') { openDebt(''); return; }
+      state.entryType = kind === 'addIncome' ? 'income' : 'expense';
+      openEntry('add');
+    });
+  }
 
   $('monthBtn').addEventListener('click', function (ev) {
     ev.stopPropagation();
