@@ -6,7 +6,7 @@
 'use strict';
 
 /* ────────────────────────── constants ────────────────────────── */
-var VERSION = '4.2';
+var VERSION = '4.3';
 
 var SK = {
   entries: 'dakhel_entries',
@@ -924,7 +924,7 @@ function renderDebts() {
 
   var h = '';
   sorted.forEach(function (d) {
-    h += '<div class="debt-card ' + (isC ? 'cred' : 'deb') + (d.paid ? ' paid' : '') + '" data-act="debt" data-id="' + esc(d.id) + '">' +
+    h += '<div class="debt-card ' + (isC ? 'cred' : 'deb') + (d.paid ? ' is-paid' : '') + '" data-act="debt" data-id="' + esc(d.id) + '">' +
            '<div class="debt-av">' + esc(String(d.name).charAt(0)) + '</div>' +
            '<div class="debt-body">' +
              '<div class="debt-name">' + esc(d.name) + (d.paid ? ' <span style="color:var(--mint)">✓</span>' : '') + '</div>' +
