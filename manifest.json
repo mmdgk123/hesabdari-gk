@@ -1,23 +1,38 @@
 {
+  "id": "/hesabdari-gk/",
   "name": "حسابداری GK",
   "short_name": "حسابداری",
-  "description": "ثبت دخل و خرج ماهانه",
+  "description": "دفترچه دخل و خرج و بدهی با تقویم شمسی، بودجه ماهانه و نرخ طلا و ارز",
+  "lang": "fa",
+  "dir": "rtl",
   "start_url": "/hesabdari-gk/",
   "scope": "/hesabdari-gk/",
   "display": "standalone",
-  "background_color": "#07080d",
-  "theme_color": "#07080d",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "portrait",
+  "background_color": "#08090f",
+  "theme_color": "#08090f",
+  "categories": ["finance", "productivity"],
   "icons": [
     {
-      "src": "icon-192.png?v=2.9",
+      "src": "icon-192.png?v=4",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "icon-512.png?v=2.9",
+      "src": "icon-512.png?v=4",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "ثبت سریع",
+      "short_name": "ثبت سریع",
+      "url": "/hesabdari-gk/widget.html",
+      "icons": [{ "src": "widget-icon.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }
