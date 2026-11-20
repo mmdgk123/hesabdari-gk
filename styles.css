@@ -519,7 +519,9 @@ button,input{font-family:inherit}
 .sheet-wrap.is-open{display:flex;animation:fade .2s}
 @keyframes fade{from{opacity:0}}
 .sheet{
-  width:100%;max-width:520px;max-height:92vh;display:flex;flex-direction:column;
+  width:100%;max-width:520px;
+  max-height:calc(92vh - var(--kb, 0px));margin-bottom:var(--kb, 0px);
+  display:flex;flex-direction:column;
   background:var(--bg-elev);border:1px solid var(--line-2);border-bottom:none;
   border-radius:26px 26px 0 0;animation:up .32s cubic-bezier(.22,1,.36,1);overflow:hidden;
 }
@@ -579,23 +581,13 @@ button,input{font-family:inherit}
 .field input::placeholder{color:var(--text-3);font-weight:500}
 .field input:focus{border-color:var(--indigo);box-shadow:0 0 0 3px var(--indigo-12)}
 
-/* ─── amount + keypad ─── */
-.amount-display{text-align:center;padding:4px 0 12px}
-.amount-value{
-  font-size:34px;font-weight:800;letter-spacing:-1px;line-height:1.2;min-height:44px;
-  font-variant-numeric:tabular-nums;color:var(--text);word-break:break-all;
+/* ─── amount field ─── */
+.amount-field label{text-align:center}
+.field input.amount-input{
+  text-align:center;padding:13px 12px;font-size:30px;font-weight:800;
+  letter-spacing:-1px;font-variant-numeric:tabular-nums;
 }
-.amount-value.is-empty{color:var(--text-3)}
-.amount-unit{font-size:11px;font-weight:600;color:var(--text-3);margin-top:2px}
-.amount-hint{font-size:11.5px;font-weight:700;color:var(--indigo);margin-top:4px;min-height:18px}
-.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px}
-.key{
-  padding:13px 0;border-radius:14px;border:1px solid var(--line);background:var(--surface);
-  color:var(--text);font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;
-  cursor:pointer;transition:transform .1s ease,background .15s;
-}
-.key:active{transform:scale(.94);background:var(--surface-2)}
-.key.alt{font-size:15px;color:var(--text-2)}
+.amount-hint{font-size:11.5px;font-weight:700;color:var(--indigo);margin-top:4px;min-height:18px;text-align:center}
 
 /* ─── pills ─── */
 .pills{display:flex;flex-wrap:wrap;gap:7px}

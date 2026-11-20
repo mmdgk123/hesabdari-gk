@@ -6,7 +6,7 @@
 'use strict';
 
 /* ────────────────────────── constants ────────────────────────── */
-var VERSION = '4.3';
+var VERSION = '4.4';
 
 var SK = {
   entries: 'dakhel_entries',
@@ -102,6 +102,22 @@ function fmt(n) {
 }
 function digitsOnly(s) {
   return toEn(s == null ? '' : String(s)).replace(/[^\d]/g, '');
+}
+function fmtDigits(raw) {
+  return raw
+    ? toFa(Number(raw).toLocaleString('en-US').replace(/,/g, '٬'))
+    : '';
+}
+function caretForDigits(str, n) {
+  if (n <= 0) return 0;
+  var seen = 0;
+  for (var i = 0; i < str.length; i++) {
+    if (/[0-9۰-۹]/.test(str.charAt(i))) {
+      seen++;
+      if (seen === n) return i + 1;
+    }
+  }
+  return str.length;
 }
 function fmtShort(n) {
   var num = Math.round(Number(n) || 0);
@@ -326,7 +342,15 @@ function setText(id, txt) { var e = $(id); if (e) e.textContent = txt; }
 function show(el) { if (typeof el === 'string') el = $(el); if (el) el.hidden = false; }
 function hide(el) { if (typeof el === 'string') el = $(el); if (el) el.hidden = true; }
 function openBox(id) { var e = $(id); if (e) e.classList.add('is-open'); }
-function closeBox(id) { var e = $(id); if (e) e.classList.remove('is-open'); }
+function closeBox(id) {
+  var e = $(id);
+  if (!e) return;
+  var active = document.activeElement;
+  if (active && e.contains(active) && active.blur) {
+    try { active.blur(); } catch (err) {}
+  }
+  e.classList.remove('is-open');
+}
 
 var toastTimer = null;
 function toast(msg) {
@@ -1211,6 +1235,11 @@ function openEntry(mode, id) {
   fillDescChips();
   renderEntrySheet();
   openBox('sheetEntry');
+
+  var amtEl = $('entryAmt');
+  if (amtEl) {
+    try { amtEl.focus(); } catch (err) {}
+  }
 }
 
 function renderEntrySheet() {
@@ -1219,14 +1248,10 @@ function renderEntrySheet() {
     segs[i].classList.toggle('is-on', segs[i].dataset.t === state.entryType);
   }
 
-  var amtEl = $('amtDisplay');
+  var amtEl = $('entryAmt');
   if (amtEl) {
-    if (state.amountRaw) {
-      amtEl.textContent = toFa(Number(state.amountRaw).toLocaleString('en-US').replace(/,/g, '٬'));
-    } else {
-      amtEl.textContent = '۰';
-    }
-    amtEl.classList.toggle('is-empty', !state.amountRaw);
+    var shown = fmtDigits(state.amountRaw);
+    if (amtEl.value !== shown) amtEl.value = shown;
   }
   setText('amtHint', state.amountRaw
     ? '= ' + fmt(Number(state.amountRaw) * 1000) + ' تومان'
@@ -1258,22 +1283,36 @@ function renderEntrySheet() {
   }
 }
 
-function keypadPress(k) {
-  var raw = state.amountRaw;
-  if (k === 'del') raw = raw.slice(0, -1);
-  else if (k === 'clear') raw = '';
-  else if (k === '000') { if (raw && raw !== '0') raw += '000'; }
-  else if (/^[0-9]$/.test(k)) {
-    if (raw.length < 10) raw = (raw === '0' ? '' : raw) + k;
-  }
+/* کیبورد عددی خود گوشی — ورودی مبلغ مستقیم تایپ می‌شود */
+function onAmountInput(el) {
+  if (!el) return;
+  var val = String(el.value || '');
+  var pos = val.length;
+  try { if (el.selectionStart != null) pos = el.selectionStart; } catch (e) {}
+
+  var before = digitsOnly(val.slice(0, pos)).length;
+  var raw = digitsOnly(val).slice(0, 10);
   state.amountRaw = raw;
-  renderEntrySheet();
-  buzz(6);
+
+  var out = fmtDigits(raw);
+  if (el.value !== out) {
+    el.value = out;
+    try {
+      var c = caretForDigits(out, before);
+      el.setSelectionRange(c, c);
+    } catch (e) {}
+  }
+  setText('amtHint', raw ? '= ' + fmt(Number(raw) * 1000) + ' تومان' : '');
 }
 
 function submitEntry() {
   var thousands = parseInt(state.amountRaw, 10) || 0;
-  if (thousands <= 0) { toast('مبلغ را وارد کن'); return; }
+  if (thousands <= 0) {
+    toast('مبلغ را وارد کن');
+    var ai = $('entryAmt');
+    if (ai) ai.focus();
+    return;
+  }
 
   var descEl = $('entryDesc');
   var desc = (descEl ? descEl.value : '').trim();
@@ -1518,6 +1557,10 @@ function deleteAccount(id) {
 
 /* ══════════════════════ date picker ══════════════════════ */
 function openDatePicker() {
+  var ae = document.activeElement;
+  if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA')) {
+    try { ae.blur(); } catch (e) {}
+  }
   var d = state.entryDate || nowJ();
   state.dpY = d.y;
   state.dpM = d.m;
@@ -1822,9 +1865,6 @@ function onDocClick(ev) {
       state.entryType = target.dataset.t;
       renderEntrySheet();
       break;
-    case 'key':
-      keypadPress(target.dataset.k);
-      break;
     case 'eacc':
       state.entryAcc = target.dataset.v;
       renderEntrySheet();
@@ -1862,6 +1902,30 @@ function setHidden(v) {
     seg[i].classList.toggle('is-on', seg[i].dataset.v === (state.hidden ? 'hide' : 'show'));
   }
   buzz(8);
+}
+
+/* شیت‌ها را بالای کیبورد گوشی نگه می‌دارد */
+function initKeyboardInset() {
+  var vv = window.visualViewport;
+  if (!vv) return;
+
+  function update() {
+    var ae = document.activeElement;
+    var typing = !!(ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.isContentEditable));
+    var gap = 0;
+    if (typing) {
+      gap = Math.round(window.innerHeight - vv.height - vv.offsetTop);
+      if (!(gap > 40)) gap = 0;
+    }
+    document.documentElement.style.setProperty('--kb', gap + 'px');
+  }
+
+  vv.addEventListener('resize', update);
+  vv.addEventListener('scroll', update);
+  window.addEventListener('resize', update);
+  document.addEventListener('focusin', function () { setTimeout(update, 60); });
+  document.addEventListener('focusout', function () { setTimeout(update, 60); });
+  update();
 }
 
 function bind() {
@@ -1903,6 +1967,7 @@ function bind() {
   });
 
   $('entryDate').addEventListener('click', openDatePicker);
+  $('entryAmt').addEventListener('input', function () { onAmountInput(this); });
   $('btnEntrySubmit').addEventListener('click', submitEntry);
   $('btnEntryDelete').addEventListener('click', deleteCurrentEntry);
 
@@ -1952,7 +2017,7 @@ function bind() {
   var overlays = document.querySelectorAll('.sheet-wrap, .modal-wrap');
   for (var i = 0; i < overlays.length; i++) {
     overlays[i].addEventListener('click', function (ev) {
-      if (ev.target === this) this.classList.remove('is-open');
+      if (ev.target === this) closeBox(this.id);
     });
   }
 
@@ -2005,6 +2070,7 @@ function init() {
 
   applyTheme(state.theme);
   bind();
+  initKeyboardInset();
   renderAll();
   switchPage('home');
   updateMonthLabel();

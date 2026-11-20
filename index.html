@@ -200,24 +200,11 @@ try{
         <button class="seg-btn is-on" data-act="type" data-t="expense">خرج</button>
         <button class="seg-btn" data-act="type" data-t="income">دخل</button>
       </div>
-      <div class="amount-display">
-        <div class="amount-value is-empty" id="amtDisplay">۰</div>
-        <div class="amount-unit">هزار تومان</div>
+      <div class="field amount-field">
+        <label for="entryAmt">مبلغ (هزار تومان)</label>
+        <input type="text" id="entryAmt" class="amount-input" inputmode="numeric"
+               placeholder="۰" autocomplete="off" enterkeyhint="done">
         <div class="amount-hint" id="amtHint"></div>
-      </div>
-      <div class="keypad" id="keypad">
-        <button class="key" data-act="key" data-k="7">۷</button>
-        <button class="key" data-act="key" data-k="8">۸</button>
-        <button class="key" data-act="key" data-k="9">۹</button>
-        <button class="key" data-act="key" data-k="4">۴</button>
-        <button class="key" data-act="key" data-k="5">۵</button>
-        <button class="key" data-act="key" data-k="6">۶</button>
-        <button class="key" data-act="key" data-k="1">۱</button>
-        <button class="key" data-act="key" data-k="2">۲</button>
-        <button class="key" data-act="key" data-k="3">۳</button>
-        <button class="key alt" data-act="key" data-k="000">۰۰۰</button>
-        <button class="key" data-act="key" data-k="0">۰</button>
-        <button class="key alt" data-act="key" data-k="del">⌫</button>
       </div>
       <div class="field">
         <label>توضیح</label>
@@ -302,7 +289,7 @@ try{
       </div>
       <button class="btn-ghost" id="btnCheckUpdate" style="margin-bottom:8px">🔄 بررسی آپدیت برنامه</button>
       <button class="btn-ghost btn-danger" id="btnWipe" style="margin-bottom:10px">🗑 پاک کردن همه داده‌ها</button>
-      <p class="fineprint" id="verLine">نسخه ۴.۳</p>
+      <p class="fineprint" id="verLine">نسخه ۴.۴</p>
       <a class="credit" href="https://t.me/mmdGK" target="_blank" rel="noopener">ساخته‌شده توسط <b>mmdGK</b></a>
       <input type="file" id="fileIn" accept=".json,application/json" hidden>
     </div>

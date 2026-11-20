@@ -49,25 +49,11 @@ try{
       <button class="seg-btn" data-t="income">دخل</button>
     </div>
 
-    <div class="amount-display">
-      <div class="amount-value is-empty" id="wAmt">۰</div>
-      <div class="amount-unit">هزار تومان</div>
+    <div class="field amount-field">
+      <label for="wAmt">مبلغ (هزار تومان)</label>
+      <input type="text" id="wAmt" class="amount-input" inputmode="numeric"
+             placeholder="۰" autocomplete="off" enterkeyhint="done">
       <div class="amount-hint" id="wHint"></div>
-    </div>
-
-    <div class="keypad" id="keypad">
-      <button class="key" data-k="7">۷</button>
-      <button class="key" data-k="8">۸</button>
-      <button class="key" data-k="9">۹</button>
-      <button class="key" data-k="4">۴</button>
-      <button class="key" data-k="5">۵</button>
-      <button class="key" data-k="6">۶</button>
-      <button class="key" data-k="1">۱</button>
-      <button class="key" data-k="2">۲</button>
-      <button class="key" data-k="3">۳</button>
-      <button class="key alt" data-k="000">۰۰۰</button>
-      <button class="key" data-k="0">۰</button>
-      <button class="key alt" data-k="del">⌫</button>
     </div>
 
     <div class="field">
@@ -235,10 +221,8 @@ function render() {
 
   var amtEl = $('wAmt');
   if (amtEl) {
-    amtEl.textContent = state.raw
-      ? toFa(Number(state.raw).toLocaleString('en-US').replace(/,/g, '٬'))
-      : '۰';
-    amtEl.classList.toggle('is-empty', !state.raw);
+    var shown = state.raw ? fmtDigits(state.raw) : '';
+    if (amtEl.value !== shown) amtEl.value = shown;
   }
   var hint = $('wHint');
   if (hint) hint.textContent = state.raw ? '= ' + fmt(Number(state.raw) * 1000) + ' تومان' : '';
@@ -266,16 +250,46 @@ function fillDescChips() {
   }).join('');
 }
 
-function keypadPress(k) {
-  var raw = state.raw;
-  if (k === 'del') raw = raw.slice(0, -1);
-  else if (k === '000') { if (raw && raw !== '0') raw += '000'; }
-  else if (/^[0-9]$/.test(k)) {
-    if (raw.length < 10) raw = (raw === '0' ? '' : raw) + k;
+function fmtDigits(raw) {
+  return raw
+    ? toFa(Number(raw).toLocaleString('en-US').replace(/,/g, '٬'))
+    : '';
+}
+function digitsOnly(s) {
+  return toEn(s == null ? '' : String(s)).replace(/[^\d]/g, '');
+}
+function caretForDigits(str, n) {
+  if (n <= 0) return 0;
+  var seen = 0;
+  for (var i = 0; i < str.length; i++) {
+    if (/[0-9۰-۹]/.test(str.charAt(i))) {
+      seen++;
+      if (seen === n) return i + 1;
+    }
   }
+  return str.length;
+}
+
+/* کیبورد عددی خود گوشی — ورودی مبلغ مستقیم تایپ می‌شود */
+function onAmountInput(el) {
+  if (!el) return;
+  var val = String(el.value || '');
+  var pos = val.length;
+  try { if (el.selectionStart != null) pos = el.selectionStart; } catch (e) {}
+
+  var before = digitsOnly(val.slice(0, pos)).length;
+  var raw = digitsOnly(val).slice(0, 10);
   state.raw = raw;
+
+  var out = fmtDigits(raw);
+  if (el.value !== out) {
+    el.value = out;
+    try {
+      var c = caretForDigits(out, before);
+      el.setSelectionRange(c, c);
+    } catch (e) {}
+  }
   render();
-  buzz(6);
 }
 
 /* ── ثبت ── */
@@ -327,12 +341,11 @@ function submit() {
 /* ── رویدادها ── */
 document.addEventListener('click', function (ev) {
   var t = ev.target;
-  while (t && t !== document && !(t.dataset && (t.dataset.k || t.dataset.acc || t.dataset.desc || t.dataset.t))) {
+  while (t && t !== document && !(t.dataset && (t.dataset.acc || t.dataset.desc || t.dataset.t))) {
     t = t.parentNode;
   }
   if (!t || t === document || !t.dataset) return;
 
-  if (t.dataset.k) { keypadPress(t.dataset.k); return; }
   if (t.dataset.acc) { state.acc = t.dataset.acc; render(); buzz(6); return; }
   if (t.dataset.t) { state.type = t.dataset.t; render(); buzz(6); return; }
   if (t.dataset.desc) {
@@ -343,6 +356,10 @@ document.addEventListener('click', function (ev) {
 
 var submitBtn = $('wSubmit');
 if (submitBtn) submitBtn.addEventListener('click', submit);
+var amtInput = $('wAmt');
+if (amtInput) {
+  amtInput.addEventListener('input', function () { onAmountInput(this); });
+}
 var descInput = $('wDesc');
 if (descInput) {
   descInput.addEventListener('keydown', function (ev) {
