@@ -17,15 +17,28 @@ try{
   }
 }catch(e){}
 </script>
-<link rel="apple-touch-icon" href="apple-touch-icon-180.png?v=4">
-<link rel="icon" href="icon-192.png?v=4">
+<link rel="apple-touch-icon" href="apple-touch-icon-180.png?v=5">
+<link rel="icon" href="icon-192.png?v=5">
 <link rel="manifest" href="manifest.json">
 <title>حسابداری</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- فونت غیرمسدودکننده: بدون اینترنت هم صفحه فوری باز می‌شود و از فونت جانشین استفاده می‌کند -->
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="styles.css">
 <script src="app.js" defer></script>
+<script>
+/* ثبت سرویس‌ورکر پیش از بارگذاری برنامه، تا حتی اگر app.js خطا بدهد
+   نصب کش آفلاین انجام شده باشد */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    try {
+      navigator.serviceWorker.register('sw.js', { scope: './' }).catch(function () {});
+    } catch (e) {}
+  });
+}
+</script>
 </head>
 <body>
 
@@ -289,7 +302,7 @@ try{
       </div>
       <button class="btn-ghost" id="btnCheckUpdate" style="margin-bottom:8px">🔄 بررسی آپدیت برنامه</button>
       <button class="btn-ghost btn-danger" id="btnWipe" style="margin-bottom:10px">🗑 پاک کردن همه داده‌ها</button>
-      <p class="fineprint" id="verLine">نسخه ۴.۴</p>
+      <p class="fineprint" id="verLine">نسخه ۴.۵</p>
       <a class="credit" href="https://t.me/mmdGK" target="_blank" rel="noopener">ساخته‌شده توسط <b>mmdGK</b></a>
       <input type="file" id="fileIn" accept=".json,application/json" hidden>
     </div>

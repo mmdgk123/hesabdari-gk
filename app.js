@@ -6,7 +6,7 @@
 'use strict';
 
 /* ────────────────────────── constants ────────────────────────── */
-var VERSION = '4.4';
+var VERSION = '4.5';
 
 var SK = {
   entries: 'dakhel_entries',
@@ -1117,8 +1117,31 @@ function ageMinutes(iso) {
   if (isNaN(t)) return 999;
   return Math.max(0, Math.round((Date.now() - t) / 60000));
 }
+function isOffline() {
+  try { return navigator.onLine === false; } catch (e) { return false; }
+}
+function cachedRatesNote() {
+  return '📴 آفلاین — آخرین قیمت ذخیره‌شده<br>' +
+    toFa(String((ratesCache && ratesCache.time) || '').replace('T', ' ').slice(0, 16));
+}
+function showCachedRatesOffline(quiet) {
+  if (ratesCache && ratesCache.items && ratesCache.items.length) {
+    renderRates(ratesCache.items, cachedRatesNote());
+  } else {
+    setHTML('ratesList', emptyHTML('📴', 'آفلاین هستی — برای دیدن قیمت‌ها اینترنت را وصل کن'));
+    setHTML('ratesMeta', '📴 آفلاین');
+    if (!quiet) toast('آفلاین هستی — قیمت‌ها وقتی آنلاین شدی می‌آید');
+  }
+}
 function refreshRates() {
   var btn = $('btnRates');
+
+  /* آفلاین: هیچ درخواستی نزن، آخرین قیمت ذخیره‌شده را نشان بده */
+  if (isOffline()) {
+    showCachedRatesOffline(false);
+    return;
+  }
+
   if (btn) {
     if (btn.dataset.busy) return;
     btn.dataset.busy = '1';
@@ -1157,6 +1180,12 @@ function refreshRates() {
     })
     .catch(function () {
       finish();
+      /* اگر اینترنت نبود، به‌جای خطا آخرین قیمت ذخیره‌شده را نگه دار */
+      if (ratesCache && ratesCache.items && ratesCache.items.length) {
+        showCachedRatesOffline(true);
+        toast('قیمت‌ها به‌روز نشد — آخرین قیمت ذخیره‌شده نمایش داده شد');
+        return;
+      }
       buzz(40);
       toast('دریافت قیمت‌ها ناموفق بود — اینترنت را چک کن');
     });
@@ -1184,6 +1213,7 @@ function autoRefreshRates() {
   if (Date.now() - ratesLastFetch > 90000) refreshRates();
 }
 function renderRatesPage() {
+  if (isOffline()) { showCachedRatesOffline(true); return; }
   if (ratesCache && ratesCache.items && ratesCache.items.length) {
     var note = ratesCache.note ||
       ('آخرین بروزرسانی: ' + toFa(String(ratesCache.time || '').replace('T', ' ').slice(0, 16)));
@@ -1708,7 +1738,10 @@ function checkUpdate() {
   if ('serviceWorker' in navigator) {
     Promise.all([
       caches.keys().then(function (keys) {
-        return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+        return Promise.all(keys.map(function (k) {
+          /* فقط کش همین برنامه پاک شود، نه پروژه‌های دیگر روی همین دامنه */
+          if (k.indexOf('dakhel-') === 0) return caches.delete(k);
+        }));
       }),
       navigator.serviceWorker.getRegistrations().then(function (rs) {
         return Promise.all(rs.map(function (r) { return r.unregister(); }));
@@ -2081,8 +2114,17 @@ function init() {
   }
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(function () {});
+    navigator.serviceWorker.getRegistration().then(function (r) {
+      if (r) r.update();
+      else navigator.serviceWorker.register('sw.js', { scope: './' }).catch(function () {});
+    }).catch(function () {});
   }
+
+  /* وقتی اینترنت برگشت و صفحه‌ی نرخ‌ها باز بود، خودش تازه کند */
+  window.addEventListener('online', function () {
+    var p = $('page-rates');
+    if (p && p.className && p.className.indexOf('is-active') >= 0) refreshRates();
+  });
 }
 
 document.addEventListener('DOMContentLoaded', init);

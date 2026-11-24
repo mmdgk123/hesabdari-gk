@@ -21,8 +21,19 @@ try{
 <title>ثبت سریع</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="styles.css">
+<script>
+/* این صفحه هم آفلاین باز شود، حتی اگر قبلاً فقط خودش باز شده باشد */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    try {
+      navigator.serviceWorker.register('sw.js', { scope: './' }).catch(function () {});
+    } catch (e) {}
+  });
+}
+</script>
 <style>
 .acc-card.sel{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc-24),var(--shadow)}
 .sheet-title{margin-top:2px}
